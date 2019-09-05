@@ -70,7 +70,6 @@ namespace AtGuider2
                 Autoguider = 1,
                 AutoSaveOn = 0,
                 Frame = ccdsoftImageFrame.cdLight,
-                ImageReduction = ccdsoftImageReduction.cdAutoDark,
                 Delay = 2.0,
                 AutoguiderExposureTime = calExposure,
                 ExposureTime = calExposure
@@ -106,7 +105,6 @@ namespace AtGuider2
             {
                 Autoguider = 1,
                 Frame = ccdsoftImageFrame.cdLight,
-                ImageReduction = ccdsoftImageReduction.cdAutoDark,
                 Delay = 0,
                 Asynchronous = 0,
                 AutoSaveOn = 1,

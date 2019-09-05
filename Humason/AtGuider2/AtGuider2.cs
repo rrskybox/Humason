@@ -106,7 +106,6 @@ namespace AtGuider2
             {
                 Autoguider = 0,
                 Frame = ccdsoftImageFrame.cdLight,
-                ImageReduction = ccdsoftImageReduction.cdAutoDark,
                 ExposureTime = 10,
                 Delay = 0,
                 Asynchronous = 0,
