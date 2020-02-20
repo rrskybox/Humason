@@ -77,7 +77,7 @@ namespace Humason
             //Closes log file
             //Raises a log event for anyone who is listening
 
-            string logdirpath = FormHumason.openSession.HumasonDirectoryPath +"\\Logs";
+            string logdirpath = FormHumason.openSession.HumasonDirectoryPath + "\\Logs";
             if (!Directory.Exists(logdirpath))
             { Directory.CreateDirectory(logdirpath); }
             string logdate = DateTime.Now.ToString("yyyy-MM-dd");

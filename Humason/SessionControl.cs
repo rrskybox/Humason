@@ -85,6 +85,7 @@ namespace Humason
         const string DomeAddOnCheckedXName = "DomeAddOnEnabled";
         const string PowerManagerCheckedXName = "PowerManagerEnabled";
         const string RotatorDeviceEnabled = "RotatorDeviceEnabled";
+        const string DomeHomeAzXName = "DomeHomeAz";
 
         //Class data -- just saves some file access time
 
@@ -558,7 +559,17 @@ namespace Humason
             set => DirectXcess.ReplaceItem(DomeAddOnCheckedXName, value);
         }
 
- 
+        public int DomeHomeAz
+        {
+            get
+            {
+                if (DirectXcess.GetItem(DomeHomeAzXName) != null)
+                { return Convert.ToInt32(DirectXcess.GetItem(DomeHomeAzXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(DomeHomeAzXName, value);
+        }
+
         #endregion
 
     }

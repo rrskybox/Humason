@@ -81,8 +81,14 @@ namespace Humason
             string spFilePath = axessXMLFilePath;
             XElement spPlanX = XElement.Load(spFilePath);
             XElement itemX = spPlanX.Element(itemName);
-            if (itemX == null) return false;
-            else return true;
+            if (itemX == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public string GetItem(string itemName)
@@ -351,7 +357,10 @@ namespace Humason
         {
             XElement NewListX = new XElement(itemName);
             foreach (string itemStr in itemList)
+            {
                 NewListX.Add(new XElement(itemName, itemStr));
+            }
+
             return NewListX;
         }
 
@@ -359,7 +368,10 @@ namespace Humason
         {
             List<string> NewListStr = new List<string>();
             foreach (XElement itemX in itemListX.Elements())
+            {
                 NewListStr.Add(itemX.Value);
+            }
+
             return NewListStr;
         }
     }

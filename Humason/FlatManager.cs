@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Planetarium;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Planetarium;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Humason
 {
@@ -68,7 +66,12 @@ namespace Humason
                 //Stage the mount to the flatman
                 FlatMan flmn = new FlatMan();
                 lg.LogIt("Staging FlatMan");
-                flmn.FlatManStage();
+                bool stgResult = flmn.FlatManStage();
+                if (!stgResult)
+                {
+                    lg.LogIt("FlatMan Staging Failed -- aborting flats");
+                    return;
+                }
                 //If Manual Setup is selected, then pause for user to position the FlatMan for flats
                 if (FormHumason.openSession.IsFlatManManualSetupEnabled)
                 {

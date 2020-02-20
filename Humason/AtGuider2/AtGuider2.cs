@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Humason;
+using System;
 using TheSkyXLib;
-using Humason;
 
 namespace AtGuider2
 {
@@ -20,84 +20,94 @@ namespace AtGuider2
              *   
              */
 
-            const string Version = "AtGuider2 V1.0";
             const double InitialGuiderExposure = 0.5; //Initial exposure level for guider camera images.
             const double OptGuiderADU = 20000; //Target ADU for guide star in guider camera images.
 
             //Open text output form
-            FormGuiderAutoCalibrate ag2Form = new FormGuiderAutoCalibrate();
-            ag2Form.Text = Version;
-            ag2Form.Show();
+
+            LogEvent lg = FormHumason.lg;
 
             //Lets get started...
             //plate solve current location to prime target star search and to acquire image camera position angle
 
-            ag2Form.agcTextBox.AppendText("Plate Solving for current position and position angle" + "\r\n");
+            lg.LogIt("Plate Solving for current position and position angle");
             double imagePA = PlateSolve();
-            ag2Form.agcTextBox.AppendText("Position Angle: " + imagePA.ToString("0.000") + "\r\n");
+            lg.LogIt("Position Angle: " + imagePA.ToString("0.000"));
             //Create an FOV object for the guider from the "My equipment.txt" Field of View Indicators file
-            ag2Form.agcTextBox.AppendText("Parsing My equipment.txt file for FOVI definitions" + "\r\n");
+            lg.LogIt("Parsing My equipment.txt file for FOVI definitions");
             FOVMiracles guiderFOV = new FOVMiracles();
-            ag2Form.agcTextBox.AppendText("Active Guider found: " + guiderFOV.FOVName + "\r\n");
+            lg.LogIt("Active Guider found: " + guiderFOV.FOVName);
             //Set the chart size for something pleasant around the FOVI's
             guiderFOV.SetStarChartSize();
             //Find a calibration star near the current position
             //  that is sufficiently isolated from other similar stars
-            ag2Form.agcTextBox.AppendText("Looking for proximate star to use for calibration" + "\r\n");
+            lg.LogIt("Looking for proximate star to use for calibration");
             DBQStar foundStar = FindStar(guiderFOV.FOVIsolation);
             if (foundStar == null)
             {
-                ag2Form.agcTextBox.AppendText("No calibration star found.  Try another location." + "\r\n");
+                lg.LogIt("No calibration star found.  Try another location.");
             }
             else
             {
-                ag2Form.agcTextBox.AppendText("Calibration star found: " + foundStar.StarName + "\r\n");
+                lg.LogIt("Calibration star found: " + foundStar.StarName);
                 //Closed Loop Slew (following standard slew -- see notes) to the target guide star
-                ag2Form.agcTextBox.AppendText("Centering imaging camera on calibration star" + "\r\n");
+                lg.LogIt("Centering imaging camera on calibration star");
                 bool slewDone1 = SlewToStar(foundStar.StarName, foundStar.StarRA, foundStar.StarDec);
-                if (slewDone1) ag2Form.agcTextBox.AppendText("Calibration star centered" + "\r\n");
-                else ag2Form.agcTextBox.AppendText("There was a problem centering the calibration star" + "\r\n");
+                if (slewDone1)
+                {
+                    lg.LogIt("Calibration star centered");
+                }
+                else
+                {
+                    lg.LogIt("There was a problem centering the calibration star");
+                }
                 //Calculate a pointing position that would put the target star in the guider FOV
-                ag2Form.agcTextBox.AppendText("Calculating offset for centering star in guider FOV" + "\r\n");
+                lg.LogIt("Calculating offset for centering star in guider FOV");
                 DBQStar tgtPosition = guiderFOV.OffsetCenter(foundStar, imagePA);
-                ag2Form.agcTextBox.AppendText("Offset calculated for pointing at " +
+                lg.LogIt("Offset calculated for pointing at " +
                     tgtPosition.StarRA.ToString("0.000") + " , " +
-                    tgtPosition.StarDec.ToString("0.000") + "\r\n");
+                    tgtPosition.StarDec.ToString("0.000"));
 
                 //Closed Loop Slew (following standard slew -- see notes) to that offset position
-                ag2Form.agcTextBox.AppendText("Centering calibration star in guider FOV" + "\r\n");
+                lg.LogIt("Centering calibration star in guider FOV");
                 bool slewDone = SlewToPosition(tgtPosition.StarRA, tgtPosition.StarDec);
-                if (slewDone1) ag2Form.agcTextBox.AppendText("Calibration star centered in guider FOV" + "\r\n");
-                else ag2Form.agcTextBox.AppendText("Could not recenter the calibration star" + "\r\n");
+                if (slewDone1)
+                {
+                    lg.LogIt("Calibration star centered in guider FOV");
+                }
+                else
+                {
+                    lg.LogIt("Could not recenter the calibration star");
+                }
                 //plate solve current location -- not necessary but it sets up the star chart nicely for viewing
                 //  note that we are not in such a hurry that we can't mess around a bit
-                ag2Form.agcTextBox.AppendText("Checking offset position with a plate solve" + "\r\n");
+                lg.LogIt("Checking offset position with a plate solve");
                 imagePA = PlateSolve();
                 //Reset the chart size for something pleasant around the FOVI's
                 guiderFOV.SetStarChartSize();
                 //center the star chart on the pointing location ==  once again, for esthetic purposes
-                ag2Form.agcTextBox.AppendText("Recentering chart" + "\r\n");
+                lg.LogIt("Recentering chart");
                 sky6StarChart tsxsc = new sky6StarChart
                 {
                     RightAscension = tgtPosition.StarRA,
                     Declination = tgtPosition.StarDec
                 };
                 //Take a guider image and adjust the exposure to an optimal level
-                ag2Form.agcTextBox.AppendText("Adjusting guider exposure to achieve ADU of " + OptGuiderADU.ToString() + "\r\n");
+                lg.LogIt("Adjusting guider exposure to achieve ADU of " + OptGuiderADU.ToString());
                 double optExposure = OptimizeExposure(InitialGuiderExposure, OptGuiderADU);
-                ag2Form.agcTextBox.AppendText("Best guider exposure determined to be " + optExposure.ToString("0.00") + " secs" + "\r\n");
+                lg.LogIt("Best guider exposure determined to be " + optExposure.ToString("0.00") + " secs");
                 //Calibrate the guider
-                ag2Form.agcTextBox.AppendText("Starting direct guide calibration" + "\r\n");
+                lg.LogIt("Starting direct guide calibration");
                 string calDone = CalibrateGuideCam(optExposure, false); //No AO
-                ag2Form.agcTextBox.AppendText("Direct guide " + calDone + "\r\n");
+                lg.LogIt("Direct guide " + calDone);
                 //Calibrate the AO, if enabled
                 TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-                ag2Form.agcTextBox.AppendText("Starting AO guide calibration" + "\r\n");
+                lg.LogIt("Starting AO guide calibration");
                 calDone = CalibrateGuideCam(optExposure, true); // AO
-                ag2Form.agcTextBox.AppendText("AO guide " + calDone + "\r\n");
+                lg.LogIt("AO guide " + calDone);
             }
         }
-        
+
         static double PlateSolve()
         {
             //runs an image link on the current location to get PA data

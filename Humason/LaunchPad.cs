@@ -97,7 +97,11 @@ namespace Humason
                 lg.LogIt("Running Staging Process");
                 pSystemExe.StartInfo.FileName = FormHumason.openSession.StagingFilePath;
                 pSystemExe.Start();
-                if (FormHumason.openSession.IsStagingWaitEnabled) pSystemExe.WaitForExit();
+                if (FormHumason.openSession.IsStagingWaitEnabled)
+                {
+                    pSystemExe.WaitForExit();
+                }
+
                 lg.LogIt("Staging Process Complete");
             }
             return;
@@ -115,7 +119,11 @@ namespace Humason
                 lg.LogIt("Running Start Up Process");
                 pSystemExe.StartInfo.FileName = FormHumason.openSession.StartUpFilePath;
                 pSystemExe.Start();
-                if (FormHumason.openSession.IsStartUpWaitEnabled) pSystemExe.WaitForExit();
+                if (FormHumason.openSession.IsStartUpWaitEnabled)
+                {
+                    pSystemExe.WaitForExit();
+                }
+
                 lg.LogIt("Start Up Process Complete");
             }
             return;
@@ -135,7 +143,10 @@ namespace Humason
                 try
                 {
                     pSystemExe.Start();
-                    if (FormHumason.openSession.IsShutDownWaitEnabled) pSystemExe.WaitForExit();
+                    if (FormHumason.openSession.IsShutDownWaitEnabled)
+                    {
+                        pSystemExe.WaitForExit();
+                    }
                 }
                 catch { }
                 lg.LogIt("Shut Down Process Complete");

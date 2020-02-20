@@ -10,8 +10,15 @@ namespace Humason
         {
             InitializeComponent();
             //bool rstat = Rotator.Connect();  //get around to handling problems later...
-            if (FormHumason.openSession.RotatorDirection == 1) RotatorDirectionBox.Text = "CW";
-            else RotatorDirectionBox.Text = "CCW";
+            if (FormHumason.openSession.RotatorDirection == 1)
+            {
+                RotatorDirectionBox.Text = "CW";
+            }
+            else
+            {
+                RotatorDirectionBox.Text = "CCW";
+            }
+
             TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
             if (tPlan.TargetPlanPath != null)
             {
@@ -133,24 +140,40 @@ namespace Humason
         private void DisplayResults()
         {
             double ipa = Rotator.ImagePA;
-            ImagePABox.Text = NHUtil.ReduceTo360(ipa).ToString("0.000") + TestDegrees(ipa);
+            ImagePABox.Text = AstroMath.Transform.NormalizeDegreeRange(ipa).ToString("0.000") + TestDegrees(ipa);
             double rpa = Rotator.RealRotatorPA;
-            RotatorPABox.Text = NHUtil.ReduceTo360(rpa).ToString("0.000") + TestDegrees(rpa);
+            RotatorPABox.Text = AstroMath.Transform.NormalizeDegreeRange(rpa).ToString("0.000") + TestDegrees(rpa);
             double fpa = TSXLink.FOVI.GetFOVPA;
-            FOVPABox.Text = NHUtil.ReduceTo360(fpa).ToString("0.000") + TestDegrees(fpa);
+            FOVPABox.Text = AstroMath.Transform.NormalizeDegreeRange(fpa).ToString("0.000") + TestDegrees(fpa);
             double rof = Rotator.RotatorOffset;
             RotatorOffsetBox.Text = rof.ToString("0.000");
-            if (Rotator.RotatorDirection == 1) RotatorDirectionBox.Text = "CW";
-            else RotatorDirectionBox.Text = "CCW";
+            if (Rotator.RotatorDirection == 1)
+            {
+                RotatorDirectionBox.Text = "CW";
+            }
+            else
+            {
+                RotatorDirectionBox.Text = "CCW";
+            }
+
             TSXLink.StarChart.SetFOV(2);
             return;
         }
 
         private string TestDegrees(double degrees)
         {
-            if (degrees < 0) return ("  (-)");
-            else if (degrees >= 360) return ("  (^)");
-            else return "";
+            if (degrees < 0)
+            {
+                return ("  (-)");
+            }
+            else if (degrees >= 360)
+            {
+                return ("  (^)");
+            }
+            else
+            {
+                return "";
+            }
         }
 
     }

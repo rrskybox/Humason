@@ -125,7 +125,7 @@ namespace Humason
                 this.AdjustButton.Text = "Save Adjustment";
                 TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
                 TSXLink.Target tgt = TSXLink.StarChart.FindTarget(tPlan.TargetName);
-                double totalPA = NHUtil.ReduceTo360(Rotator.RealRotatorPA + TSXLink.FOVI.GetFOVPA);
+                double totalPA = AstroMath.Transform.NormalizeDegreeRange(Rotator.RealRotatorPA + TSXLink.FOVI.GetFOVPA);
                 tPlan.TargetRA = tgt.RA;
                 tPlan.TargetDec = tgt.Dec;
                 tPlan.TargetPA = totalPA;
@@ -136,7 +136,7 @@ namespace Humason
             {
                 TSXLink tLink = new TSXLink();
                 TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-                double totalPA = NHUtil.ReduceTo360(Rotator.RealRotatorPA + TSXLink.FOVI.GetFOVPA);
+                double totalPA = AstroMath.Transform.NormalizeDegreeRange(Rotator.RealRotatorPA + TSXLink.FOVI.GetFOVPA);
                 tPlan.TargetRA = TSXLink.StarChart.ChartRA;
                 tPlan.TargetDec = TSXLink.StarChart.ChartDec;
                 tPlan.TargetPA = totalPA;
@@ -259,7 +259,7 @@ namespace Humason
             //Launches ImageForecast to create target plans
             NHUtil.ButtonRed(ImageForecastButton);
             string toolName = "Image Planner.appref-ms";
-            string ttdir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)   + "\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
+            string ttdir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
             Process pSystemExe = new Process();
             string ifbPath = ttdir + "\\" + toolName;
             pSystemExe.StartInfo.FileName = ifbPath;
@@ -271,8 +271,14 @@ namespace Humason
         public bool IsTopPlanTargetName()
         {
             //Return true if there are any more scheduled plans
-            if (ScheduleListBox.Items.Count > 0) return true;
-            else return false;
+            if (ScheduleListBox.Items.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public string GetTopPlanTargetName()
@@ -326,7 +332,12 @@ namespace Humason
             PlanListBox.Items.Clear();
             List<string> tgtfiles = FormHumason.openSession.GetTargetFiles();
             foreach (string fn in tgtfiles)
-            { if (fn.Split('.')[0] != "Default") PlanListBox.Items.Add(fn); }
+            {
+                if (fn.Split('.')[0] != "Default")
+                {
+                    PlanListBox.Items.Add(fn);
+                }
+            }
         }
 
         public void AddTargetPlanToSchedule(string targetName)
@@ -364,7 +375,7 @@ namespace Humason
             //Causes the sequencer form to be updated with new values
             TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
             //Raise target event so target sequence form can update its fields accordingly
-            TargetEvent reTarget = FormSequenceBuilder.targetreset;
+            TargetEvent reTarget = FormTarget.targetreset;
             reTarget.TargetEntry(tPlan.TargetName);
         }
 
@@ -390,5 +401,5 @@ namespace Humason
                 tPlan.DeltaDecRate = tsxtgt.DeltaDecRate;
             }
         }
-     }
+    }
 }

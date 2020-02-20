@@ -14,13 +14,14 @@ namespace Humason
         public static bool InitializingHumason;
         public static FormDevices fCameraForm;
         public static FormFlats fCalibrationForm;
-        public static FormSequenceBuilder fSequenceForm;
+        public static FormTarget fSequenceForm;
         public static FormAutoGuide fGuideForm;
         public static FormAutoFocus fFocusForm;
         public static FormRotate fRotateForm;
         public static FormPlan fPlanForm;
         public static FormSessionControl fSessionForm;
- 
+        public static FormDome fDomeForm;
+
         //Open public variable for logging from all subforms
         public static LogEvent lg = new LogEvent();
 
@@ -50,10 +51,11 @@ namespace Humason
 
             //Initialize Default Target Plan
             TargetPlan dtPlan = new TargetPlan("Default");  //code for default
-            openSession.CurrentTargetName = "Default";
+                                                            //openSession.CurrentTargetName = "Default";
+
             openSession.DefaultTargetPlanPath = dtPlan.DefaultPlanPath;
 
-            fSequenceForm = new FormSequenceBuilder { TopLevel = false };
+            fSequenceForm = new FormTarget { TopLevel = false };
             TargetTab.Controls.Add(fSequenceForm);
             fSequenceForm.Show();
 
@@ -73,7 +75,6 @@ namespace Humason
             FocusTab.Controls.Add(fFocusForm);
             fFocusForm.Show();
 
-
             if (settings.RotatorDeviceEnabled)
             {
                 fRotateForm = new FormRotate { TopLevel = false };
@@ -86,7 +87,16 @@ namespace Humason
             PlanTab.Controls.Add(fPlanForm);
             fPlanForm.Show();
 
-              //Open log and subscribe this form to the log event 
+            if (settings.HasDomeAddOn)
+            {
+                fDomeForm = new FormDome { TopLevel = false };
+                DomeTab.Controls.Add(fDomeForm);
+                fDomeForm.Show();
+            }
+            else { HumasonTabs.TabPages.Remove(DomeTab); }
+
+
+            //Open log and subscribe this form to the log event 
             lg.CreateLog();
             lg.LogEventHandler += LogReportUpDate_Handler;
 
@@ -116,10 +126,9 @@ namespace Humason
         {
             //Power on and connect devices as configured
             lg.LogIt("Connecting");
-             if (HomeMountCheckBox.Checked)
-            {
-                TSXLink.Connection.DeployMount();
-            }
+            if (HomeMountCheckBox.Checked) { TSXLink.Connection.DeployMount(); }
+            //Make sure themount is Parked
+            TSXLink.Mount.Park();
             TSXLink.Connection.ConnectAllDevices();
             fCameraForm.RefreshFilterList();
             lg.LogIt("Devices Connected");
@@ -159,6 +168,7 @@ namespace Humason
             LogEvent lg = FormHumason.lg;
 
             //Run a quick check on all the things that might be wrong, based on past history
+            //  the main thing being that there is at least one target plan queued.
             StartButton.Text = "Checking";
             lg.LogIt("Running diagnostics");
             if (!Diagnostics.CheckUp())
@@ -172,13 +182,12 @@ namespace Humason
 
             //All good -- start running
             StartButton.Text = "Running";
-
             //Clear abortflag (if necessary)
             AbortFlag = false;
 
-            lg.LogIt("Loading current session configuration");
-            lg.LogIt("Loading first session target plan");
+            //All selected devices should be on-line and connected
             //Load the first target plan so we can pull some information for this session
+            lg.LogIt("Loading first session target plan");
             if (!FormHumason.fPlanForm.IsTopPlanTargetName())
             {
                 lg.LogIt("No Target Plan");
@@ -209,66 +218,41 @@ namespace Humason
             fSequenceForm.UpdateFormFromPlan();
             TSXLink.StarChart.SetClock(0, true);
 
+            //Await Staging and Start Up
+            //Potentially nothing is powered or initialized at this point
+            AwaitStagingAndStartUp();
+
+            //Both Staging and Start Up have been run. All devices should be powered, but not necessarily connected
+            //Power up and connect devices (if not done already)
+            lg.LogIt("Initializing system");
+            InitializeSystem();
+
             //Remove all flat requests from the flats file
             //   No, don't
             //FlatManager nhFlat = new FlatManager();
             //nhFlat.FlatSetClearAll();
             //nhFlat = null;
 
-            //Wait until Staging Time
-            LaunchPad.WaitLoop(openSession.StagingTime);
-            //check for abort
-            if (AbortFlag)
+            //Check for proximity to meridian flip
+            //  if HA of target is within 10 minutes, then just wait it out at 
+            //Get target HA
+            TSXLink.Target tgto;
+            lg.LogIt("Checking for new target to clear meridian");
+            tgto = TSXLink.StarChart.FindTarget(ftPlan.TargetName);
+            double ha = tgto.HA.TotalMinutes;
+            while ((ha >= -10) && (ha <= 0))
             {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
+                System.Threading.Thread.Sleep(10000);
+                tgto = TSXLink.StarChart.FindTarget(ftPlan.TargetName);
+                ha = tgto.HA.TotalMinutes;
             }
-            //  If autorun enabled, then run the staging time autorun script/app
-            if (openSession.IsAutoRunEnabled)
-            {
-                if (openSession.IsStagingEnabled)
-                { LaunchPad.WaitStaging(); }
-            }
-            //check for abort
-            if (AbortFlag)
-            {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
-            }
-
-            //Wait until Start Up Time
-            LaunchPad.WaitLoop(openSession.StartUpTime);
-            //check for abort
-            if (AbortFlag)
-            {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
-            }
-            //  If autorun enabled, then run the start up time autorun script/app
-            if (openSession.IsAutoRunEnabled)
-            {
-                if (openSession.IsStartUpEnabled)
-                { LaunchPad.WaitStartUp(); }
-            }
-            //check for abort
-            if (AbortFlag)
-            {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
-            }
-
-            //Power up and connect devices (if not done already)
-            lg.LogIt("Initializing system");
-            InitializeSystem();
+            lg.LogIt("New target is clear of meridian");
 
             //Make sure the mount is unparked
             TSXLink.Mount.UnPark();
             //Make sure tracking is turned on
             TSXLink.Mount.TurnTrackingOn();
+
             //Bring camera to temperature (if not already), then clear the objects
             AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Imaging };
             TSXLink.Camera cCam = new TSXLink.Camera(asti);
@@ -315,7 +299,10 @@ namespace Humason
                 }
 
                 //Try to move to target, if this fails just abort
-                if (!fSequenceForm.imgseq.CLSToTargetPlanCoordinates()) AbortFlag = true;
+                if (!fSequenceForm.imgseq.CLSToTargetPlanCoordinates())
+                {
+                    AbortFlag = true;
+                }
 
                 //check for abort
                 if (AbortFlag)
@@ -400,25 +387,12 @@ namespace Humason
         {
             NHUtil.ButtonGreen(ConnectButton);
             NHUtil.ButtonGreen(CloseButton);
-            NHUtil.ButtonGreen(HumasonButton);
             NHUtil.ButtonGreen(DisconnectButton);
             NHUtil.ButtonGreen(StartButton);
             NHUtil.ButtonGreen(AbortButton);
             NHUtil.ButtonGreen(CloseButton);
             NHUtil.ButtonGreen(OptionsButton);
-            NHUtil.ButtonNeutral(AboutButton);
-            return;
-        }
-
-        private void Journal_Button_Click(object sender, EventArgs e)
-        {
-            NHUtil.ButtonRed(HumasonButton);
-            //string toolName = "Journal.appref-ms";
-            //string ttdir = "C:\\Users\\" + System.Environment.UserName + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
-            //Process pSystemExe = new Process();
-            //pSystemExe.StartInfo.FileName = ttdir + "\\" + toolName;
-            //pSystemExe.Start();
-            NHUtil.ButtonGreen(HumasonButton);
+            NHUtil.ButtonGreen(AboutButton);
             return;
         }
 
@@ -462,14 +436,9 @@ namespace Humason
             FormHumason.openSession.IsParkMountEnabled = ParkMountCheckBox.Checked;
         }
 
-        private void PowerTab_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void AboutButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Humason Astro-Imaging Application" + "\n" + "Created by R.McAlister, 2017");
+            MessageBox.Show("Humason Astro-Imaging Control Application" + "\n" + "Created by R.McAlister, 2017");
         }
 
         private void LogReportUpDate_Handler(object sender, LogEvent.LogEventArgs e)
@@ -485,6 +454,60 @@ namespace Humason
             AbortFlag = true;
             return;
         }
+
+        /// <summary>
+        /// Wait loop control for Staging and Start Up
+        /// </summary>
+        private void AwaitStagingAndStartUp()
+        {
+            //Wait until Staging Time
+            LaunchPad.WaitLoop(openSession.StagingTime);
+            //check for abort
+            if (AbortFlag)
+            {
+                NHUtil.ButtonGreen(StartButton);
+                StartButton.Text = "Start";
+                return;
+            }
+            //  If autorun enabled, then run the staging time autorun script/app
+            if (openSession.IsAutoRunEnabled)
+            {
+                if (openSession.IsStagingEnabled)
+                { LaunchPad.WaitStaging(); }
+            }
+            //check for abort
+            if (AbortFlag)
+            {
+                NHUtil.ButtonGreen(StartButton);
+                StartButton.Text = "Start";
+                return;
+            }
+
+            //Wait until Start Up Time
+            LaunchPad.WaitLoop(openSession.StartUpTime);
+            //check for abort
+            if (AbortFlag)
+            {
+                NHUtil.ButtonGreen(StartButton);
+                StartButton.Text = "Start";
+                return;
+            }
+            //  If autorun enabled, then run the start up time autorun script/app
+            if (openSession.IsAutoRunEnabled)
+            {
+                if (openSession.IsStartUpEnabled)
+                { LaunchPad.WaitStartUp(); }
+            }
+            //check for abort
+            if (AbortFlag)
+            {
+                NHUtil.ButtonGreen(StartButton);
+                StartButton.Text = "Start";
+                return;
+            }
+
+        }
+
 
     }
 }

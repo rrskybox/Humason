@@ -53,7 +53,7 @@
             // 
             // AcquireButton
             // 
-            this.AcquireButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.AcquireButton.ForeColor = System.Drawing.Color.Black;
             this.AcquireButton.Location = new System.Drawing.Point(170, 36);
             this.AcquireButton.Name = "AcquireButton";
             this.AcquireButton.Size = new System.Drawing.Size(79, 23);
@@ -64,7 +64,7 @@
             // 
             // SelectButton
             // 
-            this.SelectButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.SelectButton.ForeColor = System.Drawing.Color.Black;
             this.SelectButton.Location = new System.Drawing.Point(170, 9);
             this.SelectButton.Name = "SelectButton";
             this.SelectButton.Size = new System.Drawing.Size(79, 23);
@@ -86,7 +86,7 @@
             // 
             // AdjustButton
             // 
-            this.AdjustButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.AdjustButton.ForeColor = System.Drawing.Color.Black;
             this.AdjustButton.Location = new System.Drawing.Point(27, 104);
             this.AdjustButton.Name = "AdjustButton";
             this.AdjustButton.Size = new System.Drawing.Size(79, 38);
@@ -107,7 +107,7 @@
             // 
             // MosaicButton
             // 
-            this.MosaicButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.MosaicButton.ForeColor = System.Drawing.Color.Black;
             this.MosaicButton.Location = new System.Drawing.Point(170, 65);
             this.MosaicButton.Name = "MosaicButton";
             this.MosaicButton.Size = new System.Drawing.Size(79, 22);
@@ -118,7 +118,7 @@
             // 
             // LoadPlanButton
             // 
-            this.LoadPlanButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.LoadPlanButton.ForeColor = System.Drawing.Color.Black;
             this.LoadPlanButton.Location = new System.Drawing.Point(27, 148);
             this.LoadPlanButton.Name = "LoadPlanButton";
             this.LoadPlanButton.Size = new System.Drawing.Size(79, 36);
@@ -138,7 +138,7 @@
             // 
             // DeletePlanButton
             // 
-            this.DeletePlanButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.DeletePlanButton.ForeColor = System.Drawing.Color.Black;
             this.DeletePlanButton.Location = new System.Drawing.Point(42, 16);
             this.DeletePlanButton.Name = "DeletePlanButton";
             this.DeletePlanButton.Size = new System.Drawing.Size(30, 23);
@@ -157,7 +157,7 @@
             // 
             // SchedulePlanButton
             // 
-            this.SchedulePlanButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.SchedulePlanButton.ForeColor = System.Drawing.Color.Black;
             this.SchedulePlanButton.Location = new System.Drawing.Point(78, 16);
             this.SchedulePlanButton.Name = "SchedulePlanButton";
             this.SchedulePlanButton.Size = new System.Drawing.Size(28, 23);
@@ -168,7 +168,7 @@
             // 
             // UnschedulePlanButton
             // 
-            this.UnschedulePlanButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.UnschedulePlanButton.ForeColor = System.Drawing.Color.Black;
             this.UnschedulePlanButton.Location = new System.Drawing.Point(6, 16);
             this.UnschedulePlanButton.Name = "UnschedulePlanButton";
             this.UnschedulePlanButton.Size = new System.Drawing.Size(28, 23);
@@ -179,7 +179,7 @@
             // 
             // DownScheduleButton
             // 
-            this.DownScheduleButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.DownScheduleButton.ForeColor = System.Drawing.Color.Black;
             this.DownScheduleButton.Location = new System.Drawing.Point(44, 16);
             this.DownScheduleButton.Name = "DownScheduleButton";
             this.DownScheduleButton.Size = new System.Drawing.Size(28, 23);
@@ -190,7 +190,7 @@
             // 
             // UpScheduleButton
             // 
-            this.UpScheduleButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.UpScheduleButton.ForeColor = System.Drawing.Color.Black;
             this.UpScheduleButton.Location = new System.Drawing.Point(78, 16);
             this.UpScheduleButton.Name = "UpScheduleButton";
             this.UpScheduleButton.Size = new System.Drawing.Size(28, 23);
@@ -205,7 +205,7 @@
             this.groupBox1.Controls.Add(this.DeletePlanButton);
             this.groupBox1.Controls.Add(this.SchedulePlanButton);
             this.groupBox1.Controls.Add(this.PlanListBox);
-            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(11, 205);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(116, 185);
@@ -215,7 +215,7 @@
             // 
             // RefreshButton
             // 
-            this.RefreshButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.RefreshButton.ForeColor = System.Drawing.Color.Black;
             this.RefreshButton.Location = new System.Drawing.Point(6, 16);
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(30, 23);
@@ -230,7 +230,7 @@
             this.groupBox2.Controls.Add(this.ScheduleListBox);
             this.groupBox2.Controls.Add(this.DownScheduleButton);
             this.groupBox2.Controls.Add(this.UnschedulePlanButton);
-            this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox2.ForeColor = System.Drawing.Color.White;
             this.groupBox2.Location = new System.Drawing.Point(150, 205);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(116, 185);
@@ -240,7 +240,7 @@
             // 
             // ImageForecastButton
             // 
-            this.ImageForecastButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ImageForecastButton.ForeColor = System.Drawing.Color.Black;
             this.ImageForecastButton.Location = new System.Drawing.Point(170, 124);
             this.ImageForecastButton.Name = "ImageForecastButton";
             this.ImageForecastButton.Size = new System.Drawing.Size(79, 38);
@@ -252,7 +252,7 @@
             // SolarSystemBodyCheckBox
             // 
             this.SolarSystemBodyCheckBox.AutoSize = true;
-            this.SolarSystemBodyCheckBox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.SolarSystemBodyCheckBox.ForeColor = System.Drawing.Color.White;
             this.SolarSystemBodyCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SolarSystemBodyCheckBox.Location = new System.Drawing.Point(7, 65);
             this.SolarSystemBodyCheckBox.Name = "SolarSystemBodyCheckBox";
@@ -267,7 +267,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 402);
             this.Controls.Add(this.SolarSystemBodyCheckBox);
             this.Controls.Add(this.ImageForecastButton);
@@ -280,7 +280,7 @@
             this.Controls.Add(this.AcquireButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
-            this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormPlan";
             this.Text = "Form Plan";

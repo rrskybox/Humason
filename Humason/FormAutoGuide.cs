@@ -85,8 +85,14 @@ namespace Humason
                     tPlan.GuiderBinning = 1;
                 }
             }
-            else if (Binning1x1RadioButton.Checked) tPlan.GuiderBinning = 1;
-            else tPlan.GuiderBinning = 2;
+            else if (Binning1x1RadioButton.Checked)
+            {
+                tPlan.GuiderBinning = 1;
+            }
+            else
+            {
+                tPlan.GuiderBinning = 2;
+            }
         }
 
         public double GuideExposure()
@@ -154,7 +160,7 @@ namespace Humason
         {
             //Calibrate the mount (direct guide), then calibrate AO, if set
             NHUtil.ButtonRed(CalibrateButton);
-            AutoGuide.AutoGuideCalibrate(SubframeCheckBox.Checked, (double)XAxisMoveTime.Value, (double)YAxisMoveTime.Value);
+            AutoGuide.CalibrateAutoguiding(SubframeCheckBox.Checked, (double)XAxisMoveTime.Value, (double)YAxisMoveTime.Value);
             //Restore original target position if (a new star was used
             NHUtil.ButtonGreen(CalibrateButton);
         }
@@ -270,6 +276,14 @@ namespace Humason
         private void GuideStarEdgeMarginNum_ValueChanged(object sender, EventArgs e)
         {
             FormHumason.openSession.GuideStarEdgeMargin = (Int16)GuideStarEdgeMarginNum.Value;
+        }
+
+        private void SubframeCheckBox_CheckedChanged_1(object sender, EventArgs e)
+        {
+            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            {
+                GuiderSubframeEnabled = SubframeCheckBox.Checked
+            };
         }
     }
 }

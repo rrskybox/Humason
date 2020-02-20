@@ -84,7 +84,10 @@ namespace Humason
             PrgUpdate = new Progress();
             TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
             //No plan, then just quit
-            if (tPlan.TargetPlanPath == null) return;
+            if (tPlan.TargetPlanPath == null)
+            {
+                return;
+            }
 
             LogEvent lg = FormHumason.lg;
             //Fill in site and target data from TSX
@@ -250,9 +253,20 @@ namespace Humason
                 //Set flip textbox to N/A if flip is after dawn, after limit or after end of imaging
                 if ((cFlipToDawn > 0) || (cFlipToLimit > 0) || (cFlipToEnd > 0))
                 {
-                    if (cFlipToDawn > 0) FlipText = "After Dawn";
-                    if (cFlipToLimit > 0) FlipText = "After Limit";
-                    if (cFlipToEnd > 0) FlipText = "None";
+                    if (cFlipToDawn > 0)
+                    {
+                        FlipText = "After Dawn";
+                    }
+
+                    if (cFlipToLimit > 0)
+                    {
+                        FlipText = "After Limit";
+                    }
+
+                    if (cFlipToEnd > 0)
+                    {
+                        FlipText = "None";
+                    }
                 }
                 else
                 //Otherwise, determine where the transit might be relative to start and end
@@ -262,8 +276,14 @@ namespace Humason
                     //  and set the done textbox to the end of imaging time, if not flagged for limit or dawn
                     {
                         FlipText = "None";
-                        if (doneFlag == "") DoneText = sequenceEndLocal.ToString("HH:mm");
-                        else DoneText = doneFlag;
+                        if (doneFlag == "")
+                        {
+                            DoneText = sequenceEndLocal.ToString("HH:mm");
+                        }
+                        else
+                        {
+                            DoneText = doneFlag;
+                        }
                     }
                     else
                     //transit is before the end of imaging
@@ -275,8 +295,14 @@ namespace Humason
                         // and set the done textbox to the end of imaging time, if not flagged for limit or dawn
                         {
                             FlipText = sequenceTransitLocal.ToString("HH:mm");
-                            if (doneFlag == "") DoneText = sequenceEndLocal.ToString("HH:mm");
-                            else DoneText = doneFlag;
+                            if (doneFlag == "")
+                            {
+                                DoneText = sequenceEndLocal.ToString("HH:mm");
+                            }
+                            else
+                            {
+                                DoneText = doneFlag;
+                            }
                         }
                         else
                         //transit is before start of imaging (Flip not required)
@@ -284,8 +310,14 @@ namespace Humason
                         // and set the done textbox to the end of imaging time, if not flagged for limit or dawn
                         {
                             FlipText = "None";
-                            if (doneFlag == "") DoneText = sequenceEndLocal.ToString("HH:mm");
-                            else DoneText = doneFlag;
+                            if (doneFlag == "")
+                            {
+                                DoneText = sequenceEndLocal.ToString("HH:mm");
+                            }
+                            else
+                            {
+                                DoneText = doneFlag;
+                            }
                         }
                     }
                 }
@@ -354,7 +386,7 @@ namespace Humason
 
             //If autoguiding is checked and calibration requested, then calibrate the guider
             if (tPlan.AutoGuideEnabled && tPlan.CalibrateEnabled)
-            { AutoGuide.AutoGuideCalibrate(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
+            { AutoGuide.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
 
             //Set up for shoot loop:
             //For each filter column,
@@ -380,6 +412,7 @@ namespace Humason
                 //  the assumption will be that if there are more targets, then they
                 //  too will hit the weather unsafe condition and break out.
                 //  After all targets have cleared, then the normal shut down will proceed.
+                //  Mount will be returned to current target position if Park'ed during the interrum
                 if (FormHumason.openSession.IsWeatherEnabled)
                 {
                     WeatherReader wrf = new WeatherReader(FormHumason.openSession.WeatherDataFilePath);
@@ -394,8 +427,8 @@ namespace Humason
                         TSXLink.Mount.Park();
                         if (FormHumason.openSession.IsDomeAddOnEnabled)
                         {
-                            lg.LogIt("Homing Dome");
-                            TSXLink.Dome.HomeDome();
+                            //Close dome -- dome is homed before closing
+                            // Note that the mount will be left in the Park position
                             lg.LogIt("Closing Dome");
                             TSXLink.Dome.CloseDome();
                         }
@@ -464,11 +497,17 @@ namespace Humason
                 //if (target is currently on the west side of meridian and the mount Side of Pier is also east, then flip east to west
                 if (IsTargetWest())
                 { //target is West, check for OTA on West side, if so, then flip
-                    if (TSXLink.Mount.OTASideOfPier == TSXLink.Mount.SOP.West) MeridianFlipper(true);   //OTA flips to east side of pier
+                    if (TSXLink.Mount.OTASideOfPier == TSXLink.Mount.SOP.West)
+                    {
+                        MeridianFlipper(true);   //OTA flips to east side of pier
+                    }
                 }
                 else //target is East, check for OTA on East side, if so, then flip
                 {
-                    if (TSXLink.Mount.OTASideOfPier == TSXLink.Mount.SOP.East) MeridianFlipper(false); //OTA goes to west side of pier
+                    if (TSXLink.Mount.OTASideOfPier == TSXLink.Mount.SOP.East)
+                    {
+                        MeridianFlipper(false); //OTA goes to west side of pier
+                    }
                 }
 
                 //if AutoGuide is selected:
@@ -478,10 +517,14 @@ namespace Humason
                 // precision slew to the target coordinates before continuing just
                 // to make sure that we haven't drifted off somewhere.
                 if (tPlan.AutoGuideEnabled)
+                {
                     if (tPlan.ResyncEnabled)
                     {
                         StopAutoguiding();
-                        if (!StartAutoguiding()) CLSToTargetPlanCoordinates();
+                        if (!StartAutoguiding())
+                        {
+                            CLSToTargetPlanCoordinates();
+                        }
                     }
                     else
                     {
@@ -491,14 +534,21 @@ namespace Humason
                         //     or if autoguiding was successfully started up.
                         //If not already running or successfully started (StartAutoguiding returns false),
                         //    thenjust CLS to the target to center up
-                        if (!StartAutoguiding()) CLSToTargetPlanCoordinates();
+                        if (!StartAutoguiding())
+                        {
+                            CLSToTargetPlanCoordinates();
+                        }
                     }
+                }
                 else
                      //If Autoguide is not enabled, then we must be running unguided on purpose.
                      //  if so (and the user wants to resync), 
                      //      make a precision slew in order to make up for any incremental drift
                      //  that has occurred since starting the last frame.
-                     if (tPlan.ResyncEnabled) CLSToTargetPlanCoordinates();
+                     if (tPlan.ResyncEnabled)
+                {
+                    CLSToTargetPlanCoordinates();
+                }
                 //Check for SmallSolarSystemObject
                 //  if so, then set the tracking rates based on the sequence deltaRA and deltaDec values, if any
                 if (tPlan.SmallSolarSystemBodyEnabled)
@@ -657,7 +707,7 @@ namespace Humason
                 // Before we go, because of an apparent TSX AO bug, must recalibrate guider if using AO
                 //
                 if (tPlan.AutoGuideEnabled && tPlan.AOEnabled)
-                { AutoGuide.AutoGuideCalibrate(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
+                { AutoGuide.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
                 //
                 //////////////////////
             }
@@ -705,7 +755,7 @@ namespace Humason
             //  where the hour that is at 30 degrees is (90-30)/90 fraction
             //  from the transit time to the set time
             TimeSpan minAltTime;
-               double TelescopeLimit = FormHumason.openSession.MinimumAltitude;
+            double TelescopeLimit = FormHumason.openSession.MinimumAltitude;
 
             // If rise and set are zero, then the target never sets
             //  So the minAlt is the opposition (12 hourse) from transit
@@ -746,7 +796,11 @@ namespace Humason
             //TTUtility.SaveTSXState();
             //Create TSX Objects
             string suffix = "";
-            if (tPlan.TargetAdjustEnabled) suffix = "  (Adj)";
+            if (tPlan.TargetAdjustEnabled)
+            {
+                suffix = "  (Adj)";
+            }
+
             lg.LogIt("Initiating coordinate CLS to " + tPlan.TargetName + suffix);
             //perform a find to the target RA and Dec.  This  sets up the CLS target parameters
             string sRA = tPlan.TargetRA.ToString();
@@ -781,14 +835,25 @@ namespace Humason
             };
             //Launch CLS 
             clsstat = TSXLink.ImageSolution.PrecisionSlew(asti);
+            //If it fails, take one more shot at it
+            if (clsstat != 0)
+            {
+                //Launch CLS -- again
+                lg.LogIt("CLS Failed: Error " + clsstat.ToString() + " -- trying again");
+            }
+
+            clsstat = TSXLink.ImageSolution.PrecisionSlew(asti);
+            //If it fails again, then just end it
             if (clsstat != 0)
             {
                 lg.LogIt("CLS Failed: " + clsstat.ToString());
                 return false;
             }
-            //Clean Up
-            lg.LogIt("Closed Loop Slew Successful");
-            return true;
+            else
+            {
+                lg.LogIt("Closed Loop Slew Successful");
+                return true;
+            }
         }
 
         private void CacheTargetSideOfMeridian()
@@ -855,7 +920,10 @@ namespace Humason
                     lg.LogIt("Dither Failed: Runninng unguided");
                     return false;
                 }
-                else return true;
+                else
+                {
+                    return true;
+                }
             }
             else
             {
@@ -939,8 +1007,18 @@ namespace Humason
             //Read the configured filter set and return the TSX filter name for the
             //  fidx'th filter in the filter set.  Return null if not there.
             List<Filter> fSet = ImageFilterGroup();
-            if (fSet == null) return null;
-            foreach (Filter f in fSet) { if (f.Index == fidx) return f.Name; }
+            if (fSet == null)
+            {
+                return null;
+            }
+
+            foreach (Filter f in fSet)
+            {
+                if (f.Index == fidx)
+                {
+                    return f.Name;
+                }
+            }
             return null;
         }
 
@@ -949,8 +1027,18 @@ namespace Humason
             //Read the configured filter set and return the TSX filter index number for the
             //  fidx'th filter in the filter set.  Return 0 if not there.
             List<Filter> fSet = ImageFilterGroup();
-            if (fSet == null) return 0;
-            foreach (Filter f in fSet) { if (f.Index == fidx) return f.Index; }
+            if (fSet == null)
+            {
+                return 0;
+            }
+
+            foreach (Filter f in fSet)
+            {
+                if (f.Index == fidx)
+                {
+                    return f.Index;
+                }
+            }
             return 0;
         }
 

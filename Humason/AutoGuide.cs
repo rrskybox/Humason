@@ -42,10 +42,10 @@ namespace Humason
             //Compute the subframe from the trackbox size
             int sizeX = gCam.TrackBoxX;
             int sizeY = gCam.TrackBoxY;
-            gCam.SubframeTop = (int)tPlan.GuideStarY - (sizeY / 2);
-            gCam.SubframeBottom = (int)tPlan.GuideStarY + (sizeY / 2);
-            gCam.SubframeLeft = (int)tPlan.GuideStarX - (sizeX / 2);
-            gCam.SubframeRight = (int)tPlan.GuideStarX + (sizeX / 2);
+            gCam.SubframeTop = (int)(tPlan.GuideStarY * tPlan.GuiderBinning) - (sizeY / 2);
+            gCam.SubframeBottom = (int)(tPlan.GuideStarY * tPlan.GuiderBinning) + (sizeY / 2);
+            gCam.SubframeLeft = (int)(tPlan.GuideStarX * tPlan.GuiderBinning) - (sizeX / 2);
+            gCam.SubframeRight = (int)(tPlan.GuideStarX * tPlan.GuiderBinning) + (sizeX / 2);
 
             int tstat = gCam.GetImage();
             if (tstat != 0)
@@ -60,7 +60,7 @@ namespace Humason
         }
 
         //SexTractor-based method for getting the ADU of a guide star
-        public static double GuideStarSextractor(double exposure)
+        public static double GetGuideStarADU(double exposure)
         {
             //Determines the ADU for the X/Y centroid of the maximum FWHM star in a subframe
             //
@@ -88,15 +88,18 @@ namespace Humason
                 AutoSaveOn = 1//Turn on autosave so we can extract a star inventory via ShowInventory()
             };
             //Center up AO, just in case and if enabled
-            if (tPlan.AOEnabled) { gCam.CenterAO(); }
+            if (tPlan.AOEnabled)
+            {
+                gCam.CenterAO();
+            }
 
             //Compute the subframe from the trackbox size
             int sizeX = gCam.TrackBoxX;
             int sizeY = gCam.TrackBoxY;
-            gCam.SubframeTop = (int)tPlan.GuideStarY - (sizeY / 2);
-            gCam.SubframeBottom = (int)tPlan.GuideStarY + (sizeY / 2);
-            gCam.SubframeLeft = (int)tPlan.GuideStarX - (sizeX / 2);
-            gCam.SubframeRight = (int)tPlan.GuideStarX + (sizeX / 2);
+            gCam.SubframeTop = (int)(tPlan.GuideStarY * tPlan.GuiderBinning) - (sizeY / 2);
+            gCam.SubframeBottom = (int)(tPlan.GuideStarY * tPlan.GuiderBinning) + (sizeY / 2);
+            gCam.SubframeLeft = (int)(tPlan.GuideStarX * tPlan.GuiderBinning) - (sizeX / 2);
+            gCam.SubframeRight = (int)(tPlan.GuideStarX * tPlan.GuiderBinning) + (sizeX / 2);
 
             //Take an image f
             int tstat = gCam.GetImage();
@@ -178,6 +181,7 @@ namespace Humason
                 try { gCam.CenterAO(); }
                 catch (Exception e) { lg.LogIt("AO Centering Error: " + e.Message); }
             }
+
             //guide star and exposure should have already been run
             //turn on guiding
             int agstat = gCam.AutoGuiderOn();
@@ -196,7 +200,7 @@ namespace Humason
         }
 
         //Runs the guider through the calibration routine
-        public static void AutoGuideCalibrate(bool subFrameIt, double xSubframeSize, double ySubframeSize)
+        public static void CalibrateAutoguiding(bool subFrameIt, double xSubframeSize, double ySubframeSize)
         {
             //Save current location
             //Make sure Autoguiding is turned off
@@ -223,7 +227,10 @@ namespace Humason
             //Set image reduction
             if (tPlan.GuiderAutoDarkEnabled) { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
             else { asti.ImageReduction = AstroImage.ReductionType.None; }
-            if (subFrameIt) asti.SubFrame = 1;
+            if (subFrameIt)
+            {
+                asti.SubFrame = 1;
+            }
             //Create camera object from parameters, turn on Autosave
             TSXLink.Camera gCam = new TSXLink.Camera(asti) { AutoSaveOn = 0 };
             //Set subframe around star, if enabled.  
@@ -283,7 +290,7 @@ namespace Humason
             // 
             int MagWeight = 1;
             int FWHMWeight = 1;
-            int ElpWeight = -1;
+            int ElpWeight = 1;
             int ClsWeight = 1;
 
             // Algorithm:
@@ -322,7 +329,10 @@ namespace Humason
             else { asti.ImageReduction = AstroImage.ReductionType.None; }
             TSXLink.Camera guider = new TSXLink.Camera(asti) { AutoSaveOn = 1 };
             //Center AO, if configured
-            if (tPlan.AOEnabled) { guider.CenterAO(); }
+            if (tPlan.AOEnabled)
+            {
+                guider.CenterAO();
+            }
 
             //Take an image f
             int camResult = guider.GetImage();
@@ -352,7 +362,9 @@ namespace Humason
             //
 
             double[] MagArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexMagnitude);
-            if (MagArr.Length == 0)
+            int starCount = MagArr.Length;
+
+            if (starCount == 0)
             {
                 lg.LogIt("No astrometric sources found");
                 tsex.Close();
@@ -380,26 +392,29 @@ namespace Humason
             double maxCls = ClsArr[0];
             double minCls = ClsArr[0];
 
-            double AvgFWHM = 0;
+            double avgFWHM = 0;
+            double avgMag = 0;
 
-            for (int i = 0; i < MagArr.Length; i++)
+            for (int i = 0; i < starCount; i++)
             {
                 if (MagArr[i] < minMag) { minMag = MagArr[i]; }
                 if (MagArr[i] > maxMag) { maxMag = MagArr[i]; }
-                AvgFWHM += FWHMArr[i];
                 if (FWHMArr[i] < minFWHM) { minFWHM = FWHMArr[i]; }
                 if (FWHMArr[i] > maxFWHM) { maxFWHM = FWHMArr[i]; }
                 if (ElpArr[i] < minElp) { minElp = ElpArr[i]; }
                 if (ElpArr[i] > maxElp) { maxElp = ElpArr[i]; }
                 if (ClsArr[i] < minCls) { minCls = ClsArr[i]; }
                 if (ClsArr[i] > maxCls) { maxCls = ClsArr[i]; }
+                avgFWHM += FWHMArr[i];
+                avgMag += MagArr[i];
             }
 
-            AvgFWHM = AvgFWHM / FWHMArr.Length;
+            avgFWHM /= starCount;
+            avgMag /= starCount;
 
             // Create a set of "best" values
             double optMag = minMag;       // Magnitudes increase with negative values
-            double optFWHM = AvgFWHM;     // Looking for the closest to average FWHM
+            double optFWHM = avgFWHM;     // Looking for the closest to maximum FWHM
             double optElp = minElp;     // Want the minimum amount of elongation
             double optCls = maxCls;      // 1 = star,0 = galaxy
                                          // Create a set of ranges
@@ -416,12 +431,13 @@ namespace Humason
             int SourceCount = 0;
             int EdgeCount = 0;
             int NeighborCount = 0;
+            int edgekeepout;
 
             // Create a selection array to store normilized and summed difference values
-            int[] SelectArr = new int[MagArr.Length];
+            double[] NormArr = new double[starCount];
 
             // Convert all points to normalized differences, checking for zero ranges (e.g.single or identical data points)
-            for (int i = 0; i < MagArr.Length; i++)
+            for (int i = 0; i < starCount; i++)
             {
                 if (rangeMag != 0) { normMag = 1 - Math.Abs(optMag - MagArr[i]) / rangeMag; }
                 else { normMag = 0; }
@@ -433,35 +449,28 @@ namespace Humason
                 else { normCls = 0; }
 
                 // Sum the normalized points, weight and store value
-                SelectArr[i] = Convert.ToInt32((normMag * MagWeight) +
-                                                (normFWHM * FWHMWeight) +
-                                                (normElp * ElpWeight) +
-                                                (normCls * ClsWeight));
+                NormArr[i] = (normMag * MagWeight) + (normFWHM * FWHMWeight) + (normElp * ElpWeight) + (normCls * ClsWeight);
                 SourceCount += 1;
 
                 // Remove neighbors and edge liers
-                int edgekeepout = FormHumason.openSession.GuideStarEdgeMargin ;
+                edgekeepout = FormHumason.openSession.GuideStarEdgeMargin;
 
-                if (IsOnEdge((int)XPosArr[i], (int)YPosArr[i], Xsize, Ysize, edgekeepout))
-                {
-                    SelectArr[i] = -1;
-                }
+                if (IsOnEdge((int)XPosArr[i], (int)YPosArr[i], Xsize, Ysize, edgekeepout)) { NormArr[i] = -1; }
                 else
                 {
-                    for (int j = i + 1; j < SelectArr.Length - 1; j++)
-                        if (IsNeighbor((int)XPosArr[i], (int)YPosArr[i], (int)XPosArr[j], (int)YPosArr[j], TrackBoxSize))
-                        {
-                            SelectArr[i] = -2;
-                        }
+                    for (int j = i + 1; j < starCount - 1; j++)
+                    {
+                        if (IsNeighbor((int)XPosArr[i], (int)YPosArr[i], (int)XPosArr[j], (int)YPosArr[j], TrackBoxSize)) { NormArr[i] = -2; }
+                    }
                 }
             }
 
             // Now find the best remaining entry
 
             int bestOne = 0;
-            for (int i = 0; i < SelectArr.Length; i++)
+            for (int i = 0; i < starCount; i++)
             {
-                if (SelectArr[i] > SelectArr[bestOne])
+                if (NormArr[i] > NormArr[bestOne])
                 {
                     bestOne = i;
                 }
@@ -474,10 +483,10 @@ namespace Humason
             asti.SubframeTop = (int)(YPosArr[bestOne] - (TrackBoxSize / 2)) * asti.BinY;
             asti.SubframeBottom = (int)(YPosArr[bestOne] + (TrackBoxSize / 2)) * asti.BinY;
 
-            if (SelectArr[bestOne] != -1)
+            if (NormArr[bestOne] != -1)
             {
-                tPlan.GuideStarX = guider.GuideStarX;
-                tPlan.GuideStarY = guider.GuideStarY;
+                tPlan.GuideStarX = guider.GuideStarX / asti.BinX;
+                tPlan.GuideStarY = guider.GuideStarY / asti.BinY;
                 lg.LogIt("Guide star coordinates set");
                 tsex.Close();
                 return true;
@@ -487,11 +496,11 @@ namespace Humason
                 // run statistics -- only if (total failure
                 for (int i = 0; i < SourceCount; i++)
                 {
-                    if (SelectArr[i] == -1)
+                    if (NormArr[i] == -1)
                     {
                         EdgeCount += 1;
                     }
-                    if (SelectArr[i] == -2)
+                    if (NormArr[i] == -2)
                     {
                         NeighborCount += 1;
                     }
@@ -535,7 +544,7 @@ namespace Humason
                 //Take a subframe image
                 //Get maximum pixels ADU
                 //
-                double maxPixel = GuideStarSextractor(exposure);  //Uses SexTractor engine
+                double maxPixel = GetGuideStarADU(exposure);  //Uses SexTractor engine
                 lg.LogIt("Guide star ADU at " + maxPixel.ToString())
                     ;
                 //Check through too low, too high and just right

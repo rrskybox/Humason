@@ -27,7 +27,10 @@ namespace Humason
             if (tPlan.TargetPlanPath != null)
             {
                 FocusFilterBox.Text = tPlan.FocusFilter.ToString();
-                if (tPlan.HasValue(TargetPlan.FocusExposureXName)) tPlan.FocusExposure = (double)FocusExposureBox.Value;
+                if (tPlan.HasValue(TargetPlan.FocusExposureXName))
+                {
+                    tPlan.FocusExposure = (double)FocusExposureBox.Value;
+                }
             }
         }
 

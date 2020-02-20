@@ -51,7 +51,7 @@
             // 
             // ShutDownBrowseButton
             // 
-            this.ShutDownBrowseButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ShutDownBrowseButton.ForeColor = System.Drawing.Color.Black;
             this.ShutDownBrowseButton.Location = new System.Drawing.Point(483, 16);
             this.ShutDownBrowseButton.Name = "ShutDownBrowseButton";
             this.ShutDownBrowseButton.Size = new System.Drawing.Size(75, 23);
@@ -73,7 +73,7 @@
             this.groupBox2.Controls.Add(this.ShutdownWaitCheckBox);
             this.groupBox2.Controls.Add(this.ShutDownBrowseButton);
             this.groupBox2.Controls.Add(this.ShutDownFilePathBox);
-            this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.groupBox2.ForeColor = System.Drawing.Color.Black;
             this.groupBox2.Location = new System.Drawing.Point(12, 118);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(568, 47);
@@ -97,7 +97,7 @@
             // OKButton
             // 
             this.OKButton.BackColor = System.Drawing.Color.LightGreen;
-            this.OKButton.Location = new System.Drawing.Point(260, 171);
+            this.OKButton.Location = new System.Drawing.Point(264, 171);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 1;
@@ -111,7 +111,7 @@
             this.groupBox5.Controls.Add(this.StartupWaitCheckBox);
             this.groupBox5.Controls.Add(this.button2);
             this.groupBox5.Controls.Add(this.StartUpFilePathBox);
-            this.groupBox5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.groupBox5.ForeColor = System.Drawing.Color.Black;
             this.groupBox5.Location = new System.Drawing.Point(12, 65);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(568, 47);
@@ -134,7 +134,7 @@
             // 
             // button2
             // 
-            this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button2.ForeColor = System.Drawing.Color.Black;
             this.button2.Location = new System.Drawing.Point(487, 16);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -156,7 +156,7 @@
             this.groupBox6.Controls.Add(this.StagingWaitCheckBox);
             this.groupBox6.Controls.Add(this.button3);
             this.groupBox6.Controls.Add(this.StageSystemFilePathBox);
-            this.groupBox6.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.groupBox6.ForeColor = System.Drawing.Color.Black;
             this.groupBox6.Location = new System.Drawing.Point(12, 12);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(568, 47);
@@ -179,7 +179,7 @@
             // 
             // button3
             // 
-            this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button3.ForeColor = System.Drawing.Color.Black;
             this.button3.Location = new System.Drawing.Point(483, 16);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
@@ -200,12 +200,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.ClientSize = new System.Drawing.Size(594, 205);
+            this.BackColor = System.Drawing.Color.LightSeaGreen;
+            this.ClientSize = new System.Drawing.Size(594, 200);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox5);
+            this.ForeColor = System.Drawing.Color.Black;
             this.Name = "FormAutoRun";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AutoRun Configuration";

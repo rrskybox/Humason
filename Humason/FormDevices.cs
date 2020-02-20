@@ -116,15 +116,21 @@ namespace Humason
                 AutoGuideEnabled = AutoguideCheck.Checked,
                 RotatorEnabled = RotatorCheckBox.Checked,
                 DitherEnabled = DitherCheck.Checked,
-                GuiderAutoDarkEnabled = GuiderAutoDarkCheckBox .Checked,
+                GuiderAutoDarkEnabled = GuiderAutoDarkCheckBox.Checked,
                 AutoFocusEnabled = AutofocusCheck.Checked,
                 CalibrateEnabled = CalibrateCheck.Checked,
                 ResyncEnabled = ResyncCheck.Checked,
                 CameraTemperatureSet = (double)CameraTemperatureSet.Value
             };
             FormHumason.openSession.RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value;
-            if (AtFocus2RadioButton.Checked) tPlan.AtFocusSelect = 2;
-            else tPlan.AtFocusSelect = 3;
+            if (AtFocus2RadioButton.Checked)
+            {
+                tPlan.AtFocusSelect = 2;
+            }
+            else
+            {
+                tPlan.AtFocusSelect = 3;
+            }
         }
 
         private void FilterList_SelectedIndexChanged(object sender, EventArgs e)
@@ -176,8 +182,14 @@ namespace Humason
         {
             //Store it in the configuration and move on
             TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-            if (FormHumason.openSession.IsRotationEnabled) tPlan.RotatorEnabled = RotatorCheckBox.Checked;
-            else RotatorCheckBox.Checked = false;
+            if (FormHumason.openSession.IsRotationEnabled)
+            {
+                tPlan.RotatorEnabled = RotatorCheckBox.Checked;
+            }
+            else
+            {
+                RotatorCheckBox.Checked = false;
+            }
         }
 
         private void CameraTemperatureSet_ValueChanged(object sender, EventArgs e)

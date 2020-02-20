@@ -38,11 +38,11 @@
             this.FocusTab = new System.Windows.Forms.TabPage();
             this.GuideTab = new System.Windows.Forms.TabPage();
             this.RotatorTab = new System.Windows.Forms.TabPage();
+            this.DomeTab = new System.Windows.Forms.TabPage();
             this.ConnectButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
             this.StatusStripLine = new System.Windows.Forms.ToolStripStatusLabel();
             this.HumasonStatus = new System.Windows.Forms.StatusStrip();
-            this.HumasonButton = new System.Windows.Forms.Button();
             this.OnTopCheck = new System.Windows.Forms.CheckBox();
             this.DisconnectButton = new System.Windows.Forms.Button();
             this.HomeMountCheckBox = new System.Windows.Forms.CheckBox();
@@ -70,6 +70,7 @@
             this.HumasonTabs.Controls.Add(this.FocusTab);
             this.HumasonTabs.Controls.Add(this.GuideTab);
             this.HumasonTabs.Controls.Add(this.RotatorTab);
+            this.HumasonTabs.Controls.Add(this.DomeTab);
             this.HumasonTabs.HotTrack = true;
             this.HumasonTabs.Location = new System.Drawing.Point(0, 1);
             this.HumasonTabs.Multiline = true;
@@ -150,9 +151,18 @@
             this.RotatorTab.Text = "Rotate";
             this.RotatorTab.UseVisualStyleBackColor = true;
             // 
+            // DomeTab
+            // 
+            this.DomeTab.Location = new System.Drawing.Point(23, 4);
+            this.DomeTab.Name = "DomeTab";
+            this.DomeTab.Size = new System.Drawing.Size(278, 402);
+            this.DomeTab.TabIndex = 10;
+            this.DomeTab.Text = "Dome";
+            this.DomeTab.UseVisualStyleBackColor = true;
+            // 
             // ConnectButton
             // 
-            this.ConnectButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ConnectButton.ForeColor = System.Drawing.Color.Black;
             this.ConnectButton.Location = new System.Drawing.Point(6, 19);
             this.ConnectButton.Name = "ConnectButton";
             this.ConnectButton.Size = new System.Drawing.Size(74, 23);
@@ -164,7 +174,7 @@
             // CloseButton
             // 
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.CloseButton.ForeColor = System.Drawing.Color.Black;
             this.CloseButton.Location = new System.Drawing.Point(245, 504);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(48, 23);
@@ -183,7 +193,7 @@
             // 
             // HumasonStatus
             // 
-            this.HumasonStatus.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.HumasonStatus.BackColor = System.Drawing.Color.White;
             this.HumasonStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusStripLine});
             this.HumasonStatus.Location = new System.Drawing.Point(0, 539);
@@ -193,22 +203,10 @@
             this.HumasonStatus.TabIndex = 8;
             this.HumasonStatus.Text = "StatusText";
             // 
-            // HumasonButton
-            // 
-            this.HumasonButton.Enabled = false;
-            this.HumasonButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.HumasonButton.Location = new System.Drawing.Point(6, 77);
-            this.HumasonButton.Name = "HumasonButton";
-            this.HumasonButton.Size = new System.Drawing.Size(74, 23);
-            this.HumasonButton.TabIndex = 9;
-            this.HumasonButton.Text = "Journal";
-            this.HumasonButton.UseVisualStyleBackColor = true;
-            this.HumasonButton.Click += new System.EventHandler(this.Journal_Button_Click);
-            // 
             // OnTopCheck
             // 
             this.OnTopCheck.AutoSize = true;
-            this.OnTopCheck.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.OnTopCheck.ForeColor = System.Drawing.Color.White;
             this.OnTopCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.OnTopCheck.Location = new System.Drawing.Point(78, 16);
             this.OnTopCheck.Name = "OnTopCheck";
@@ -220,8 +218,8 @@
             // 
             // DisconnectButton
             // 
-            this.DisconnectButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DisconnectButton.Location = new System.Drawing.Point(6, 48);
+            this.DisconnectButton.ForeColor = System.Drawing.Color.Black;
+            this.DisconnectButton.Location = new System.Drawing.Point(6, 61);
             this.DisconnectButton.Name = "DisconnectButton";
             this.DisconnectButton.Size = new System.Drawing.Size(74, 23);
             this.DisconnectButton.TabIndex = 11;
@@ -233,7 +231,7 @@
             // 
             this.HomeMountCheckBox.AutoSize = true;
             this.HomeMountCheckBox.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.HomeMountCheckBox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.HomeMountCheckBox.ForeColor = System.Drawing.Color.White;
             this.HomeMountCheckBox.Location = new System.Drawing.Point(83, 16);
             this.HomeMountCheckBox.Name = "HomeMountCheckBox";
             this.HomeMountCheckBox.Size = new System.Drawing.Size(39, 31);
@@ -246,7 +244,7 @@
             // 
             this.ParkMountCheckBox.AutoSize = true;
             this.ParkMountCheckBox.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.ParkMountCheckBox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ParkMountCheckBox.ForeColor = System.Drawing.Color.White;
             this.ParkMountCheckBox.Location = new System.Drawing.Point(86, 53);
             this.ParkMountCheckBox.Name = "ParkMountCheckBox";
             this.ParkMountCheckBox.Size = new System.Drawing.Size(33, 31);
@@ -257,7 +255,7 @@
             // 
             // StartButton
             // 
-            this.StartButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.StartButton.ForeColor = System.Drawing.Color.Black;
             this.StartButton.Location = new System.Drawing.Point(6, 19);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(66, 23);
@@ -268,7 +266,7 @@
             // 
             // AbortButton
             // 
-            this.AbortButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.AbortButton.ForeColor = System.Drawing.Color.Black;
             this.AbortButton.Location = new System.Drawing.Point(6, 48);
             this.AbortButton.Name = "AbortButton";
             this.AbortButton.Size = new System.Drawing.Size(66, 23);
@@ -279,7 +277,7 @@
             // 
             // OptionsButton
             // 
-            this.OptionsButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.OptionsButton.ForeColor = System.Drawing.Color.Black;
             this.OptionsButton.Location = new System.Drawing.Point(78, 48);
             this.OptionsButton.Name = "OptionsButton";
             this.OptionsButton.Size = new System.Drawing.Size(63, 23);
@@ -290,8 +288,8 @@
             // 
             // AboutButton
             // 
-            this.AboutButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.AboutButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.AboutButton.BackColor = System.Drawing.Color.Transparent;
+            this.AboutButton.ForeColor = System.Drawing.Color.Black;
             this.AboutButton.Location = new System.Drawing.Point(160, 505);
             this.AboutButton.Name = "AboutButton";
             this.AboutButton.Size = new System.Drawing.Size(49, 23);
@@ -302,15 +300,14 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.HumasonButton);
             this.groupBox1.Controls.Add(this.ParkMountCheckBox);
             this.groupBox1.Controls.Add(this.DisconnectButton);
             this.groupBox1.Controls.Add(this.ConnectButton);
             this.groupBox1.Controls.Add(this.HomeMountCheckBox);
-            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(12, 422);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(127, 106);
+            this.groupBox1.Size = new System.Drawing.Size(127, 95);
             this.groupBox1.TabIndex = 18;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Manual";
@@ -321,7 +318,7 @@
             this.groupBox3.Controls.Add(this.StartButton);
             this.groupBox3.Controls.Add(this.OnTopCheck);
             this.groupBox3.Controls.Add(this.OptionsButton);
-            this.groupBox3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox3.ForeColor = System.Drawing.Color.White;
             this.groupBox3.Location = new System.Drawing.Point(154, 422);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(147, 76);
@@ -333,7 +330,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.BackColor = System.Drawing.Color.DarkCyan;
             this.ClientSize = new System.Drawing.Size(305, 561);
             this.Controls.Add(this.AboutButton);
             this.Controls.Add(this.CloseButton);
@@ -373,7 +370,6 @@
         internal System.Windows.Forms.ToolStripStatusLabel StatusStripLine;
         public System.Windows.Forms.StatusStrip HumasonStatus;
         private System.Windows.Forms.TabPage TargetTab;
-        internal System.Windows.Forms.Button HumasonButton;
         private System.Windows.Forms.CheckBox OnTopCheck;
         private System.Windows.Forms.TabPage SessionTab;
         internal System.Windows.Forms.Button DisconnectButton;
@@ -385,6 +381,7 @@
         internal System.Windows.Forms.Button AboutButton;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TabPage DomeTab;
     }
 }
 

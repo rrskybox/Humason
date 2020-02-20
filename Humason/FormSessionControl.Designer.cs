@@ -63,7 +63,7 @@
             // 
             this.groupBox5.BackColor = System.Drawing.Color.SkyBlue;
             this.groupBox5.Controls.Add(this.StagingEnabledCheckBox);
-            this.groupBox5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.groupBox5.ForeColor = System.Drawing.Color.Black;
             this.groupBox5.Location = new System.Drawing.Point(51, 42);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(193, 47);
@@ -86,7 +86,7 @@
             // 
             this.groupBox3.BackColor = System.Drawing.Color.SkyBlue;
             this.groupBox3.Controls.Add(this.StartupEnabledCheckBox);
-            this.groupBox3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.groupBox3.ForeColor = System.Drawing.Color.Black;
             this.groupBox3.Location = new System.Drawing.Point(51, 105);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(193, 47);
@@ -109,7 +109,7 @@
             // 
             this.groupBox6.BackColor = System.Drawing.Color.SkyBlue;
             this.groupBox6.Controls.Add(this.ShutdownEnabledCheckBox);
-            this.groupBox6.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.groupBox6.ForeColor = System.Drawing.Color.Black;
             this.groupBox6.Location = new System.Drawing.Point(51, 168);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(193, 47);
@@ -130,7 +130,7 @@
             // 
             // OTAButton
             // 
-            this.OTAButton.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.OTAButton.ForeColor = System.Drawing.Color.Black;
             this.OTAButton.Location = new System.Drawing.Point(80, 369);
             this.OTAButton.Name = "OTAButton";
             this.OTAButton.Size = new System.Drawing.Size(125, 21);
@@ -145,7 +145,7 @@
             this.groupBox1.Controls.Add(this.groupBox3);
             this.groupBox1.Controls.Add(this.groupBox5);
             this.groupBox1.Controls.Add(this.AutoRunCheck);
-            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(13, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(253, 239);
@@ -185,13 +185,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 402);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.MinimumAltitudeBox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.OTAButton);
-            this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

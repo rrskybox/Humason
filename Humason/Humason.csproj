@@ -26,8 +26,8 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>156</ApplicationRevision>
-    <ApplicationVersion>2.6.0.%2a</ApplicationVersion>
+    <ApplicationRevision>182</ApplicationRevision>
+    <ApplicationVersion>2.9.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -96,10 +96,6 @@
   <ItemGroup>
     <Compile Include="AbortEvent.cs" />
     <Compile Include="AtGuider2\AtGuider2.cs" />
-    <Compile Include="AtGuider2\FormGuiderAutoCalibrate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AtGuider2\FormGuiderAutoCalibrate.Designer.cs" />
     <Compile Include="AtGuider2\FOVMiracles.cs" />
     <Compile Include="AtGuider2\FOVX.cs" />
     <Compile Include="AtGuider2\GuideControl.cs" />
@@ -107,6 +103,7 @@
     <Compile Include="AtGuider2\StarProspects.cs" />
     <Compile Include="AutoFocus.cs" />
     <Compile Include="Diagnostics.cs" />
+    <Compile Include="DomeControl.cs" />
     <Compile Include="FilterManager.cs" />
     <Compile Include="FlatMan.cs" />
     <Compile Include="FlatManager.cs" />
@@ -129,6 +126,12 @@
     <Compile Include="FormAutoRun.designer.cs">
       <DependentUpon>FormAutoRun.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormDome.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDome.Designer.cs">
+      <DependentUpon>FormDome.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSessionControl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +143,12 @@
     </Compile>
     <Compile Include="FormOptions.Designer.cs">
       <DependentUpon>FormOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTarget.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTarget.Designer.cs">
+      <DependentUpon>FormTarget.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -179,12 +188,6 @@
     </Compile>
     <Compile Include="Rotator.cs" />
     <Compile Include="Sequencer.cs" />
-    <Compile Include="FormSequenceControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormSequenceControl.Designer.cs">
-      <DependentUpon>FormSequenceControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormFlats.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -201,7 +204,6 @@
     <Compile Include="TSXLink.cs" />
     <Compile Include="WeatherFileReader.cs" />
     <Compile Include="Axess.cs" />
-    <EmbeddedResource Include="AtGuider2\FormGuiderAutoCalibrate.resx" />
     <EmbeddedResource Include="ClearTheListTheHardWay.dbq" />
     <EmbeddedResource Include="FormAutoFocus.resx">
       <DependentUpon>FormAutoFocus.cs</DependentUpon>
@@ -211,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAutoRun.resx">
       <DependentUpon>FormAutoRun.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDome.resx">
+      <DependentUpon>FormDome.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormHumason.resx">
       <DependentUpon>FormHumason.cs</DependentUpon>
@@ -225,6 +230,9 @@
     <EmbeddedResource Include="FormOptions.resx">
       <DependentUpon>FormOptions.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormTarget.resx">
+      <DependentUpon>FormTarget.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -237,9 +245,6 @@
     </Compile>
     <EmbeddedResource Include="FormRotate.resx">
       <DependentUpon>FormRotate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormSequenceControl.resx">
-      <DependentUpon>FormSequenceControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormFlats.resx">
       <DependentUpon>FormFlats.cs</DependentUpon>

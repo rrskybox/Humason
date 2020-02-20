@@ -1,7 +1,7 @@
 ﻿using Planetarium;
 using System;
 using System.Diagnostics;
-using TheSkyXLib;
+using System.Windows.Forms;
 
 namespace Humason
 {
@@ -12,7 +12,8 @@ namespace Humason
         public FlatMan()
         {
             Port = FormHumason.openSession.FlatManComPort;
-            return; }
+            return;
+        }
 
         public int Port
         {
@@ -45,39 +46,64 @@ namespace Humason
         /// FMSetUp
         /// Prepares imaging for flats.  Closes dome, points telescope at MyFlat
         /// </summary>
-        public void FlatManStage()
+        public bool FlatManStage()
         {
             //Console routine to set up the scope to use the FlatMan
             //  to be called from CCDAP or other apps prior to running flats
             //
             //Routine will find the "My Flat Field" location via TSX, after
             //  it has been installed in the SDB (see instructions)
+            //Then the slit will be closed, if open and dome homed and disconnected
             //The mount will then be sent to that position and tracking turned off
 
-            //Then the slit will be closed, if open and dome homed and disconnected
             LogEvent lg = new LogEvent();
-
+            
             lg.LogIt("Establishing TSX interfaces: star chart, mount, dome.");
+            //If the dome is enabled,  Home it and disconnect
             if (FormHumason.openSession.IsDomeAddOnEnabled)
             {
-                //Abort any dome command in progress, wait for it to take then disconnect the dome so it doesn//t chase the mount
-                lg.LogIt("Aborting any current dome activity and disconnecting from the dome");
-                TSXLink.Dome.AbortDome();
-                System.Threading.Thread.Sleep(5000);
-                //tsxd.IsCoupled = 0;
-                TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Dome);
+                //Complete any dome commands, including homing and closing the dome, if needed
+                //The mount will be parked and disconnected during this operation
+                //Dome will be decoupled from mount
+                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                {
+                    lg.LogIt("Homing and Closing Dome");
+                    lg.LogIt("Connecting Dome");
+                    TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
+                    //No idea how we could be here, but lg.LogIt the error and quit
+                    //Clear any operation that might be underway for whatever bogus reason
+                    lg.LogIt("Aborting any active dome command... again");
+                    TSXLink.Dome.AbortDome();
+                    //Wait for five seconds for everything to clear (Maxdome is a bit slow)
+                    lg.LogIt("Waiting for dome operations to abort, if any");
+                    System.Threading.Thread.Sleep(5000);
+                    //Close Dome (if open) -- Close dome will home the dome before closing
+                    TSXLink.Dome.CloseDome();
+                    //Uncouple the dome from the mount
+                    lg.LogIt("Disconnecting Dome");
+                    TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Dome);
+                }
             }
-            //Connect to telescope, Unpark (if parked), look up My Flat Field, slew to it, turn off tracking
+            //Connect to telescope, 
+            // if manual set up, then park the mount (to keep it from tracking someplace bad)
+            //  and ask the user for permission to continue, abort if user cancels, otherwise continue.
             lg.LogIt("Connecting mount");
             TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
-
+            if (FormHumason.openSession.IsFlatManManualSetupEnabled)
+            {
+                lg.LogIt("Parking mount to wait for manual flatman set up");
+                TSXLink.Mount.Park();
+                DialogResult dr = MessageBox.Show("Manual FlatMan set up selected:  Continue?", "Manual FlatMan Preparation", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.Cancel) return false;
+            }
+            //Unpark (if parked), look up My Flat Field, slew to it, turn off tracking
             TSXLink.Mount.UnPark();
             lg.LogIt("Looking up flat panel position");
             TSXLink.Target ffTarget = TSXLink.StarChart.FindTarget("MyFlatField");
             if (ffTarget == null)
             {
                 lg.LogIt("Could not find My Flat Field");
-                return;
+                return false;
             }
             double altitude = ffTarget.Altitude;
             double azimuth = ffTarget.Azimuth;
@@ -88,34 +114,11 @@ namespace Humason
             //Disconnect from mount
             lg.LogIt("Disconnecting Mount");
             TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Mount);
-            if (FormHumason.openSession.IsDomeAddOnEnabled)
-            {
-                lg.LogIt("Reconnecting Dome");
-                TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
-                //No idea how we could be here, but lg.LogIt the error and quit
-                //Clear any operation that might be underway for whatever bogus reason
-                lg.LogIt("Aborting any active dome command... again");
-                TSXLink.Dome.AbortDome();
-                //Wait for five seconds for everything to clear (Maxdome is a bit slow)
-                lg.LogIt("Waiting for dome operations to abort, if any");
-                System.Threading.Thread.Sleep(5000);
-                //Home the dome
-                TSXLink.Dome.HomeDome();
-                //Close Dome (if open)
-                TSXLink.Dome.CloseDome();
-                //Uncouple the dome from the mount
-                //tsxd.IsCoupled = 0;
-                lg.LogIt("Disconnecting Dome");
-                TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Dome);
-            }
-            lg.LogIt("Connecting Mount");
-            TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
-            lg.LogIt("Turning Tracking Off");
-            TSXLink.Mount.TurnTrackingOff();
             lg.LogIt("FlatMan positioning complete");
 
             //All done -- garbage collect and exit
-            return;
+            return true;
+
 
         }
 

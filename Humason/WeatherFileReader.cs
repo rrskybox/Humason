@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 
 //Class for reading Standard weather files
 namespace WeatherWatch
@@ -113,8 +111,14 @@ namespace WeatherWatch
         public bool IsWeatherValid()
         {
             weaList = ReadWeatherDataIn();
-            if (weaList.Count == 0) return false;
-            else return true;
+            if (weaList.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public void WeatherUpdate()

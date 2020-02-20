@@ -8,7 +8,7 @@
     <Setting Name="WeatherMonitorEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DomeControlEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="HasDomeAddOn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

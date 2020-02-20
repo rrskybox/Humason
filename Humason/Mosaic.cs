@@ -29,7 +29,10 @@ namespace Humason
                 string[] splitmo = clipboardText.Split(DelimNewLine, StringSplitOptions.RemoveEmptyEntries);
                 int tgtCount = splitmo.Length;
                 //if no entries (for any reason) return nothing
-                if (tgtCount == 0) return null;
+                if (tgtCount == 0)
+                {
+                    return null;
+                }
                 //get the current TSX FOVI postion angle
                 double iFOVPA = TSXLink.FOVI.GetFOVPA;
                 //Create empty target data list

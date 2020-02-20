@@ -66,7 +66,20 @@ namespace AtGuider2
         public double StarMag(int starIdx) => starProspectList[starIdx].StarMag;
 
         //Get the number of prospects in the list
-        public int Count { get { return starProspectList.Count; } }
+        public int Count
+        {
+            get
+            {
+                if (starProspectList == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return starProspectList.Count;
+                }
+            }
+        }
 
         //Get the starDBQ for the nth prospect
         public DBQStar Star(int starIdx)

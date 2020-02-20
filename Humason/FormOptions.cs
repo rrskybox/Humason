@@ -19,9 +19,7 @@ namespace Humason
 
             RotatorCheckBox.Checked = settings.RotatorDeviceEnabled; ;
             WeatherCheckBox.Checked = settings.WeatherMonitorEnabled;
-            DomeAddOnCheckBox.Checked = settings.DomeControlEnabled;
-
-            // WeatherCheck.Checked = settings.
+            DomeAddOnCheckBox.Checked = settings.HasDomeAddOn;
             //done
 
             optionsFormInit = false;
@@ -30,6 +28,9 @@ namespace Humason
 
         private void SaveButton_Click(object sender, System.EventArgs e)
         {
+            FormHumason.openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
+            FormHumason.openSession.IsRotationEnabled = RotatorCheckBox.Checked;
+            FormHumason.openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
             MessageBox.Show("Restart Humason for new settings to take effect");
             settings.Save();
             Close();
@@ -71,7 +72,8 @@ namespace Humason
         private void DomeAddOnCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             FormHumason.openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
-            settings.DomeControlEnabled = DomeAddOnCheckBox.Checked;
+            settings.HasDomeAddOn = DomeAddOnCheckBox.Checked;
+            return;
         }
     }
 }

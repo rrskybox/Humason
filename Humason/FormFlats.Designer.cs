@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.FlatsGroup = new System.Windows.Forms.GroupBox();
+            this.ClearFlatsButton = new System.Windows.Forms.Button();
             this.FlatsRotationCheckBox = new System.Windows.Forms.CheckBox();
             this.RotatorPANum = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -45,16 +46,15 @@
             this.FlatsRepetitionsBox = new System.Windows.Forms.NumericUpDown();
             this.FlatManOnButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.FlatManManualSetupCheckbox = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.FlatManPortNum = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.FlatManExposureNum = new System.Windows.Forms.NumericUpDown();
             this.FlatManStageButton = new System.Windows.Forms.Button();
-            this.FlatManEastCheckBox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.FlatManEastCheckBox = new System.Windows.Forms.CheckBox();
             this.FlatManBrightnessNum = new System.Windows.Forms.NumericUpDown();
-            this.ClearFlatsButton = new System.Windows.Forms.Button();
-            this.FlatManManualSetupCheckbox = new System.Windows.Forms.CheckBox();
             this.FlatsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RotatorPANum)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -80,13 +80,24 @@
             this.FlatsGroup.Controls.Add(this.FlatsTargetADU);
             this.FlatsGroup.Controls.Add(this.TakeFlatsButton);
             this.FlatsGroup.Controls.Add(this.FlatsRepetitionsBox);
-            this.FlatsGroup.ForeColor = System.Drawing.SystemColors.Control;
+            this.FlatsGroup.ForeColor = System.Drawing.Color.White;
             this.FlatsGroup.Location = new System.Drawing.Point(8, 12);
             this.FlatsGroup.Name = "FlatsGroup";
             this.FlatsGroup.Size = new System.Drawing.Size(258, 185);
             this.FlatsGroup.TabIndex = 32;
             this.FlatsGroup.TabStop = false;
             this.FlatsGroup.Text = "Flat Frame Recipe";
+            // 
+            // ClearFlatsButton
+            // 
+            this.ClearFlatsButton.ForeColor = System.Drawing.Color.Black;
+            this.ClearFlatsButton.Location = new System.Drawing.Point(176, 145);
+            this.ClearFlatsButton.Name = "ClearFlatsButton";
+            this.ClearFlatsButton.Size = new System.Drawing.Size(68, 25);
+            this.ClearFlatsButton.TabIndex = 43;
+            this.ClearFlatsButton.Text = "Clear Flats";
+            this.ClearFlatsButton.UseVisualStyleBackColor = true;
+            this.ClearFlatsButton.Click += new System.EventHandler(this.ClearFlatsButton_Click);
             // 
             // FlatsRotationCheckBox
             // 
@@ -116,7 +127,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(26, 114);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(89, 13);
@@ -125,7 +136,7 @@
             // 
             // MakeFlatsButton
             // 
-            this.MakeFlatsButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.MakeFlatsButton.ForeColor = System.Drawing.Color.Black;
             this.MakeFlatsButton.Location = new System.Drawing.Point(14, 145);
             this.MakeFlatsButton.Name = "MakeFlatsButton";
             this.MakeFlatsButton.Size = new System.Drawing.Size(68, 25);
@@ -139,7 +150,7 @@
             this.groupBox2.Controls.Add(this.DuskRadioButton);
             this.groupBox2.Controls.Add(this.DawnRadioButton);
             this.groupBox2.Controls.Add(this.FlatManRadioButton);
-            this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox2.ForeColor = System.Drawing.Color.White;
             this.groupBox2.Location = new System.Drawing.Point(21, 17);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(223, 36);
@@ -197,7 +208,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label5.ForeColor = System.Drawing.Color.White;
             this.label5.Location = new System.Drawing.Point(119, 63);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 13);
@@ -239,7 +250,7 @@
             // 
             // TakeFlatsButton
             // 
-            this.TakeFlatsButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.TakeFlatsButton.ForeColor = System.Drawing.Color.Black;
             this.TakeFlatsButton.Location = new System.Drawing.Point(95, 145);
             this.TakeFlatsButton.Name = "TakeFlatsButton";
             this.TakeFlatsButton.Size = new System.Drawing.Size(68, 25);
@@ -250,7 +261,7 @@
             // 
             // FlatsRepetitionsBox
             // 
-            this.FlatsRepetitionsBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FlatsRepetitionsBox.ForeColor = System.Drawing.Color.Black;
             this.FlatsRepetitionsBox.Location = new System.Drawing.Point(59, 59);
             this.FlatsRepetitionsBox.Maximum = new decimal(new int[] {
             50,
@@ -274,7 +285,7 @@
             // 
             // FlatManOnButton
             // 
-            this.FlatManOnButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FlatManOnButton.ForeColor = System.Drawing.Color.Black;
             this.FlatManOnButton.Location = new System.Drawing.Point(163, 144);
             this.FlatManOnButton.Name = "FlatManOnButton";
             this.FlatManOnButton.Size = new System.Drawing.Size(75, 27);
@@ -295,7 +306,7 @@
             this.groupBox1.Controls.Add(this.FlatManEastCheckBox);
             this.groupBox1.Controls.Add(this.FlatManBrightnessNum);
             this.groupBox1.Controls.Add(this.FlatManOnButton);
-            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(8, 203);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(258, 187);
@@ -303,10 +314,22 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FlatMan Configuration";
             // 
+            // FlatManManualSetupCheckbox
+            // 
+            this.FlatManManualSetupCheckbox.AutoSize = true;
+            this.FlatManManualSetupCheckbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.FlatManManualSetupCheckbox.Location = new System.Drawing.Point(21, 19);
+            this.FlatManManualSetupCheckbox.Name = "FlatManManualSetupCheckbox";
+            this.FlatManManualSetupCheckbox.Size = new System.Drawing.Size(92, 17);
+            this.FlatManManualSetupCheckbox.TabIndex = 46;
+            this.FlatManManualSetupCheckbox.Text = "Manual Setup";
+            this.FlatManManualSetupCheckbox.UseVisualStyleBackColor = true;
+            this.FlatManManualSetupCheckbox.CheckedChanged += new System.EventHandler(this.FlatManManualSetupCheckbox_CheckedChanged);
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(127, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(50, 13);
@@ -335,7 +358,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(101, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(51, 13);
@@ -364,7 +387,7 @@
             // 
             // FlatManStageButton
             // 
-            this.FlatManStageButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FlatManStageButton.ForeColor = System.Drawing.Color.Black;
             this.FlatManStageButton.Location = new System.Drawing.Point(21, 144);
             this.FlatManStageButton.Name = "FlatManStageButton";
             this.FlatManStageButton.Size = new System.Drawing.Size(75, 27);
@@ -372,6 +395,16 @@
             this.FlatManStageButton.Text = "Stage";
             this.FlatManStageButton.UseVisualStyleBackColor = true;
             this.FlatManStageButton.Click += new System.EventHandler(this.FlatManStageButton_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(101, 81);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 37;
+            this.label2.Text = "Brightness";
             // 
             // FlatManEastCheckBox
             // 
@@ -386,16 +419,6 @@
             this.FlatManEastCheckBox.Text = "FlatMan East of Pier?";
             this.FlatManEastCheckBox.UseVisualStyleBackColor = true;
             this.FlatManEastCheckBox.CheckedChanged += new System.EventHandler(this.FlatManEastCheckBox_CheckedChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label2.Location = new System.Drawing.Point(101, 81);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
-            this.label2.TabIndex = 37;
-            this.label2.Text = "Brightness";
             // 
             // FlatManBrightnessNum
             // 
@@ -416,37 +439,15 @@
             0});
             this.FlatManBrightnessNum.ValueChanged += new System.EventHandler(this.FlatManBrightnessNum_ValueChanged);
             // 
-            // ClearFlatsButton
-            // 
-            this.ClearFlatsButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ClearFlatsButton.Location = new System.Drawing.Point(176, 145);
-            this.ClearFlatsButton.Name = "ClearFlatsButton";
-            this.ClearFlatsButton.Size = new System.Drawing.Size(68, 25);
-            this.ClearFlatsButton.TabIndex = 43;
-            this.ClearFlatsButton.Text = "Clear Flats";
-            this.ClearFlatsButton.UseVisualStyleBackColor = true;
-            this.ClearFlatsButton.Click += new System.EventHandler(this.ClearFlatsButton_Click);
-            // 
-            // FlatManManualSetupCheckbox
-            // 
-            this.FlatManManualSetupCheckbox.AutoSize = true;
-            this.FlatManManualSetupCheckbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FlatManManualSetupCheckbox.Location = new System.Drawing.Point(21, 19);
-            this.FlatManManualSetupCheckbox.Name = "FlatManManualSetupCheckbox";
-            this.FlatManManualSetupCheckbox.Size = new System.Drawing.Size(92, 17);
-            this.FlatManManualSetupCheckbox.TabIndex = 46;
-            this.FlatManManualSetupCheckbox.Text = "Manual Setup";
-            this.FlatManManualSetupCheckbox.UseVisualStyleBackColor = true;
-            this.FlatManManualSetupCheckbox.CheckedChanged += new System.EventHandler(this.FlatManManualSetupCheckbox_CheckedChanged);
-            // 
             // FormFlats
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 402);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.FlatsGroup);
+            this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormFlats";
             this.Text = "Set Up";

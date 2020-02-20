@@ -21,7 +21,7 @@ namespace Humason
         public static double ImageDec { get; set; } = 0;
         public static double ImagePA { get; set; } = 0;
         public static double RotatorOffset { get; set; } = 0;
-        public static int RotatorDirection { get; set; } = -1;
+        public static int RotatorDirection { get; set; } = 1;
 
         public static bool CalibrateRotator()
         {
@@ -77,10 +77,12 @@ namespace Humason
 
             rotatorOffset = (StartImagePA - StartRotatorAngle);
             if (StartImagePA + TestAngle < 360)
-                if (StartImagePA > EndImagePA) { rotatorDirection = 1; }
-                else { rotatorDirection = -1; }
-            else if (StartImagePA < EndImagePA) { rotatorDirection = 1; }
-            else { rotatorDirection = -1; }
+            {
+                if (StartImagePA > EndImagePA) { rotatorDirection = -1; }
+                else { rotatorDirection = 1; }
+            }
+            else if (StartImagePA < EndImagePA) { rotatorDirection = -1; }
+            else { rotatorDirection = 1; }
 
             RotatorDirection = rotatorDirection;
             FormHumason.openSession.RotatorDirection = rotatorDirection;
@@ -99,8 +101,8 @@ namespace Humason
             int rotDir = Convert.ToInt32(FormHumason.openSession.RotatorDirection);
             //target rotation PA = current image PA + current rotator PA - target image PA 
             // double tgtRotationPA = ((startImagePA - endImagePA) * rotdir) + rotPA;
-            double destRotationPA = ((ImagePA - tgtImagePA) * rotDir) + NHUtil.ReduceTo360(RealRotatorPA);
-            double destRotationPAnormalized = NHUtil.ReduceTo360(destRotationPA);
+            double destRotationPA = ((ImagePA - tgtImagePA) * -rotDir) + AstroMath.Transform.NormalizeDegreeRange(RealRotatorPA);
+            double destRotationPAnormalized = AstroMath.Transform.NormalizeDegreeRange(destRotationPA);
             trot.SetRotatorPositionAngle(destRotationPAnormalized);
             //ImagePA = tgtImagePA;
             return;
@@ -149,7 +151,7 @@ namespace Humason
             if (tPlan.RotatorEnabled)
             {
                 //RotatorOffset = ImagePA - NHUtil.ReduceTo360( RealRotatorPA);
-                RotatorOffset = ImagePA - RealRotatorPA;
+                RotatorOffset = AstroMath.Transform.NormalizeDegreeRange(ImagePA - RealRotatorPA);
             }
             return true;
         }

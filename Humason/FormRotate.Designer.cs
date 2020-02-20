@@ -57,7 +57,7 @@
             // 
             // PlateSolveButton
             // 
-            this.PlateSolveButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.PlateSolveButton.ForeColor = System.Drawing.Color.Black;
             this.PlateSolveButton.Location = new System.Drawing.Point(28, 35);
             this.PlateSolveButton.Name = "PlateSolveButton";
             this.PlateSolveButton.Size = new System.Drawing.Size(75, 23);
@@ -144,7 +144,7 @@
             // 
             // InitializeButton
             // 
-            this.InitializeButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.InitializeButton.ForeColor = System.Drawing.Color.Black;
             this.InitializeButton.Location = new System.Drawing.Point(28, 215);
             this.InitializeButton.Name = "InitializeButton";
             this.InitializeButton.Size = new System.Drawing.Size(75, 23);
@@ -171,7 +171,7 @@
             // 
             // CheckButton
             // 
-            this.CheckButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.CheckButton.ForeColor = System.Drawing.Color.Black;
             this.CheckButton.Location = new System.Drawing.Point(158, 215);
             this.CheckButton.Name = "CheckButton";
             this.CheckButton.Size = new System.Drawing.Size(75, 23);
@@ -182,7 +182,7 @@
             // 
             // TargetButton
             // 
-            this.TargetButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.TargetButton.ForeColor = System.Drawing.Color.Black;
             this.TargetButton.Location = new System.Drawing.Point(28, 244);
             this.TargetButton.Name = "TargetButton";
             this.TargetButton.Size = new System.Drawing.Size(75, 23);
@@ -241,7 +241,7 @@
             // 
             // RotateToIPAButton
             // 
-            this.RotateToIPAButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.RotateToIPAButton.ForeColor = System.Drawing.Color.Black;
             this.RotateToIPAButton.Location = new System.Drawing.Point(26, 306);
             this.RotateToIPAButton.Name = "RotateToIPAButton";
             this.RotateToIPAButton.Size = new System.Drawing.Size(75, 23);
@@ -284,7 +284,7 @@
             // 
             // RotateToRPAButton
             // 
-            this.RotateToRPAButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.RotateToRPAButton.ForeColor = System.Drawing.Color.Black;
             this.RotateToRPAButton.Location = new System.Drawing.Point(28, 275);
             this.RotateToRPAButton.Name = "RotateToRPAButton";
             this.RotateToRPAButton.Size = new System.Drawing.Size(75, 23);
@@ -297,7 +297,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 402);
             this.Controls.Add(this.RotateToRPAButton);
             this.Controls.Add(this.label8);
@@ -321,7 +321,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.PlateSolveExposure);
             this.Controls.Add(this.PlateSolveButton);
-            this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormRotate";
             this.Text = "Rotate";

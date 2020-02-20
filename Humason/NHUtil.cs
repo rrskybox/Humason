@@ -1,36 +1,12 @@
 ﻿using System;
-using System.IO;
-using System.Windows.Forms;
 using System.Drawing;
-using TheSkyXLib;
-using Planetarium;
-using WeatherWatch;
+using System.Windows.Forms;
 
 namespace Humason
 {
 
     public static class NHUtil
     {
-
-        //Common utilities for TSX connections
-        //
-        // ConnectDevice():  Opens TSX (if  not already open) and connects mount, camera, filter, focuser or guider
-        // ConnectAllDevices():  Opens TSX (if  not already open) and connects mount, camera, filter, focuser and guider
-        //
-        // DisconnectDevice:  return specif ic hardware to default state and disconnect
-        // DisconnectAllDevices:  return all hardware to default state and disconnect
-        //
-        // Clear_Observing_List(targetname As String): Wipes out the current observing list and restores target name to list
-        //
-        //lg.LogIt appends a new line to the log file
-
-        public static double ReduceTo360(double degrees)
-        {
-            degrees = Math.IEEERemainder(degrees, 360);
-            if (degrees < 0)
-            { degrees += 360; }
-            return degrees;
-        }
 
         public static void ButtonRed(Button genericButton)
         {

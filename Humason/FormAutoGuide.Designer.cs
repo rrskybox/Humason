@@ -52,11 +52,12 @@
             this.Binning2x2RadioButton = new System.Windows.Forms.RadioButton();
             this.Binning1x1RadioButton = new System.Windows.Forms.RadioButton();
             this.GuiderAutoCalibrateButton = new System.Windows.Forms.Button();
-            this.SubframeCheckBox = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.GuideStarEdgeMarginNum = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.SubframeCheckBox = new System.Windows.Forms.CheckBox();
             this.GuideStarGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MinimumGuideExposureTimeBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XAxisMoveTime)).BeginInit();
@@ -73,7 +74,7 @@
             // 
             this.GuideStarGroup.Controls.Add(this.GuideStarXBox);
             this.GuideStarGroup.Controls.Add(this.GuideStarYBox);
-            this.GuideStarGroup.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.GuideStarGroup.ForeColor = System.Drawing.Color.White;
             this.GuideStarGroup.Location = new System.Drawing.Point(136, 197);
             this.GuideStarGroup.Name = "GuideStarGroup";
             this.GuideStarGroup.Size = new System.Drawing.Size(120, 45);
@@ -84,7 +85,7 @@
             // GuideStarXBox
             // 
             this.GuideStarXBox.AutoSize = true;
-            this.GuideStarXBox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.GuideStarXBox.ForeColor =  System.Drawing.Color.White;
             this.GuideStarXBox.Location = new System.Drawing.Point(15, 17);
             this.GuideStarXBox.Name = "GuideStarXBox";
             this.GuideStarXBox.Size = new System.Drawing.Size(13, 13);
@@ -94,7 +95,7 @@
             // GuideStarYBox
             // 
             this.GuideStarYBox.AutoSize = true;
-            this.GuideStarYBox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.GuideStarYBox.ForeColor =  System.Drawing.Color.White;
             this.GuideStarYBox.Location = new System.Drawing.Point(63, 17);
             this.GuideStarYBox.Name = "GuideStarYBox";
             this.GuideStarYBox.Size = new System.Drawing.Size(13, 13);
@@ -103,8 +104,8 @@
             // 
             // AutoGuideOnButton
             // 
-            this.AutoGuideOnButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.AutoGuideOnButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.AutoGuideOnButton.BackColor = System.Drawing.Color.White;
+            this.AutoGuideOnButton.ForeColor = System.Drawing.Color.Black;
             this.AutoGuideOnButton.Location = new System.Drawing.Point(72, 362);
             this.AutoGuideOnButton.Name = "AutoGuideOnButton";
             this.AutoGuideOnButton.Size = new System.Drawing.Size(133, 28);
@@ -115,8 +116,8 @@
             // 
             // FindStarButton
             // 
-            this.FindStarButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.FindStarButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FindStarButton.BackColor = System.Drawing.Color.White;
+            this.FindStarButton.ForeColor = System.Drawing.Color.Black;
             this.FindStarButton.Location = new System.Drawing.Point(21, 198);
             this.FindStarButton.Name = "FindStarButton";
             this.FindStarButton.Size = new System.Drawing.Size(71, 45);
@@ -127,7 +128,9 @@
             // 
             // MinimumGuideExposureTimeBox
             // 
+            this.MinimumGuideExposureTimeBox.BackColor = System.Drawing.Color.White;
             this.MinimumGuideExposureTimeBox.DecimalPlaces = 2;
+            this.MinimumGuideExposureTimeBox.ForeColor = System.Drawing.Color.Black;
             this.MinimumGuideExposureTimeBox.Increment = new decimal(new int[] {
             1,
             0,
@@ -157,8 +160,8 @@
             // 
             // CalibrateButton
             // 
-            this.CalibrateButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.CalibrateButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.CalibrateButton.BackColor = System.Drawing.Color.White;
+            this.CalibrateButton.ForeColor = System.Drawing.Color.Black;
             this.CalibrateButton.Location = new System.Drawing.Point(21, 299);
             this.CalibrateButton.Name = "CalibrateButton";
             this.CalibrateButton.Size = new System.Drawing.Size(92, 20);
@@ -170,7 +173,7 @@
             // ExposureTime
             // 
             this.ExposureTime.AutoSize = true;
-            this.ExposureTime.ForeColor = System.Drawing.SystemColors.Control;
+            this.ExposureTime.ForeColor = System.Drawing.Color.White;
             this.ExposureTime.Location = new System.Drawing.Point(21, 66);
             this.ExposureTime.Name = "ExposureTime";
             this.ExposureTime.Size = new System.Drawing.Size(165, 13);
@@ -179,6 +182,7 @@
             // 
             // XAxisMoveTime
             // 
+            this.XAxisMoveTime.BackColor = System.Drawing.Color.White;
             this.XAxisMoveTime.Location = new System.Drawing.Point(161, 299);
             this.XAxisMoveTime.Name = "XAxisMoveTime";
             this.XAxisMoveTime.Size = new System.Drawing.Size(51, 20);
@@ -193,6 +197,7 @@
             // 
             // YAxisMoveTime
             // 
+            this.YAxisMoveTime.BackColor = System.Drawing.Color.White;
             this.YAxisMoveTime.Location = new System.Drawing.Point(161, 325);
             this.YAxisMoveTime.Name = "YAxisMoveTime";
             this.YAxisMoveTime.Size = new System.Drawing.Size(51, 20);
@@ -209,7 +214,7 @@
             // 
             this.AOCheckBox.AutoSize = true;
             this.AOCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.AOCheckBox.ForeColor = System.Drawing.SystemColors.Control;
+            this.AOCheckBox.ForeColor = System.Drawing.Color.White;
             this.AOCheckBox.Location = new System.Drawing.Point(21, 10);
             this.AOCheckBox.Name = "AOCheckBox";
             this.AOCheckBox.Size = new System.Drawing.Size(63, 17);
@@ -221,7 +226,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.Control;
+            this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(21, 144);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(117, 13);
@@ -230,6 +235,8 @@
             // 
             // GuideStarADUNum
             // 
+            this.GuideStarADUNum.BackColor = System.Drawing.Color.White;
+            this.GuideStarADUNum.ForeColor = System.Drawing.Color.Black;
             this.GuideStarADUNum.Increment = new decimal(new int[] {
             1000,
             0,
@@ -259,8 +266,8 @@
             // 
             // OptimizeExposureButton
             // 
-            this.OptimizeExposureButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.OptimizeExposureButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.OptimizeExposureButton.BackColor = System.Drawing.Color.White;
+            this.OptimizeExposureButton.ForeColor = System.Drawing.Color.Black;
             this.OptimizeExposureButton.Location = new System.Drawing.Point(21, 248);
             this.OptimizeExposureButton.Name = "OptimizeExposureButton";
             this.OptimizeExposureButton.Size = new System.Drawing.Size(71, 45);
@@ -271,7 +278,9 @@
             // 
             // GuiderCycleTimeNum
             // 
+            this.GuiderCycleTimeNum.BackColor = System.Drawing.Color.White;
             this.GuiderCycleTimeNum.DecimalPlaces = 1;
+            this.GuiderCycleTimeNum.ForeColor = System.Drawing.Color.Black;
             this.GuiderCycleTimeNum.Increment = new decimal(new int[] {
             1,
             0,
@@ -291,7 +300,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.Control;
+            this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(21, 118);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(120, 13);
@@ -300,7 +309,9 @@
             // 
             // MaximumGuideExposureTimeBox
             // 
+            this.MaximumGuideExposureTimeBox.BackColor = System.Drawing.Color.White;
             this.MaximumGuideExposureTimeBox.DecimalPlaces = 2;
+            this.MaximumGuideExposureTimeBox.ForeColor = System.Drawing.Color.Black;
             this.MaximumGuideExposureTimeBox.Location = new System.Drawing.Point(205, 90);
             this.MaximumGuideExposureTimeBox.Maximum = new decimal(new int[] {
             30,
@@ -326,7 +337,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.Control;
+            this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(21, 92);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(168, 13);
@@ -335,7 +346,9 @@
             // 
             // GuideExposureTimeBox
             // 
+            this.GuideExposureTimeBox.BackColor = System.Drawing.Color.White;
             this.GuideExposureTimeBox.DecimalPlaces = 2;
+            this.GuideExposureTimeBox.ForeColor = System.Drawing.Color.Black;
             this.GuideExposureTimeBox.Increment = new decimal(new int[] {
             1,
             0,
@@ -366,7 +379,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.SystemColors.Control;
+            this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(21, 39);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(158, 13);
@@ -377,7 +390,7 @@
             // 
             this.groupBox1.Controls.Add(this.Binning2x2RadioButton);
             this.groupBox1.Controls.Add(this.Binning1x1RadioButton);
-            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox1.ForeColor =  System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(136, 248);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(120, 45);
@@ -388,7 +401,7 @@
             // Binning2x2RadioButton
             // 
             this.Binning2x2RadioButton.AutoSize = true;
-            this.Binning2x2RadioButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Binning2x2RadioButton.ForeColor =  System.Drawing.Color.White;
             this.Binning2x2RadioButton.Location = new System.Drawing.Point(66, 20);
             this.Binning2x2RadioButton.Name = "Binning2x2RadioButton";
             this.Binning2x2RadioButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -403,7 +416,7 @@
             // 
             this.Binning1x1RadioButton.AutoSize = true;
             this.Binning1x1RadioButton.Checked = true;
-            this.Binning1x1RadioButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Binning1x1RadioButton.ForeColor =  System.Drawing.Color.White;
             this.Binning1x1RadioButton.Location = new System.Drawing.Point(6, 19);
             this.Binning1x1RadioButton.Name = "Binning1x1RadioButton";
             this.Binning1x1RadioButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -417,8 +430,8 @@
             // 
             // GuiderAutoCalibrateButton
             // 
-            this.GuiderAutoCalibrateButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.GuiderAutoCalibrateButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.GuiderAutoCalibrateButton.BackColor = System.Drawing.Color.White;
+            this.GuiderAutoCalibrateButton.ForeColor = System.Drawing.Color.Black;
             this.GuiderAutoCalibrateButton.Location = new System.Drawing.Point(21, 325);
             this.GuiderAutoCalibrateButton.Name = "GuiderAutoCalibrateButton";
             this.GuiderAutoCalibrateButton.Size = new System.Drawing.Size(92, 20);
@@ -427,23 +440,10 @@
             this.GuiderAutoCalibrateButton.UseVisualStyleBackColor = false;
             this.GuiderAutoCalibrateButton.Click += new System.EventHandler(this.GuiderAutoCalibrateButton_Click);
             // 
-            // SubframeCheckBox
-            // 
-            this.SubframeCheckBox.AutoSize = true;
-            this.SubframeCheckBox.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.SubframeCheckBox.ForeColor = System.Drawing.SystemColors.Control;
-            this.SubframeCheckBox.Location = new System.Drawing.Point(218, 311);
-            this.SubframeCheckBox.Name = "SubframeCheckBox";
-            this.SubframeCheckBox.Size = new System.Drawing.Size(56, 31);
-            this.SubframeCheckBox.TabIndex = 105;
-            this.SubframeCheckBox.Text = "Subframe";
-            this.SubframeCheckBox.UseVisualStyleBackColor = true;
-            this.SubframeCheckBox.CheckedChanged += new System.EventHandler(this.SubframeCheckBox_CheckedChanged);
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.SystemColors.Control;
+            this.label5.ForeColor = System.Drawing.Color.White;
             this.label5.Location = new System.Drawing.Point(122, 303);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(36, 13);
@@ -453,7 +453,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.SystemColors.Control;
+            this.label6.ForeColor = System.Drawing.Color.White;
             this.label6.Location = new System.Drawing.Point(122, 329);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(36, 13);
@@ -463,7 +463,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.SystemColors.Control;
+            this.label7.ForeColor = System.Drawing.Color.White;
             this.label7.Location = new System.Drawing.Point(21, 171);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(102, 13);
@@ -472,6 +472,8 @@
             // 
             // GuideStarEdgeMarginNum
             // 
+            this.GuideStarEdgeMarginNum.BackColor = System.Drawing.Color.White;
+            this.GuideStarEdgeMarginNum.ForeColor = System.Drawing.Color.Black;
             this.GuideStarEdgeMarginNum.Location = new System.Drawing.Point(205, 169);
             this.GuideStarEdgeMarginNum.Maximum = new decimal(new int[] {
             1000,
@@ -489,17 +491,45 @@
             0});
             this.GuideStarEdgeMarginNum.ValueChanged += new System.EventHandler(this.GuideStarEdgeMarginNum_ValueChanged);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.LightSeaGreen;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Black;
+            this.label8.Location = new System.Drawing.Point(103, 11);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(119, 13);
+            this.label8.TabIndex = 110;
+            this.label8.Text = "Also must be set in TSX";
+            // 
+            // SubframeCheckBox
+            // 
+            this.SubframeCheckBox.AutoSize = true;
+            this.SubframeCheckBox.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.SubframeCheckBox.ForeColor = System.Drawing.Color.White;
+            this.SubframeCheckBox.Location = new System.Drawing.Point(218, 303);
+            this.SubframeCheckBox.Name = "SubframeCheckBox";
+            this.SubframeCheckBox.Size = new System.Drawing.Size(56, 31);
+            this.SubframeCheckBox.TabIndex = 111;
+            this.SubframeCheckBox.Text = "Subframe";
+            this.SubframeCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.SubframeCheckBox.UseVisualStyleBackColor = true;
+            this.SubframeCheckBox.UseWaitCursor = true;
+            this.SubframeCheckBox.CheckedChanged += new System.EventHandler(this.SubframeCheckBox_CheckedChanged_1);
+            // 
             // FormAutoGuide
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 402);
+            this.Controls.Add(this.SubframeCheckBox);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.GuideStarEdgeMarginNum);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.SubframeCheckBox);
             this.Controls.Add(this.GuiderAutoCalibrateButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.GuideExposureTimeBox);
@@ -520,7 +550,7 @@
             this.Controls.Add(this.ExposureTime);
             this.Controls.Add(this.XAxisMoveTime);
             this.Controls.Add(this.YAxisMoveTime);
-            this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormAutoGuide";
             this.Text = "Autoguide";
@@ -567,10 +597,11 @@
         private System.Windows.Forms.RadioButton Binning2x2RadioButton;
         private System.Windows.Forms.RadioButton Binning1x1RadioButton;
         internal System.Windows.Forms.Button GuiderAutoCalibrateButton;
-        internal System.Windows.Forms.CheckBox SubframeCheckBox;
         internal System.Windows.Forms.Label label5;
         internal System.Windows.Forms.Label label6;
         internal System.Windows.Forms.Label label7;
         internal System.Windows.Forms.NumericUpDown GuideStarEdgeMarginNum;
+        private System.Windows.Forms.Label label8;
+        internal System.Windows.Forms.CheckBox SubframeCheckBox;
     }
 }

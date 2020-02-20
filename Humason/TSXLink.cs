@@ -134,7 +134,13 @@ namespace Planetarium
                             sky6Dome tsxd = new sky6Dome();
                             lg.LogIt("Connecting Dome");
                             try { tsxd.Connect(); }
-                            catch (Exception ex) { lg.LogIt("Connecting Dome Failed: " + ex.Message); }
+                            catch (Exception ex)
+                            {
+                                lg.LogIt("Connecting Dome Failed: " + ex.Message);
+                                return;
+                            }
+                            tsxd.IsCoupled = 1;
+                            lg.LogIt("Coupling Dome to Mount");
                         }
                         break;
 
@@ -213,8 +219,16 @@ namespace Planetarium
                         {
                             lg.LogIt("Disconnecting Dome");
                             sky6Dome tsxd = new sky6Dome();
+                            lg.LogIt("Decoupling Dome from Mount");
+                            try { tsxd.IsCoupled = 0; }
+                            catch (Exception ex)
+                            { lg.LogIt("Decoupling Dome failed" + ex.Message); }
                             try { tsxd.Disconnect(); }
-                            catch (Exception ex) { lg.LogIt("Disconnecting Rotator Failed: " + ex.Message); }
+                            catch (Exception ex)
+                            {
+                                lg.LogIt("Disconnecting Rotator Failed: " + ex.Message);
+                                return;
+                            }
                         }
                         break;
                     default:
@@ -678,7 +692,10 @@ namespace Planetarium
                 LogEvent lg = FormHumason.lg;
                 int clsResult = 0;
                 //If Dome enabled, check for dome command in progress by clearing the coupling
-                if (FormHumason.openSession.IsDomeAddOnEnabled) ToggleDomeCoupling();
+                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                {
+                    ToggleDomeCoupling();
+                }
 
                 ccdsoftCamera tsxc = new ccdsoftCamera
                 {
@@ -714,8 +731,14 @@ namespace Planetarium
                 int testDomeTrack;
                 try { testDomeTrack = tsxd.IsGotoComplete; }
                 catch { return true; }
-                if (testDomeTrack == 0) return true;
-                else return false;
+                if (testDomeTrack == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             private static void ToggleDomeCoupling()
@@ -925,9 +948,17 @@ namespace Planetarium
             public static void AbortDome()
             {
                 LogEvent lg = FormHumason.lg;
-                sky6Dome tsxd = new sky6Dome();
-                tsxd.Abort();
-                lg.LogIt("Aborted dome commandes");
+                bool dState = DomeControl.AbortDome();
+                if (dState)
+                {
+                    lg.LogIt("Aborted dome commands");
+                }
+                else
+                {
+                    lg.LogIt("Dome command abort failed");
+                }
+
+                return;
             }
 
             public static void CloseDome()
@@ -935,22 +966,16 @@ namespace Planetarium
                 if (FormHumason.openSession.IsDomeAddOnEnabled)
                 {
                     LogEvent lg = FormHumason.lg;
-                    sky6RASCOMTele tsxt = new sky6RASCOMTele();
-                    sky6Dome tsxd = new sky6Dome();
-                    lg.LogIt("Disconnecting Mount");
-                    tsxt.Disconnect();
-                    lg.LogIt("Closing Dome Slit");
-                    try
+                    //New Code
+                    lg.LogIt("Closing Dome");
+                    int domeHome = FormHumason.openSession.DomeHomeAz;
+                    if (DomeControl.CloseDome(domeHome))
                     {
-                        tsxd.CloseSlit();
-                        //Wait for command to propigate -- could be slow
-                        System.Threading.Thread.Sleep(10000);
-                        // if the operation is in progress (zero).
-                        while (tsxd.IsCloseComplete == 0) { System.Threading.Thread.Sleep(1000); }
+                        lg.LogIt("Dome successfully closed");
                     }
-                    catch
+                    else
                     {
-                        //ignor error -- probably no dome
+                        lg.LogIt("Dome close failed");
                     }
                 }
                 return;
@@ -961,23 +986,17 @@ namespace Planetarium
                 if (FormHumason.openSession.IsDomeAddOnEnabled)
                 {
                     LogEvent lg = FormHumason.lg;
-                    sky6RASCOMTele tsxt = new sky6RASCOMTele();
-                    sky6Dome tsxd = new sky6Dome();
-                    lg.LogIt("Opening Dome Slit");
-                    try
+                    //New Code
+                    lg.LogIt("Opening Dome");
+                    int domeHome = FormHumason.openSession.DomeHomeAz;
+                    if (DomeControl.OpenDome(domeHome))
                     {
-                        tsxd.OpenSlit();
-                        //Wait for command to propigate -- could be slow
-                        System.Threading.Thread.Sleep(10000);
-                        while (tsxd.IsOpenComplete == 0) { System.Threading.Thread.Sleep(1000); }
+                        lg.LogIt("Dome successfully opened");
                     }
-                    catch
+                    else
                     {
-                        //ignor error -- probably no dome or ...
+                        lg.LogIt("Dome open failed");
                     }
-                    //Connect the mount, just in case it was disconnected with a prior dome close
-                    lg.LogIt("Connecting Mount");
-                    tsxt.Connect();
                 }
                 return;
             }
@@ -986,26 +1005,46 @@ namespace Planetarium
             {
                 if (FormHumason.openSession.IsDomeAddOnEnabled)
                 {
+                    int domeHome = FormHumason.openSession.DomeHomeAz;
                     LogEvent lg = FormHumason.lg;
-                    sky6RASCOMTele tsxt = new sky6RASCOMTele();
-                    lg.LogIt("Disonconnecting Mount");
-                    tsxt.Disconnect();
-                    sky6Dome tsxd = new sky6Dome();
-                    lg.LogIt("Homing Dome Slit");
-                    try
+                    //New code
+                    lg.LogIt("Homing Dome");
+                    if (DomeControl.HomeDome(domeHome))
                     {
-                        tsxd.FindHome();
-                        //Wait for command to propigate -- could be slow
-                        System.Threading.Thread.Sleep(10000);
-                        // operation is in progress (zero)
-                        while (tsxd.IsFindHomeComplete == 0) { System.Threading.Thread.Sleep(1000); }
+                        lg.LogIt("Dome successfully homed");
                     }
-                    catch
+                    else
                     {
-                        //ignor error for now -- probably no dome or ...
+                        lg.LogIt("Dome home failed");
                     }
                 }
                 return;
+
+                //Old code
+                //    sky6RASCOMTele tsxt = new sky6RASCOMTele();
+                //    lg.LogIt("Disonconnecting Mount");
+                //    tsxt.Disconnect();
+                //    sky6Dome tsxd = new sky6Dome();
+                //    lg.LogIt("Homing Dome Slit");
+                //    try
+                //    {
+                //        tsxd.Connect();
+                //        tsxd.GotoAzEl(domeHome - 20, 0);
+                //        //Wait for command to propigate -- could be slow
+                //        System.Threading.Thread.Sleep(5000);
+                //        while (tsxd.IsGotoComplete == 0) { System.Threading.Thread.Sleep(1000); }
+                //        tsxd.FindHome();
+                //        //Wait for command to propigate -- could be slow
+                //        System.Threading.Thread.Sleep(5000);
+                //        // operation is in progress (zero)
+                //        while (tsxd.IsFindHomeComplete == 0) { System.Threading.Thread.Sleep(1000); }
+                //    }
+                //    catch
+                //    {
+                //        //ignor error for now -- probably no dome or ...
+                //    }
+                //}
+                //return;
             }
         }
         #endregion
@@ -1042,18 +1081,29 @@ namespace Planetarium
             {
                 //Make sure this is synchronous wait. 
                 sky6RASCOMTele tsxm = new sky6RASCOMTele { Asynchronous = 0 };
-                if (FormHumason.openSession.IsParkMountEnabled)
+                try { tsxm.Connect(); }
+                catch (Exception ex)
                 {
-                    try { tsxm.Park(); }
-                    catch (Exception ex) { MessageBox.Show("Park Error: " + ex.Message); }
+                    MessageBox.Show("Park Error: " + ex.Message + " on attempt to connect to mount");
+                    return;
                 }
+                try { tsxm.Park(); }
+                catch (Exception ex) { MessageBox.Show("Park Error: " + ex.Message); }
+                return;
             }
+
 
             public static void UnPark()
             {
                 //Make sure this is synchronous wait.
                 sky6RASCOMTele tsxm = new sky6RASCOMTele { Asynchronous = 0 };
-                tsxm.Unpark();
+                try
+                {
+                    if (tsxm.IsConnected == 0) { tsxm.Connect(); }
+                    tsxm.Unpark();
+                }
+                catch (Exception ex) { return; }
+                return;
             }
 
             public static void SlewAzAlt(double azm, double alt, string targetName)
@@ -1125,7 +1175,10 @@ namespace Planetarium
                         SOP pole = (SOP)Convert.ToInt32(tsxm.DoCommandOutput);
                         return pole;
                     }
-                    else return 0;
+                    else
+                    {
+                        return 0;
+                    }
                 }
             }
 
@@ -1378,9 +1431,11 @@ namespace Planetarium
                 //Make sure there is a delay for the mount to settle
                 tsxc.Delay = 2;
                 if (!AO)
+                {
                     try
                     { int calstat = tsxc.Calibrate(0); } //1 for AO, anything else for not AO(autoguider)            
                     catch { return; }
+                }
                 //wait for completion;
                 while (tsxc.State == TheSkyXLib.ccdsoftCameraState.cdStateCalibrate)
                 {
@@ -1426,8 +1481,14 @@ namespace Planetarium
             {
                 //Returns true is the autoguider is running
                 ccdsoftCameraState agState = tsxc.State;
-                if (agState == ccdsoftCameraState.cdStateAutoGuide) return true;
-                else return false;
+                if (agState == ccdsoftCameraState.cdStateAutoGuide)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         #endregion
@@ -1445,8 +1506,14 @@ namespace Planetarium
 
             public double GetRotatorPositionAngle()
             {
-                if (!(tsxc.rotatorIsConnected() == 0)) return tsxc.rotatorPositionAngle();
-                else return 0;
+                if (!(tsxc.rotatorIsConnected() == 0))
+                {
+                    return tsxc.rotatorPositionAngle();
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             public void SetRotatorPositionAngle(double tgtRotationPA)

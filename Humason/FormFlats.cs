@@ -131,7 +131,9 @@ namespace Humason
         {
             //Update the configuration file when this button changes
             if (FlatManRadioButton.Checked)
+            {
                 FormHumason.openSession.FlatLightSource = FlatManager.LightSource.lsFlatMan;
+            }
 
             return;
         }
@@ -141,7 +143,9 @@ namespace Humason
             //Update the configuration file when this button changes
             //Update the configuration file when this button changes
             if (DawnRadioButton.Checked)
+            {
                 FormHumason.openSession.FlatLightSource = FlatManager.LightSource.lsDawn;
+            }
         }
 
         private void DuskRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -149,7 +153,9 @@ namespace Humason
             //Update the configuration file when this button changes
             //Update the configuration file when this button changes
             if (DuskRadioButton.Checked)
+            {
                 FormHumason.openSession.FlatLightSource = FlatManager.LightSource.lsDusk;
+            }
         }
 
         private void MakeFlatsButton_Click(object sender, EventArgs e)
@@ -181,7 +187,7 @@ namespace Humason
             //Check to see if there is a rotator enabled, if so, and flip is enabled, then make a second set for the east side
             if ((FormHumason.openSession.IsFlatsRotationEnabled) && (FormHumason.openSession.IsFlatFlipEnabled))
             {
-                rPA = NHUtil.ReduceTo360(rPA + 180);
+                rPA = AstroMath.Transform.NormalizeDegreeRange(rPA + 180);
                 sop = "West";
                 foreach (Filter fi in fset)
                 {

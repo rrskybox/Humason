@@ -163,7 +163,10 @@ namespace Humason
                 hTargetPlanX.SetItem(TargetDecXName, tgto.Dec.ToString());
                 return hTargetPlanX;
             }
-            else return null;
+            else
+            {
+                return null;
+            }
         }
 
         public Axess SpawnTargetPlan(string targetName)
@@ -198,13 +201,29 @@ namespace Humason
             XElement tpPlanX = XElement.Load(TargetPlanPath);
             //Delete the name, ra, dec, and adjust entries, if this isn't the default plan itself
             XElement nameX = tpPlanX.Element(TargetNameXName);
-            if (nameX != null) nameX.Remove();
+            if (nameX != null)
+            {
+                nameX.Remove();
+            }
+
             XElement raX = tpPlanX.Element(TargetRAXName);
-            if (raX != null) raX.Remove();
+            if (raX != null)
+            {
+                raX.Remove();
+            }
+
             XElement decX = tpPlanX.Element(TargetDecXName);
-            if (decX != null) decX.Remove();
+            if (decX != null)
+            {
+                decX.Remove();
+            }
+
             XElement adjX = tpPlanX.Element(TargetAdjustCheckedXName);
-            if (adjX != null) adjX.Remove();
+            if (adjX != null)
+            {
+                adjX.Remove();
+            }
+
             tpPlanX.Save(FormHumason.openSession.DefaultTargetPlanPath);
             return;
         }
@@ -223,8 +242,14 @@ namespace Humason
         {
             //Returns true if plan contains 4 or fewer elements
             XElement tpPlanX = XElement.Load(TargetPlanPath);
-            if (tpPlanX.Elements().Count() < 5) return true;
-            else return false;
+            if (tpPlanX.Elements().Count() < 5)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private Axess CreateDefaultTargetPlan()
@@ -355,7 +380,7 @@ namespace Humason
         public bool GuiderSubframeEnabled
         {
             get => Convert.ToBoolean(hTargetPlanX.GetItem(GuiderSubframeEnabledXName));
-            set => hTargetPlanX.ReplaceItem(GuiderSubframeEnabledXName , value.ToString());
+            set => hTargetPlanX.ReplaceItem(GuiderSubframeEnabledXName, value.ToString());
         }
 
         public bool SmallSolarSystemBodyEnabled
@@ -464,8 +489,14 @@ namespace Humason
         {
             get
             {
-                if (hTargetPlanX.GetItem(TargetNameXName) == null) return "";
-                else return (hTargetPlanX.GetItem(TargetNameXName));
+                if (hTargetPlanX.GetItem(TargetNameXName) == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return (hTargetPlanX.GetItem(TargetNameXName));
+                }
             }
             set => hTargetPlanX.ReplaceItem(TargetNameXName, value);
         }
