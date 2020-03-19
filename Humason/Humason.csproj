@@ -26,8 +26,8 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>182</ApplicationRevision>
-    <ApplicationVersion>2.9.1.%2a</ApplicationVersion>
+    <ApplicationRevision>185</ApplicationRevision>
+    <ApplicationVersion>2.9.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -252,7 +252,9 @@
     <EmbeddedResource Include="FormDevices.resx">
       <DependentUpon>FormDevices.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Humason Description.docx" />
+    <None Include="Humason Description.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

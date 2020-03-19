@@ -71,19 +71,19 @@ namespace Planetarium
         {
             //Method for opening the TSX dome
             // use exception handlers to check for dome commands, opt out if none
-            //Park the telescope during opening
-            TSXLink.Mount.Park();
-            //Abort any dome commands
-            AbortDome();
-            //Home the dome -- return false if fails
+            //  couple the dome to telescope if everything works out
             sky6Dome tsxd = new sky6Dome();
-            if (HomeDome(domeHomeAz))
-            {
-                return false;
-            }
+            //Decouple the dome from the telescope
+            IsDomeCoupled = false;
+            //Move dome to 20 degrees short of home position
+            tsxd.GotoAzEl(domeHomeAz - 20, 0);
+            //Wait until complete (Sync mode doesn't seem to work)
+            while (tsxd.IsGotoComplete == 0) { System.Threading.Thread.Sleep(5000); };
+            //Home the dome,wait for the command to propogate, then wait until the dome reports it is homed
+            tsxd.FindHome();
+            while (tsxd.IsFindHomeComplete == 0) { System.Threading.Thread.Sleep(5000); };
             // open the dome shutter
-            try { tsxd.OpenSlit(); }
-            catch (Exception ex) { return false; }
+            tsxd.OpenSlit();
             System.Threading.Thread.Sleep(10000);  //Wait for close command to clear TSX and ASCOM driver
             while (tsxd.IsOpenComplete == 0)
             { System.Threading.Thread.Sleep(5000); } //five second wait loop
@@ -102,27 +102,27 @@ namespace Planetarium
             //Method for closing the TSX dome
             // use exception handlers to check for dome commands, opt out if none
             //Park Mount, if not parked already
-            TSXLink.Mount.Park();
-            //Abort any dome commands
-            AbortDome();
+            sky6RASCOMTele tsxt = new sky6RASCOMTele();
+            //Decouple the dome from the mount position
+            IsDomeCoupled = false;
             sky6Dome tsxd = new sky6Dome();
+
             try { tsxd.Connect(); }
             catch { return false; }
             //Stop whatever the dome is doing, if any and wait a few seconds for it to clear
             try { tsxd.Abort(); }
             catch (Exception e) { return false; }
+            //Wait for a second for the command to clear
+            System.Threading.Thread.Sleep(1000);
             //Close up the dome:  Connect, Home (so power is to the dome), Close the slit
             if (tsxd.IsConnected == 1)
             {
                 //Move the dome to 20 degrees short of home
-                try { tsxd.GotoAzEl(domeHomeAz - 20, 0); }
-                catch { return false; }
-                System.Threading.Thread.Sleep(5000);
+                tsxd.GotoAzEl(domeHomeAz - 20, 0);
+                //Wait until complete (Sync mode doesn't seem to work)
                 while (tsxd.IsGotoComplete == 0) { System.Threading.Thread.Sleep(5000); };
                 //Home the dome,wait for the command to propogate, then wait until the dome reports it is homed
-                try { tsxd.FindHome(); }
-                catch { return false; }
-                System.Threading.Thread.Sleep(10000);
+                tsxd.FindHome();
                 while (tsxd.IsFindHomeComplete == 0) { System.Threading.Thread.Sleep(5000); };
                 //Close slit
                 //Standard false stop avoidance code
@@ -132,10 +132,7 @@ namespace Planetarium
                 {
                     tsxd.CloseSlit();
                     System.Threading.Thread.Sleep(10000);
-                    while (tsxd.IsCloseComplete == 0)
-                    {
-                        System.Threading.Thread.Sleep(5000);
-                    }
+                    while (tsxd.IsCloseComplete == 0) { System.Threading.Thread.Sleep(5000); }
                     //Report success  
                     slitClosed = true;
                 }
@@ -151,15 +148,11 @@ namespace Planetarium
                     System.Threading.Thread.Sleep(10000);
                     try
                     {
-                        while (tsxd.IsCloseComplete == 0)
-                        {
-                            System.Threading.Thread.Sleep(5000);
-                        }
+                        while (tsxd.IsCloseComplete == 0) { System.Threading.Thread.Sleep(5000); }
                         //Report success  
                     }
                     catch
                     {
-                        return false;
                     }
                 }
             }
@@ -167,7 +160,6 @@ namespace Planetarium
             tsxd.Disconnect();
             return true;
         }
-
         /// <summary>
         /// Brings the dome to the home position after resetting to azimuth home-20
         /// -- will Park the mount
@@ -214,6 +206,8 @@ namespace Planetarium
             TSXLink.Mount.Park();
             //Abort any dome commands
             AbortDome();
+            //Wait for command to clear
+            System.Threading.Thread.Sleep(5000);
             try { tsxd.GotoAzEl(domeHomeAz - 20, 0); }
             catch (Exception ex) { return false; }
             System.Threading.Thread.Sleep(5000); // Wait for dome controller to catch up
@@ -221,7 +215,6 @@ namespace Planetarium
             {
                 System.Threading.Thread.Sleep(1000);
             }
-
             return true;
         }
 

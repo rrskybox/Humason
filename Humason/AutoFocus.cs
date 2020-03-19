@@ -24,6 +24,11 @@ namespace Humason
             TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
 
             lg.LogIt("Initiating Auto Focus" + aftype.ToString());
+            //Get current temperature and focus position
+            double nowTemp = TSXLink.Focus.GetTemperature();
+            lg.LogIt("Current focuser temperature is " + nowTemp.ToString("0.0") + "C");
+            double nowPos = TSXLink.Focus.GetPosition();
+            lg.LogIt("Current focuser position is " + nowPos.ToString("0"));
             AstroImage asti = new Humason.AstroImage
             {
                 Camera = AstroImage.CameraType.Imaging,
@@ -51,6 +56,8 @@ namespace Humason
                     break;
             }
             lg.LogIt("@Focus" + aftype.ToString() + " complete");
+            nowPos = TSXLink.Focus.GetPosition();
+            lg.LogIt("New focuser position is " + nowPos.ToString("0"));
         }
 
         public static int ComputeNewFocusPosition(string focFilePath, double CurrentTemp, int filterIndex)

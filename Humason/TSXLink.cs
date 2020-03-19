@@ -976,6 +976,16 @@ namespace Planetarium
                     else
                     {
                         lg.LogIt("Dome close failed");
+                        //Try one more time;
+                        lg.LogIt("Trying to close dome again");
+                        if (DomeControl.CloseDome(domeHome))
+                        {
+                            lg.LogIt("Dome successfully closed");
+                        }
+                        else
+                        {
+                            lg.LogIt("Second try at closing dome failed");
+                        }
                     }
                 }
                 return;
@@ -1658,6 +1668,13 @@ namespace Planetarium
                 ccdsoftCamera tsxc = new ccdsoftCamera();
                 double celsius = tsxc.focTemperature;
                 return celsius;
+            }
+
+            public static double GetPosition()
+            {
+                ccdsoftCamera tsxc = new ccdsoftCamera();
+                double position = tsxc.focPosition;
+                return position;
             }
 
             public static int MoveTo(double position)

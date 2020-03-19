@@ -531,6 +531,8 @@ namespace Humason
             get
             {
                 string startTimeString = hTargetPlanX.GetItem(SequenceStartTimeXName);
+                try { Convert.ToDateTime(startTimeString); }
+                catch (Exception ex) { startTimeString = null; }
                 if ((startTimeString == null) || (Convert.ToDateTime(startTimeString) < DateTime.Now))
                 {
                     hTargetPlanX.ReplaceItem(SequenceStartTimeXName, DateTime.Now.ToString());

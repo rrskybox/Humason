@@ -73,10 +73,23 @@ namespace Humason
                     return;
                 }
                 //If Manual Setup is selected, then pause for user to position the FlatMan for flats
+                //  Disconnect imaging devices before attaching panel, then reconnect afterwards
+                //    this keeps the SBIG driver from freaking out when the guider USB is hot swapped
+                //    with the FlatMan USB (Build 182+)
                 if (FormHumason.openSession.IsFlatManManualSetupEnabled)
                 {
                     lg.LogIt("Pausing to attach FlatMan panel");
+                    lg.LogIt("Disconnecting imaging devices");
+                    TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Camera);
+                    TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Guider);
+                    TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Focuser);
+                    TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Rotator);
                     MessageBox.Show("Attach the FlatMan, then press OK");
+                    lg.LogIt("Connecting imaging devices");
+                    TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Camera);
+                    TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Guider);
+                    TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Focuser);
+                    TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Rotator);
                 }
                 //Turn on Flatman panel, if it hasn't been done already
                 lg.LogIt("Lighting up FlatMan panel");
@@ -105,7 +118,6 @@ namespace Humason
                         }
                     case (LightSource.lsFlatMan):
                         {
-
                             if (FormHumason.openSession.IsFlatManEnabled)
                             {
                                 // **********************  Use Flatman
