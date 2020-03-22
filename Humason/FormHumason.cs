@@ -288,30 +288,12 @@ namespace Humason
                 fSequenceForm.UpdateFormFromPlan();
                 HumasonTabs.SelectedIndex = 1;
 
-                //Wait for target sequence starting time
-                LaunchPad.WaitLoop(tPlan.SequenceStartTime);
-                //check for abort
-                if (AbortFlag)
-                {
-                    NHUtil.ButtonGreen(StartButton);
-                    StartButton.Text = "Start";
-                    return;
-                }
-
                 //Try to move to target, if this fails just abort
-                if (!fSequenceForm.imgseq.CLSToTargetPlanCoordinates())
-                {
-                    AbortFlag = true;
-                }
+                if (!fSequenceForm.imgseq.CLSToTargetPlanCoordinates()) { AbortFlag = true; }
 
-                //check for abort
-                if (AbortFlag)
-                {
-                    NHUtil.ButtonGreen(StartButton);
-                    StartButton.Text = "Start";
-                    return;
-                }
-
+                //check for abort having been set.  Gracefully shut everything back down if it has.
+                if (AbortFlag) { GracefulAbort(); }
+           
                 //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
                 if (tPlan.RotatorEnabled)
                 {
@@ -319,13 +301,9 @@ namespace Humason
                     Rotator.RotateToImagePA(tPlan.TargetPA);
                     Rotator.PlateSolveIt();
                 }
-                //check for abort
-                if (AbortFlag)
-                {
-                    NHUtil.ButtonGreen(StartButton);
-                    StartButton.Text = "Start";
-                    return;
-                }
+                //check for abort having been set.  Gracefully shut everything back down if it has.
+                if (AbortFlag) { GracefulAbort(); }
+
 
                 //Update the sequence for whatever time it is now
                 try
@@ -347,13 +325,9 @@ namespace Humason
                 //
                 //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
                 AutoGuide.AutoGuideStop();
-                //Run a check on abort, if set, just return
-                if (AbortFlag)
-                {
-                    NHUtil.ButtonGreen(StartButton);
-                    StartButton.Text = "Start";
-                    return;
-                }
+                //check for abort having been set.  Gracefully shut everything back down if it has.
+                if (AbortFlag) { GracefulAbort(); }
+
                 //Done with imaging on this plan.  
                 //Store the ending time
                 tPlan.SequenceEndTime = DateTime.Now;
@@ -371,8 +345,7 @@ namespace Humason
             { fmgr.TakeFlats(); }
 
             //If autorun set, then run it, or... just park the mount
-            if (openSession.IsAutoRunEnabled)
-            { LaunchPad.RunShutDownApp(); }
+            if (openSession.IsAutoRunEnabled) { LaunchPad.RunShutDownApp(); }
             else
             {
                 try { TSXLink.Mount.Park(); }
@@ -455,6 +428,38 @@ namespace Humason
             return;
         }
 
+        public void GracefulAbort()
+        {
+            //Abort has been pushed or automatically called by procedure due to some error
+            //If start is not active then we want to just park the scope and disconnect all
+            //devices.
+            //If start is active, then we want to treat this as a catastrophic event and simply
+            //stop everything by parking
+
+            LogEvent lg = FormHumason.lg;
+            lg.LogIt("Aborting and Closing Down");
+            //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
+            AutoGuide.AutoGuideStop();
+
+            //If autorun set, then run it, or... just park the mount, home the dome and disconnect
+            if (openSession.IsAutoRunEnabled) { LaunchPad.RunShutDownApp(); }
+            else
+            {
+                lg.LogIt("Parking Mount");
+                try { TSXLink.Mount.Park(); }
+                catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
+                //home dome (don't close as autorun is not enabled
+                lg.LogIt("Homing Dome");
+                if (openSession.IsDomeAddOnEnabled) { TSXLink.Dome.HomeDome(); }
+                lg.LogIt("Disconnecting all devices");
+                TSXLink.Connection.DisconnectAllDevices();
+            }
+            lg.LogIt("Abort Completed -- awaiting new orders, Captain");
+            StartButton.Text = "Start";
+            NHUtil.ButtonGreen(StartButton);
+            return;
+        }
+
         /// <summary>
         /// Wait loop control for Staging and Start Up
         /// </summary>
@@ -463,48 +468,33 @@ namespace Humason
             //Wait until Staging Time
             LaunchPad.WaitLoop(openSession.StagingTime);
             //check for abort
-            if (AbortFlag)
-            {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
-            }
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+
             //  If autorun enabled, then run the staging time autorun script/app
             if (openSession.IsAutoRunEnabled)
             {
                 if (openSession.IsStagingEnabled)
                 { LaunchPad.WaitStaging(); }
             }
-            //check for abort
-            if (AbortFlag)
-            {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
-            }
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+
 
             //Wait until Start Up Time
             LaunchPad.WaitLoop(openSession.StartUpTime);
-            //check for abort
-            if (AbortFlag)
-            {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
-            }
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+
             //  If autorun enabled, then run the start up time autorun script/app
             if (openSession.IsAutoRunEnabled)
             {
                 if (openSession.IsStartUpEnabled)
                 { LaunchPad.WaitStartUp(); }
             }
-            //check for abort
-            if (AbortFlag)
-            {
-                NHUtil.ButtonGreen(StartButton);
-                StartButton.Text = "Start";
-                return;
-            }
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+
 
         }
 
