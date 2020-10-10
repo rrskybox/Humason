@@ -20,8 +20,9 @@ namespace Humason
             //  Move filter to clear filter
             //  Run Focus@2 or AtFocus 3 for all five filters
 
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             lg.LogIt("Initiating Auto Focus" + aftype.ToString());
             //Get current temperature and focus position
@@ -63,7 +64,7 @@ namespace Humason
         public static int ComputeNewFocusPosition(string focFilePath, double CurrentTemp, int filterIndex)
         {
             //Opens and interpolates .foc file for luminance filter, returns computed position in steps based on Current Temperature 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
 
             //File and filter data structure
             int FtextFields = 2;

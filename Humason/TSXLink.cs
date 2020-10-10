@@ -10,6 +10,14 @@ namespace Planetarium
     public partial class TSXLink
     {
 
+        private static bool AbortFlag { get; set; } = false;
+
+        private void AbortReportEvent_Handler(object sender, AbortEvent.AbortEventArgs e)
+        {
+            AbortFlag = true;
+            return;
+        }
+
         #region Connection Class
 
         public static class Connection
@@ -28,7 +36,8 @@ namespace Planetarium
             public static void DeployMount()
             {
                 //Connect, Home and Park mount
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
+                SessionControl openSession = new SessionControl();
                 sky6RASCOMTele tsxt = new sky6RASCOMTele();
 
                 lg.LogIt("Connecting to Mount");
@@ -42,7 +51,7 @@ namespace Planetarium
                 }
                 lg.LogIt("Finding Mount Home");
                 tsxt.FindHome();
-                if (FormHumason.openSession.IsParkMountEnabled)
+                if (openSession.IsParkMountEnabled)
                 {
                     lg.LogIt("Parking Mount");
                     tsxt.Park();
@@ -56,9 +65,10 @@ namespace Planetarium
                 //Connect to mount but no unpark (if parked)
                 //Park mount
                 //Disconnect
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
+                SessionControl openSession = new SessionControl();
                 sky6RASCOMTele tsxt = new sky6RASCOMTele();
-                if (FormHumason.openSession.IsParkMountEnabled)
+                if (openSession.IsParkMountEnabled)
                 {
                     lg.LogIt("Parking Mount");
                     tsxt.Connect();
@@ -79,7 +89,8 @@ namespace Planetarium
                 //  if  device is 4,) { connect rotator
                 //  if  device is 5,) { connect dome
 
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
+                SessionControl openSession = new SessionControl();
 
                 //  For each device, set a status in the TSX Wrap window, try { to connect, set error status (if  fail), move on...
                 //  return False with first failing connection, return True otherwise
@@ -129,7 +140,7 @@ namespace Planetarium
                         break;
 
                     case Devices.Dome:
-                        if (FormHumason.openSession.IsDomeAddOnEnabled)
+                        if (openSession.IsDomeAddOnEnabled)
                         {
                             sky6Dome tsxd = new sky6Dome();
                             lg.LogIt("Connecting Dome");
@@ -163,7 +174,8 @@ namespace Planetarium
                 //  For each device, set a status in the TSX Wrap window, try { to disconnect, set error status (if  fail), move on...
                 //  return False with first failing connection, return True otherwise
 
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
+                SessionControl openSession = new SessionControl();
                 int status = 0;
                 switch (device)
                 {
@@ -215,7 +227,7 @@ namespace Planetarium
                         break;
 
                     case Devices.Dome:
-                        if (FormHumason.openSession.IsDomeAddOnEnabled)
+                        if (openSession.IsDomeAddOnEnabled)
                         {
                             lg.LogIt("Disconnecting Dome");
                             sky6Dome tsxd = new sky6Dome();
@@ -247,7 +259,7 @@ namespace Planetarium
                 //  if  device is 4,) { c rotator
                 //  if  device is 5,) { c dome
 
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
 
                 //  For each device, set a status in the TSX Wrap window, try { to connect, set error status (if  fail), move on...
                 //  return False with first failing connection, return True otherwise
@@ -307,7 +319,8 @@ namespace Planetarium
                 //  For each device, set a status in the TSX Wrap window, try { to connect, set error status (if  fail), move on...
                 //  return False with first failing connection, return True otherwise
                 //
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
+                SessionControl openSession = new SessionControl();
                 int status = 0;
 
                 lg.LogIt("Connecting mount");
@@ -329,14 +342,14 @@ namespace Planetarium
                 try { status = tsxc.focConnect(); }
                 catch (Exception ex) { lg.LogIt("Focuser connection error: " + ex.Message); }
 
-                if (FormHumason.openSession.IsRotationEnabled)
+                if (openSession.IsRotationEnabled)
                 {
                     lg.LogIt("Connecting rotator");
                     try { status = tsxc.rotatorConnect(); }
                     catch (Exception ex) { lg.LogIt("Rotator connection error: " + ex.Message); }
                 }
 
-                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                if (openSession.IsDomeAddOnEnabled)
                 {
                     sky6Dome tsxd = new sky6Dome();
                     lg.LogIt("Connecting dome");
@@ -347,7 +360,8 @@ namespace Planetarium
 
             public static void DisconnectAllDevices()
             {
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
+                SessionControl openSession = new SessionControl();
                 //Park scope and disconnect devices
                 SelectedHardware tsxh = new SelectedHardware();       //hardware inventory object
 
@@ -368,7 +382,7 @@ namespace Planetarium
                 catch (Exception ex) { lg.LogIt("Connecting Focuser Failed: " + ex.Message); }
 
                 //Disconnect the rotator
-                if (FormHumason.openSession.IsRotationEnabled)
+                if (openSession.IsRotationEnabled)
                 {
                     lg.LogIt("Disconnecting rotator");
                     try { tsxc.rotatorDisconnect(); }
@@ -513,10 +527,16 @@ namespace Planetarium
                 return (tgt);
             }
 
-            public static bool IsValidTarget(string targetName)
+            public static bool IsValidTarget(TargetPlan tPlan)
             {
                 //Checks to see if TSX can find the targetName
                 sky6StarChart tsxs = new sky6StarChart();
+                string targetName;
+                //IF the target it adjusted, then we use the RA/Dec coordinates as name
+                if (tPlan.TargetAdjustEnabled) targetName = tPlan.TargetRA.ToString() + "," + tPlan.TargetDec.ToString();
+                else targetName = tPlan.TargetName;
+                //If not adjusted then check for something other than null or empty,
+                //  then try a "find"
                 if ((targetName != null) && (targetName != ""))
                 {
                     try
@@ -661,7 +681,7 @@ namespace Planetarium
         {
             public static PlateSolution PlateSolve(string path)
             {
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
                 ImageLink tsxl = new TheSkyXLib.ImageLink
                 {
                     pathToFITS = path
@@ -689,10 +709,11 @@ namespace Planetarium
 
             public static int PrecisionSlew(AstroImage asti)
             {
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
+                SessionControl openSession = new SessionControl();
                 int clsResult = 0;
                 //If Dome enabled, check for dome command in progress by clearing the coupling
-                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                if (openSession.IsDomeAddOnEnabled)
                 {
                     ToggleDomeCoupling();
                 }
@@ -919,9 +940,10 @@ namespace Planetarium
             {
                 //Clears all entries in observing list, in absence of same function in TSX automation
                 //Upon clearing, the routine will "find" the target name, if  any 
+                SessionControl openSession = new SessionControl();
                 sky6DataWizard tsxdw = new sky6DataWizard
                 {
-                    Path = FormHumason.openSession.DatabaseQueryDirectoryPath + "\\ClearTheListTheHardWay.dbq"
+                    Path = openSession.DatabaseQueryDirectoryPath + "\\ClearTheListTheHardWay.dbq"
                 };
                 tsxdw.Open();
                 sky6ObjectInformation zerolist = tsxdw.RunQuery;
@@ -947,7 +969,7 @@ namespace Planetarium
         {
             public static void AbortDome()
             {
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
                 bool dState = DomeControl.AbortDome();
                 if (dState)
                 {
@@ -963,12 +985,13 @@ namespace Planetarium
 
             public static void CloseDome()
             {
-                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                SessionControl openSession = new SessionControl();
+                if (openSession.IsDomeAddOnEnabled)
                 {
-                    LogEvent lg = FormHumason.lg;
+                    LogEvent lg = new LogEvent();
                     //New Code
                     lg.LogIt("Closing Dome");
-                    int domeHome = FormHumason.openSession.DomeHomeAz;
+                    int domeHome = openSession.DomeHomeAz;
                     if (DomeControl.CloseDome(domeHome))
                     {
                         lg.LogIt("Dome successfully closed");
@@ -993,12 +1016,13 @@ namespace Planetarium
 
             public static void OpenDome()
             {
-                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                SessionControl openSession = new SessionControl();
+                if (openSession.IsDomeAddOnEnabled)
                 {
-                    LogEvent lg = FormHumason.lg;
+                    LogEvent lg = new LogEvent();
                     //New Code
                     lg.LogIt("Opening Dome");
-                    int domeHome = FormHumason.openSession.DomeHomeAz;
+                    int domeHome = openSession.DomeHomeAz;
                     if (DomeControl.OpenDome(domeHome))
                     {
                         lg.LogIt("Dome successfully opened");
@@ -1013,10 +1037,11 @@ namespace Planetarium
 
             public static void HomeDome()
             {
-                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                SessionControl openSession = new SessionControl();
+                if (openSession.IsDomeAddOnEnabled)
                 {
-                    int domeHome = FormHumason.openSession.DomeHomeAz;
-                    LogEvent lg = FormHumason.lg;
+                    int domeHome = openSession.DomeHomeAz;
+                    LogEvent lg = new LogEvent();
                     //New code
                     lg.LogIt("Homing Dome");
                     if (DomeControl.HomeDome(domeHome))
@@ -1246,7 +1271,7 @@ namespace Planetarium
                     catch (Exception ex)
                     {
                         tsxc.Abort();
-                        AbortEvent ab = FormHumason.SequenceAbort;
+                        AbortEvent ab = new AbortEvent();
                         ab.AbortIt(ex.Message);
                         return ex.HResult;
                     }

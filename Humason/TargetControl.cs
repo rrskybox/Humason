@@ -66,6 +66,8 @@ namespace Humason
         public const string TargetPAXName = "TargetPA";
         public const string SequenceStartTimeXName = "SequenceStartTime";
         public const string SequenceEndTimeXName = "SequenceEndTime";
+        public const string SequenceDawnTimeXName = "SequenceDawnTime";
+
         public const string AutoDarkCheckedXName = "AutoDarkChecked";
         public const string ImageExposureTimeXName = "ImageExposureTime";
         public const string LoopsXName = "Loops";
@@ -118,9 +120,10 @@ namespace Humason
                             default target pland merged with the TSX data
                         otherwise (no plan, no target, no nothing) do nothing
              */
+            SessionControl openSession = new SessionControl();
 
             //Store the Humason directory path so we don't have to keep looking it up when using this instance
-            hDirectoryPath = FormHumason.openSession.HumasonDirectoryPath;
+            hDirectoryPath = openSession.HumasonDirectoryPath;
             //If the target name is empty for some reason, just set a path to the default file
             if ((targetName == "") || (targetName == null) || (targetName == "Default"))
             {
@@ -153,10 +156,11 @@ namespace Humason
         public Axess SpawnTargetPlanFromTSX(string targetName)
         {
             //perform search on substring of targetName preceding any "-" in order to work with mosaic target names
+            SessionControl openSession = new SessionControl();
             TSXLink.Target tgto = TSXLink.StarChart.FindTarget((targetName.Split('-'))[0]);
             if (tgto != null)
             {
-                Axess defaultTargetPlanX = new Axess(FormHumason.openSession.DefaultTargetPlanPath);
+                Axess defaultTargetPlanX = new Axess(openSession.DefaultTargetPlanPath);
                 hTargetPlanX = new Axess(defaultTargetPlanX, TargetPlanPath);
                 hTargetPlanX.SetItem(TargetNameXName, tgto.Name);
                 hTargetPlanX.SetItem(TargetRAXName, tgto.RA.ToString());
@@ -183,9 +187,10 @@ namespace Humason
         {
             //This command will save a copy of the current tPlan
             //under the name targetname.configuration.xml
+            SessionControl openSession = new SessionControl();
 
             XElement tpPlanX = XElement.Load(TargetPlanPath);
-            XElement defaultPlanX = XElement.Load(FormHumason.openSession.DefaultTargetPlanPath);
+            XElement defaultPlanX = XElement.Load(openSession.DefaultTargetPlanPath);
             foreach (XElement tpX in defaultPlanX.Elements())
             {
                 if (!(tpPlanX.Elements().Contains(tpX)))
@@ -197,6 +202,7 @@ namespace Humason
         public void SavePlanAsDefaultPlan()
         {
             //This command will save a copy of the current target plan file
+            SessionControl openSession = new SessionControl();
             //as the default plan file
             XElement tpPlanX = XElement.Load(TargetPlanPath);
             //Delete the name, ra, dec, and adjust entries, if this isn't the default plan itself
@@ -224,7 +230,7 @@ namespace Humason
                 adjX.Remove();
             }
 
-            tpPlanX.Save(FormHumason.openSession.DefaultTargetPlanPath);
+            tpPlanX.Save(openSession.DefaultTargetPlanPath);
             return;
         }
 
@@ -548,6 +554,12 @@ namespace Humason
         {
             get => Convert.ToDateTime(hTargetPlanX.GetItem(SequenceEndTimeXName));
             set => hTargetPlanX.ReplaceItem(SequenceEndTimeXName, value.ToString());
+        }
+
+        public DateTime SequenceDawnTime
+        {
+            get => Convert.ToDateTime(hTargetPlanX.GetItem(SequenceDawnTimeXName));
+            set => hTargetPlanX.ReplaceItem(SequenceDawnTimeXName, value.ToString());
         }
 
         public bool AutoDarkEnabled

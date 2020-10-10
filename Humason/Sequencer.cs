@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using WeatherWatch;
 
+
 namespace Humason
 {
     public class Sequencer
@@ -29,35 +30,36 @@ namespace Humason
         public string FlipText { get; set; }
         public string DoneText { get; set; }
         public string TransitText { get; set; }
-        public string LimitText { get; set; }
-
+        public string SetLimitText { get; set; }
+        public string RiseLimitText { get; set; }
         public DateTime DawnDateTime { get; set; }
+        public double SiteLat { get; set; }
+        public double SiteLon { get; set; }
+        public DateTime SiteLocalTime { get; set; }
+        public TimeZoneInfo SiteLocalTZ { get; set; }
+        public DateTime UTCTime { get; set; }
+        public TimeSpan UTCOffset { get; set; }
+        public TimeSpan SunRise { get; set; }
+        public TimeSpan SunSet { get; set; }
+        public TimeSpan ATwilightStart { get; set; }
+        public TimeSpan ATwilightEnd { get; set; }
+        public double TargetRA { get; set; }
+        public double TargetDec { get; set; }
+        public TimeSpan TargetRise { get; set; }
+        public TimeSpan TargetTransit { get; set; }
+        public TimeSpan TargetSet { get; set; }
+        public TimeSpan TargetHA { get; set; }
+        public TimeSpan TargetLimitSetting { get; set; }
+        public TimeSpan TargetLimitRising { get; set; }
 
-        public double SiteLat;
-        public double SiteLon;
-        public DateTime SiteLocalTime;
-        public TimeZoneInfo SiteLocalTZ;
-        public DateTime UTCTime;
-        public TimeSpan UTCOffset;
-        public TimeSpan SunRise;
-        public TimeSpan SunSet;
-        public TimeSpan aTwilightStart;
-        public TimeSpan aTwilightEnd;
 
-        public double TargetRA;
-        public double TargetDec;
+        public double Progress_Percent { get; set; }
 
-        public TimeSpan TargetRise;
-        public TimeSpan TargetTransit;
-        public TimeSpan TargetSet;
-        public TimeSpan TargetHA;
-        public TimeSpan TargetLimit;
+        public bool AbortSequencer { get; set; }
 
-        public double Progress_Percent;
+        public bool LastTargetSideWest { get; set; }    //Records where the mount was pointing for last shot:  true = east, false = West
 
-        public bool lastTargetSideWest;    //Records where the mount was pointing for last shot:  true = east, false = West
-
-        public bool currentTargetSideWest;//Records where the mount is pointing for current shot:  true = east, false = West
+        public bool CurrentTargetSideWest { get; set; }//Records where the mount is pointing for current shot:  true = east, false = West
 
         //Set up array of frames for imaging
         //Each member of the array will be the definition for one image, or frame
@@ -65,7 +67,6 @@ namespace Humason
         //The array will be redimensioned when populated
 
         public int[,] ImageSeries;
-        public Progress PrgUpdate;
 
         //Array indices for rows: (parameters)
         int si_Filter = 0;
@@ -80,16 +81,21 @@ namespace Humason
 
         public Sequencer()
         {
-            //Set up for progress reports
-            PrgUpdate = new Progress();
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            //Clear abort, if any
+            AbortSequencer = false;
+            //Load Abort Event Handler
+            AbortEvent abortEvent = new AbortEvent();
+            abortEvent.AbortEventHandler += SequencerAbortEvent_Handler;
+            //Open target plan for this sequence
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             //No plan, then just quit
             if (tPlan.TargetPlanPath == null)
             {
                 return;
             }
 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             //Fill in site and target data from TSX
             //Create star chart and object information class instantiations in TSX
             //Set TSX Star Chart for the current sequence start time
@@ -131,9 +137,9 @@ namespace Humason
             //Sun Data
             TSXLink.Target suno = TSXLink.StarChart.FindTarget("Sun");
             // Get astronmical twilight start (morning);
-            aTwilightStart = suno.Dusk;
+            ATwilightStart = suno.Dusk;
             // Get astronmical twilight end (evening);
-            aTwilightEnd = suno.Dawn;
+            ATwilightEnd = suno.Dawn;
             // Get Rise Time
             SunRise = suno.Rise;
             // Get Set Time
@@ -147,18 +153,29 @@ namespace Humason
             UTCOffset = SiteLocalTZ.BaseUtcOffset;
             SiteLocalTime = TSXLink.StarChart.ComputedSiteLocalTime;
             UTCTime = SiteLocalTime.ToUniversalTime();
-            TargetLimit = CalcMinAltHourAngle();
+            TimeSpan minAltHourAngle = CalcMinAltHourAngle();
+            if (minAltHourAngle != TimeSpan.FromHours(0))
+            {
+                TargetLimitSetting = TargetTransit + minAltHourAngle;
+                TargetLimitRising = TargetTransit - minAltHourAngle;
+            }
+            else
+            {
+                TargetLimitSetting = TimeSpan.FromHours(24);
+                TargetLimitRising = TimeSpan.FromHours(24);
+            }
             //turn computer clock back on to return to local time
             TSXLink.StarChart.SetClock(0, true);
         }
 
         public void SequenceGenerator()
         {
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             //Check to see if we have a valid target, if not, then just returnd
-            if (!(TSXLink.StarChart.IsValidTarget(tPlan.TargetName)))
+            if (!(TSXLink.StarChart.IsValidTarget(tPlan)))
             {
                 lg.LogIt("Target Not Found");
                 return;
@@ -183,16 +200,15 @@ namespace Humason
 
             //Convert the sequence parameters to timespan values
             int frames = loops * ((filters - 1) + ratio);
-            TimeSpan cycletime = new TimeSpan(0, 0, (int)(filters * (exposure + delay + overhead)));                 //in timespan
             TimeSpan duration = new TimeSpan(0, 0, (int)(frames * (exposure + delay + overhead)));  //in timespan
 
             //Set the starting time for the image sequence as the configured starting time, converted to UTC
             // and set the ending time for the image sequence as the current time + the duration of the sequence
             // and set the transit time for the image sequence as the current time - the target hour angle
 
-            DateTime sequenceStartUTC = UTCTime;
+            //DateTime sequenceStartUTC = UTCTime;
+            //DateTime sequenceTransitUTC = UTCTime - TargetHA;
             DateTime sequenceEndUTC = UTCTime + duration;
-            DateTime sequenceTransitUTC = UTCTime - TargetHA;
             DateTime sequenceStartLocal = SiteLocalTime;
             DateTime sequenceEndLocal = TimeZoneInfo.ConvertTimeFromUtc(sequenceEndUTC, SiteLocalTZ);
 
@@ -201,133 +217,102 @@ namespace Humason
 
             //Calculate the transit datetime by adding the 
             DateTime sequenceTransitLocal;
-            if (TargetHA < TimeSpan.FromHours(0))
-            { sequenceTransitLocal = SiteLocalTime - TargetHA; }
-            else
-            { sequenceTransitLocal = SiteLocalTime + TimeSpan.FromHours(12) - TargetHA; }
+            if (TargetHA < TimeSpan.FromHours(0)) { sequenceTransitLocal = SiteLocalTime - TargetHA; }
+            else { sequenceTransitLocal = SiteLocalTime + TimeSpan.FromHours(12) - TargetHA; }
 
             //Calculate the limit (minimum altitude) time by adding the local date and limit time of day
             //  if (the limit datetime is less than the current datetime,{ add a half day
-            DateTime sequenceLimitLocal = siteDateLocal + TargetLimit;
-            if (TargetLimit == TimeSpan.FromHours(24))
-            { sequenceLimitLocal = sequenceLimitLocal.AddDays(2); }
-            else
+            //  if the target never gets above the minimum then set to "never"
+            DateTime sequenceLimitSettngLocal = siteDateLocal + TargetLimitSetting;
+            DateTime sequenceLimitRisingLocal = siteDateLocal + TargetLimitRising;
+
+            if (TargetLimitSetting == TimeSpan.FromHours(24)) { sequenceLimitSettngLocal = sequenceLimitSettngLocal.AddDays(2); }
+            //check for astronomical twilight start is earlier than current time, if so add a day
+            if (DateTime.Compare(SiteLocalTime, sequenceLimitSettngLocal) > 0) { sequenceLimitSettngLocal = sequenceLimitSettngLocal.AddDays(1); }
+            //Calculate the twilight time by adding the local date and twilight start time of day
+            //  if (the twilight datetime is less than the current datetime,{ add a day
+            DateTime sequenceDawnLocal = siteDateLocal + ATwilightStart;
+            //if astronomical twilight start is earlier than current time, add a day
+            if (DateTime.Compare(SiteLocalTime, sequenceDawnLocal) > 0) { sequenceDawnLocal = sequenceDawnLocal.AddDays(1); }
+            //Get the current local time and time zone, set the form start time value
+            //if transit is after dawn, set daytime
+            if (sequenceTransitLocal > sequenceDawnLocal) { TransitText = "Daytime"; }
+            else { TransitText = sequenceTransitLocal.ToString("HH:mm"); }
+            //if target lime  greater than 24 hours, then limit is never reached
+            if (TargetLimitSetting == TimeSpan.FromHours(24)) { SetLimitText = "Never"; }
+            else { SetLimitText = sequenceLimitSettngLocal.ToString("HH:mm"); }
+            if (TargetLimitSetting == TimeSpan.FromHours(24)) { RiseLimitText = "Never"; }
+            else { RiseLimitText = sequenceLimitRisingLocal.ToString("HH:mm"); }
+
+            DawnDateTime = sequenceDawnLocal;
+
+            //Construct relative time comparisions: start to dawn, end to dawn, flip to end, etc
+            //int cStartToTwilight = DateTime.Compare(sequenceStartLocal, sequenceDawnLocal);
+            //int cStartToLimit = DateTime.Compare(sequenceStartLocal, sequenceLimitSettngLocal);
+            int cEndToDawn = DateTime.Compare(sequenceEndLocal, sequenceDawnLocal);          //Less than zero if end before dawn
+            int cStartToFlip = DateTime.Compare(sequenceStartLocal, sequenceTransitLocal);       //Less than zero if start before transit
+            int cFlipToEnd = DateTime.Compare(sequenceTransitLocal, sequenceEndLocal);           //Less than zero if transit before end
+            int cEndToLimit = DateTime.Compare(sequenceEndLocal, sequenceLimitSettngLocal);        //Less than zero if end before limit 
+            int cFlipToLimit = DateTime.Compare(sequenceTransitLocal, sequenceLimitSettngLocal);  //Less than zero if limit before transit
+            int cFlipToDawn = DateTime.Compare(sequenceTransitLocal, sequenceDawnLocal);        //Less than zero if dawn before transit
+
+            //Preset the flip and done textbox times to transit and end datetimes
+            FlipText = sequenceTransitLocal.ToString("HH:mm");
+            DoneText = sequenceEndLocal.ToString("HH:mm");
+            //Store a text flag for done textbox (after dawn or after limit) if end is either after dawn or limit
+            string doneFlag = "";
+            if (cEndToDawn > 0) { doneFlag = "After Dawn"; }
+            if (cEndToLimit > 0) { doneFlag = "After Limit"; }
+            //Set flip textbox to N/A if flip is after dawn, after limit or after end of imaging
+            if ((cFlipToDawn > 0) || (cFlipToLimit > 0) || (cFlipToEnd > 0))
             {
-                if (DateTime.Compare(SiteLocalTime, sequenceLimitLocal) > 0) //astronomical twilight start is earlier than current time
-                { sequenceLimitLocal = sequenceLimitLocal.AddDays(1); }
-
-                //Calculate the twilight time by adding the local date and twilight start time of day
-                //  if (the twilight datetime is less than the current datetime,{ add a day
-                DateTime sequenceDawnLocal = siteDateLocal + aTwilightStart;
-                //if astronomical twilight start is earlier than current time, add a day
-                if (DateTime.Compare(SiteLocalTime, sequenceDawnLocal) > 0)
-                { sequenceDawnLocal = sequenceDawnLocal.AddDays(1); }
-                //Get the current local time and time zone, set the form start time value
-                //if transit is after dawn, set daytime
-                if (sequenceTransitLocal > sequenceDawnLocal)
-                { TransitText = "Daytime"; }
-                else
-                { TransitText = sequenceTransitLocal.ToString("HH:mm"); }
-                //if target lime  greater than 24 hours, then limit is never reached
-                if (TargetLimit == TimeSpan.FromHours(24)) { LimitText = "Never"; }
-                else { LimitText = sequenceLimitLocal.ToString("HH:mm"); }
-                DawnDateTime = sequenceDawnLocal;
-
-                //Construct relative time comparisions: start to dawn, end to dawn, flip to end, etc
-                int cStartToTwilight = DateTime.Compare(sequenceStartLocal, sequenceDawnLocal);
-                int cStartToLimit = DateTime.Compare(sequenceStartLocal, sequenceLimitLocal);
-                int cEndToDawn = DateTime.Compare(sequenceEndLocal, sequenceDawnLocal);          //Less than zero if end before dawn
-                int cStartToFlip = DateTime.Compare(sequenceStartLocal, sequenceTransitLocal);       //Less than zero if start before transit
-                int cFlipToEnd = DateTime.Compare(sequenceTransitLocal, sequenceEndLocal);           //Less than zero if transit before end
-                int cEndToLimit = DateTime.Compare(sequenceEndLocal, sequenceLimitLocal);        //Less than zero if end before limit 
-                int cFlipToLimit = DateTime.Compare(sequenceTransitLocal, sequenceLimitLocal);
-                int cFlipToDawn = DateTime.Compare(sequenceTransitLocal, sequenceDawnLocal);
-
-                //Preset the flip and done textbox times to transit and end datetimes
-                FlipText = sequenceTransitLocal.ToString("HH:mm");
-                DoneText = sequenceEndLocal.ToString("HH:mm");
-                //Store a text flag for done textbox (after dawn or after limit) if end is either after dawn or limit
-                string doneFlag = "";
-                if (cEndToDawn > 0) { doneFlag = "After Dawn"; }
-                if (cEndToLimit > 0) { doneFlag = "After Limit"; }
-                //Set flip textbox to N/A if flip is after dawn, after limit or after end of imaging
-                if ((cFlipToDawn > 0) || (cFlipToLimit > 0) || (cFlipToEnd > 0))
+                if (cFlipToDawn > 0) { FlipText = "After Dawn"; }
+                if (cFlipToLimit > 0) { FlipText = "After Limit"; }
+                if (cFlipToEnd > 0) { FlipText = "None"; }
+            }
+            else
+            //Otherwise, determine where the transit might be relative to start and end
+            {
+                if (cFlipToEnd > 0)
+                //transit is after end of imaging so set flip textbox to None
+                //  and set the done textbox to the end of imaging time, if not flagged for limit or dawn
                 {
-                    if (cFlipToDawn > 0)
-                    {
-                        FlipText = "After Dawn";
-                    }
-
-                    if (cFlipToLimit > 0)
-                    {
-                        FlipText = "After Limit";
-                    }
-
-                    if (cFlipToEnd > 0)
-                    {
-                        FlipText = "None";
-                    }
+                    FlipText = "None";
+                    if (doneFlag == "") { DoneText = sequenceEndLocal.ToString("HH:mm"); }
+                    else { DoneText = doneFlag; }
                 }
                 else
-                //Otherwise, determine where the transit might be relative to start and end
+                //transit is before the end of imaging
+                //  check to see if it is after the start of imaging
                 {
-                    if (cFlipToEnd > 0)
-                    //transit is after end of imaging so set flip textbox to None
-                    //  and set the done textbox to the end of imaging time, if not flagged for limit or dawn
+                    if (cStartToFlip < 0)
+                    //transit is after start of imaging (Flip required)
+                    //set the flip textbox to the transit time
+                    // and set the done textbox to the end of imaging time, if not flagged for limit or dawn
                     {
-                        FlipText = "None";
-                        if (doneFlag == "")
-                        {
-                            DoneText = sequenceEndLocal.ToString("HH:mm");
-                        }
-                        else
-                        {
-                            DoneText = doneFlag;
-                        }
+                        FlipText = sequenceTransitLocal.ToString("HH:mm");
+                        if (doneFlag == "") { DoneText = sequenceEndLocal.ToString("HH:mm"); }
+                        else { DoneText = doneFlag; }
                     }
                     else
-                    //transit is before the end of imaging
-                    //  check to see if it is after the start of imaging
+                    //transit is before start of imaging (Flip not required)
+                    //set the flip textbox to None
+                    // and set the done textbox to the end of imaging time, if not flagged for limit or dawn
                     {
-                        if (cStartToFlip < 0)
-                        //transit is after start of imaging (Flip required)
-                        //set the flip textbox to the transit time
-                        // and set the done textbox to the end of imaging time, if not flagged for limit or dawn
-                        {
-                            FlipText = sequenceTransitLocal.ToString("HH:mm");
-                            if (doneFlag == "")
-                            {
-                                DoneText = sequenceEndLocal.ToString("HH:mm");
-                            }
-                            else
-                            {
-                                DoneText = doneFlag;
-                            }
-                        }
-                        else
-                        //transit is before start of imaging (Flip not required)
-                        //set the flip textbox to None
-                        // and set the done textbox to the end of imaging time, if not flagged for limit or dawn
-                        {
-                            FlipText = "None";
-                            if (doneFlag == "")
-                            {
-                                DoneText = sequenceEndLocal.ToString("HH:mm");
-                            }
-                            else
-                            {
-                                DoneText = doneFlag;
-                            }
-                        }
+                        FlipText = "None";
+                        if (doneFlag == "") { DoneText = sequenceEndLocal.ToString("HH:mm"); }
+                        else { DoneText = doneFlag; }
                     }
                 }
+
             }
         }
 
         public bool SeriesGenerator()
         {
             //Method to populate imaging series control array from sequenceform
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             //Figure out how many filters will be used
             List<Filter> fSet = ImageFilterGroup();
             if (fSet == null)
@@ -376,8 +361,9 @@ namespace Humason
             //if (the side of pier changes,{ meridian flip.
             //  This version assumes that the exposure time is less than the
             //  over shoot
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             //Prepare for focusing, if (selected
             //Save the current temperature
@@ -403,7 +389,8 @@ namespace Humason
             // Poll the camera occasionally to check for completion.
             //
             double seriesprogress = 0;
-            PrgUpdate.ProgressIt((int)Math.Ceiling(seriesprogress));
+            ProgressEvent pgrEvent = new ProgressEvent();
+            pgrEvent.ProgressIt((int)Math.Ceiling(seriesprogress));
             int totalImageCount = ImageSeries.GetUpperBound(0) + 1;
             for (int frmdef = 0; frmdef < totalImageCount; frmdef++)
             {
@@ -413,9 +400,9 @@ namespace Humason
                 //  too will hit the weather unsafe condition and break out.
                 //  After all targets have cleared, then the normal shut down will proceed.
                 //  Mount will be returned to current target position if Park'ed during the interrum
-                if (FormHumason.openSession.IsWeatherEnabled)
+                if (openSession.IsWeatherEnabled)
                 {
-                    WeatherReader wrf = new WeatherReader(FormHumason.openSession.WeatherDataFilePath);
+                    WeatherReader wrf = new WeatherReader(openSession.WeatherDataFilePath);
                     if (!wrf.IsWeatherSafe())  //Unsafe condition
                     {
                         //Unsafe weather condition:
@@ -425,7 +412,7 @@ namespace Humason
                         lg.LogIt("Waiting on unsafe weather conditions...");
                         lg.LogIt("Parking telescope, if park is enabled");
                         TSXLink.Mount.Park();
-                        if (FormHumason.openSession.IsDomeAddOnEnabled)
+                        if (openSession.IsDomeAddOnEnabled)
                         {
                             //Close dome -- dome is homed before closing
                             // Note that the mount will be left in the Park position
@@ -444,7 +431,7 @@ namespace Humason
                                 if (LaunchPad.IsTimeToShutDown())
                                 { break; };
                                 //Check for abort
-                                if (FormHumason.AbortFlag)
+                                if (AbortSequencer)
                                 {
                                     lg.LogIt("Sequence aborted by user");
                                     break;
@@ -455,7 +442,7 @@ namespace Humason
                         if (wrf.IsWeatherSafe())
                         {
                             lg.LogIt("Weather conditions safe");
-                            if (FormHumason.openSession.IsDomeAddOnEnabled)
+                            if (openSession.IsDomeAddOnEnabled)
                             {
                                 lg.LogIt("Opening Dome");
                                 TSXLink.Dome.OpenDome();
@@ -468,7 +455,7 @@ namespace Humason
                     }
                 }
                 //Check for abort, again
-                if (FormHumason.AbortFlag)
+                if (AbortSequencer)
                 {
                     lg.LogIt("Sequence aborted by user");
                     break;
@@ -480,7 +467,7 @@ namespace Humason
                     break;
                 }
                 //Check for minimum altitude
-                if (TSXLink.Mount.Alt < FormHumason.openSession.MinimumAltitude)
+                if (TSXLink.Mount.Alt < openSession.MinimumAltitude)
                 {
                     lg.LogIt("Target Too Low");
                     break;
@@ -592,7 +579,7 @@ namespace Humason
                 System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(1000);
                 //Check for abort
-                if (FormHumason.AbortFlag)
+                if (AbortSequencer)
                 {
                     lg.LogIt("Sequence aborted by user");
                     tcam.CameraAbort();
@@ -618,7 +605,7 @@ namespace Humason
                     string rPA = Rotator.RealRotatorPA.ToString(); // zero if no rotator connected
                                                                    //Figure out the current side of pier, save with filename and save for flatfile operation, if any
                     string flatSide;
-                    if (lastTargetSideWest)
+                    if (LastTargetSideWest)
                     {
                         ImageFileManager.SaveLightImage(tname, tfilterName, tPA, "W");
                         flatSide = "West";
@@ -632,7 +619,7 @@ namespace Humason
                     //Check for flat definition in configuration, add if not
                     if (tPlan.MakeFlatsEnabled)
                     {
-                        int flatRepetitions = FormHumason.openSession.FlatsRepetitions;
+                        int flatRepetitions = openSession.FlatsRepetitions;
                         Filter fFilter = new Filter(tfilterName, tfilterIndex, flatRepetitions);
                         Flat imgFlat = new Flat(tname, flatSide, Convert.ToDouble(rPA), fFilter, tPlan.RotatorEnabled);
                         FlatManager flm = new FlatManager();
@@ -643,11 +630,13 @@ namespace Humason
                 // Set the shot flag as true to loop back through.
                 // Update the progress bar and increment the shot count (remember that seriesprogress is zero-based)
                 seriesprogress = seriesprogress + Progress_Percent;
-                PrgUpdate.ProgressIt((int)Math.Ceiling(seriesprogress));
+                pgrEvent.ProgressIt((int)Math.Ceiling(seriesprogress));
                 //Calculate and save the overhead duration
                 DateTime imageEnd = DateTime.Now;
                 TimeSpan imageDuration = imageEnd - imageStart;
-                tPlan.Overhead = imageDuration.TotalSeconds - asti.Exposure;
+                double overhead = imageDuration.TotalSeconds - asti.Exposure;
+                if (overhead >= 0 && overhead < tPlan.ImageExposureTime) tPlan.Overhead = overhead;
+                else tPlan.Overhead = 0;
 
                 //  Next image:  loop back to start
             }
@@ -670,8 +659,9 @@ namespace Humason
             //This routine executes a meridian flip and resumes session and imaging.
             //Flip is from west SOP to eastSOP if WestOTAtoAEastOTA is true
             //
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             lg.LogIt("Meridian Flip Underway");
             // stop guiding, if (on
@@ -699,9 +689,8 @@ namespace Humason
             //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
             if (tPlan.RotatorEnabled)
             {
-                Rotator.PlateSolveIt();
+                lg.LogIt("Rotating to new PA @ " + tPlan.TargetPA.ToString("0.00"));
                 Rotator.RotateToImagePA(tPlan.TargetPA);
-                Rotator.PlateSolveIt();
                 //////////////////////
                 //
                 // Before we go, because of an apparent TSX AO bug, must recalibrate guider if using AO
@@ -738,48 +727,64 @@ namespace Humason
             //Function to compute earliest time of this night that the target can be imaged at this location
             //Base Formula:   hourangle = arccos((sin(altitude) - (sin(latitude)*sin(dec))/(cos(latitude)*(cos(dec)))
             //  Looking for a solution at minAltitude
-            TimeSpan targetRiseTime = aTwilightEnd;  //Default if (never sets
+            TimeSpan targetRiseTime = ATwilightEnd;  //Default if (never sets
             return (targetRiseTime);
         }
 
         private TimeSpan LatestTargetView()
         {
             //Function to compute last time of this night that the target can be imaged at this location
-            TimeSpan targetSetTime = aTwilightStart; //Default if (never sets
+            TimeSpan targetSetTime = ATwilightStart; //Default if (never sets
             return (targetSetTime);
         }
 
+        /// <summary>
+        /// Computes the hours after (and before) transit that the target crosses the minimum altitude
+        /// </summary>
+        /// <returns>TimeSpan in hours</returns>
         private TimeSpan CalcMinAltHourAngle()
         {
-            //Let's try this based on rise transit and set times
-            //  where the hour that is at 30 degrees is (90-30)/90 fraction
-            //  from the transit time to the set time
-            TimeSpan minAltTime;
-            double TelescopeLimit = FormHumason.openSession.MinimumAltitude;
+            SessionControl openSession = new SessionControl();
+            double TelescopeLimit = openSession.MinimumAltitude;
+            //Create celestial ra/dec and terretrial lat/lon coordinate objects
+            AstroMath.Celestial.RADec tSpot = new AstroMath.Celestial.RADec(AstroMath.Transform.DegreesToRadians(TargetRA), AstroMath.Transform.DegreesToRadians(TargetDec));
+            AstroMath.Celestial.LatLon tLoc = new AstroMath.Celestial.LatLon(SiteLat, SiteLon);
+            //Calculate the altitude at zero hour angle (meridian)
+            //Return 0 if the target never makes it to the minimum altitude
+            double meridianAltD = AstroMath.Transform.RadiansToDegrees(tSpot.Altitude(0.0, tLoc));
+            if (meridianAltD < TelescopeLimit)
+                return TimeSpan.FromHours(0);
 
-            // If rise and set are zero, then the target never sets
-            //  So the minAlt is the opposition (12 hourse) from transit
+            TimeSpan hoursToMinAlt;
+            // If rise and set are zero, then the target never sets and worse, never drops below the telescope limit
+            //   but it doesnt matter, it seems
             if ((TargetRise == TimeSpan.FromHours(0)) && (TargetSet == TimeSpan.FromHours(0)))
             {
-                minAltTime = TimeSpan.FromHours((TargetTransit.TotalHours - 12) * ((90 - TelescopeLimit) / 90));
+                //hoursToMinAlt = TimeSpan.FromHours((TargetTransit.TotalHours - 12) * ((meridianAltD - TelescopeLimit) / meridianAltD));
+                hoursToMinAlt = TimeSpan.FromHours(AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc)));
             }
             else
             {
-                if (TargetSet > TargetTransit)
-                {
-                    minAltTime = TimeSpan.FromHours((TargetSet.TotalHours - TargetTransit.TotalHours) * ((90 - TelescopeLimit) / 90));
-                }
-                else
-                {
-                    minAltTime = TimeSpan.FromHours(((TargetSet.TotalHours + 24) - TargetTransit.TotalHours) * ((90 - TelescopeLimit) / 90));
-                }
+                //double tLimitR = AstroMath.Transform.DegreesToRadians(TelescopeLimit);
+                //double declination = tSpot.Dec;
+                //if (declination < 0) declination = 1 - declination;
+                //double haRTest1 = (Math.Sin(tLimitR) - (Math.Sin(declination) * Math.Sin(tLoc.Lat))) / (Math.Cos(tSpot.Dec) * Math.Cos(tLoc.Lat));
+                //double haRtest =  Math.Acos(haRTest1);
+
+                //double haR = tSpot.HourAngle(tLimitR, tLoc);
+                //double haHours = AstroMath.Transform.RadiansToHours(haRtest);
+                //hoursToMinAlt = TimeSpan.FromHours(haHours);
+                hoursToMinAlt = TimeSpan.FromHours(AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc)));
+                //if (TargetSet < TargetTransit)
+                //{
+                //    hoursToMinAlt = -hoursToMinAlt;
             }
-            minAltTime += TargetTransit;
-            if (minAltTime > TimeSpan.FromHours(24))
-            {
-                minAltTime -= TimeSpan.FromHours(24);
-            }
-            return minAltTime;
+            //TimeSpan minAltTime = TargetTransit + hoursToMinAlt;
+            //if (minAltTime > TimeSpan.FromHours(24))
+            //{
+            //    minAltTime -= TimeSpan.FromHours(24);
+            //}
+            return hoursToMinAlt;
         }
 
         public bool CLSToTargetPlanCoordinates()
@@ -788,8 +793,9 @@ namespace Humason
             // as defined in the configuration file
             // in this case we will use the RA,Dec version of find
             // just in case this target RA/Dec has been shifted for the shot
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             int clsstat = 0;
             //Save current camera parameters
@@ -840,9 +846,8 @@ namespace Humason
             {
                 //Launch CLS -- again
                 lg.LogIt("CLS Failed: Error " + clsstat.ToString() + " -- trying again");
+                clsstat = TSXLink.ImageSolution.PrecisionSlew(asti);
             }
-
-            clsstat = TSXLink.ImageSolution.PrecisionSlew(asti);
             //If it fails again, then just end it
             if (clsstat != 0)
             {
@@ -860,17 +865,17 @@ namespace Humason
         {
             //Store the location of the target prior to imaging
 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
 
             if (!IsTargetWest())
             {  //target is east of meridian
                 lg.LogIt("Target is east of meridian");
-                lastTargetSideWest = false;
+                LastTargetSideWest = false;
             }
             else
             {   //target is west of meridian
                 lg.LogIt("Target is west of meridian");
-                lastTargetSideWest = true;
+                LastTargetSideWest = true;
             }
         }
 
@@ -878,8 +883,9 @@ namespace Humason
         {
             //Find guidestar, optimize exposure and turn on autoguiding
             //   returns true if autoguiding was successfully prep'ed up and turned on
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-            LogEvent lg = FormHumason.lg;
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
             lg.LogIt("Checking to see if autoguiding is already running");
             if (AutoGuide.IsAutoGuideOn())
             {
@@ -936,7 +942,7 @@ namespace Humason
         private void StopAutoguiding()
         {
             //Turn off autoguiding
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             lg.LogIt("Stopping autoguider");
             AutoGuide.AutoGuideStop();
         }
@@ -945,7 +951,8 @@ namespace Humason
         {
             //Checks for need to refocus();
             //Get Maximum Temperature Variation value from the Session database
-            double atDiff = FormHumason.openSession.RefocusAtTemperatureDifference;
+            SessionControl openSession = new SessionControl();
+            double atDiff = openSession.RefocusAtTemperatureDifference;
             if (Math.Abs(TSXLink.Focus.GetTemperature() - lastFocusTemp) >= atDiff)
             {
                 RunAutoFocus();
@@ -960,8 +967,9 @@ namespace Humason
             //  Save state, selects at focus type, runs it, restores state and collects
             //  **** Turn off Autoguiding, assuming it is on
             //
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-            LogEvent lg = FormHumason.lg;
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
             //TTUtility.SaveTSXState(tPlan.getitem);
             //Filter chosen for autofocus
             lg.LogIt("Running @Focus" + tPlan.AtFocusSelect.ToString("0"));
@@ -983,7 +991,8 @@ namespace Humason
             //
             //For each filter in the filter list, add the filter index to the output array,
             //  make that LRGBRatio times for the ClearFilter.
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             List<Filter> filterGroup = tPlan.FilterWheelList;
             int repeatFilter = tPlan.ClearFilter;
             int repeats = tPlan.LRGBRatio;
@@ -1041,6 +1050,18 @@ namespace Humason
             }
             return 0;
         }
+
+        #region Event Handlers
+
+        private void SequencerAbortEvent_Handler(object sender, AbortEvent.AbortEventArgs e)
+        {
+            AbortSequencer = true;
+            return;
+        }
+
+        #endregion
+
+
 
     }
 }

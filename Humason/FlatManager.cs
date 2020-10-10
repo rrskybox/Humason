@@ -37,7 +37,8 @@ namespace Humason
         public FlatManager()
         {
             //Create the folder path for the base folder.
-            nhDir = FormHumason.openSession.HumasonDirectoryPath;
+            SessionControl openSession = new SessionControl();
+            nhDir = openSession.HumasonDirectoryPath;
             //Create the flats request xml file, if it doesn't exist
             fReq = new Axess(nhDir + "\\" + HumasonFlatStackFilename, HumasonFlatsXCName);
         }
@@ -45,7 +46,8 @@ namespace Humason
         public void TakeFlats()
         {
             //Pulls flat requests from the flat stack (file) and services accordingly
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
             lg.LogIt("Checking for flat requests");
 
             //Opt out if no flats to look at
@@ -61,7 +63,7 @@ namespace Humason
 
             //Fire off flatman if enabled, otherwise point the telescope up for dawn or dusk flats
             // Sort flats by filter and source (i.e. twightlight or dawn)
-            if (FormHumason.openSession.IsFlatManEnabled)
+            if (openSession.IsFlatManEnabled)
             {
                 //Stage the mount to the flatman
                 FlatMan flmn = new FlatMan();
@@ -76,7 +78,7 @@ namespace Humason
                 //  Disconnect imaging devices before attaching panel, then reconnect afterwards
                 //    this keeps the SBIG driver from freaking out when the guider USB is hot swapped
                 //    with the FlatMan USB (Build 182+)
-                if (FormHumason.openSession.IsFlatManManualSetupEnabled)
+                if (openSession.IsFlatManManualSetupEnabled)
                 {
                     lg.LogIt("Pausing to attach FlatMan panel");
                     lg.LogIt("Disconnecting imaging devices");
@@ -110,7 +112,7 @@ namespace Humason
             //Loop on the flat entries in the flat stack file, if any
             while (HaveFlatsToDo())
             {
-                switch (FormHumason.openSession.FlatLightSource)
+                switch (openSession.FlatLightSource)
                 {
                     case (LightSource.lsNone):
                         {
@@ -118,12 +120,12 @@ namespace Humason
                         }
                     case (LightSource.lsFlatMan):
                         {
-                            if (FormHumason.openSession.IsFlatManEnabled)
+                            if (openSession.IsFlatManEnabled)
                             {
                                 // **********************  Use Flatman
                                 //Rotate to PA, if there is a rotator is enabled
                                 Flat iFlat = GetLeastRotatedFlat();
-                                if (FormHumason.openSession.IsRotationEnabled)
+                                if (openSession.IsRotationEnabled)
                                 {
                                     Rotator.RotateToRotatorPA(iFlat.RotationPA);
                                 }
@@ -155,7 +157,7 @@ namespace Humason
                 }
             }
             //If FlatMan was used, then shut it down
-            if (FormHumason.openSession.IsFlatManEnabled)
+            if (openSession.IsFlatManEnabled)
             {
                 //Turn off flatman functions
                 FlatMan flmn = new FlatMan();
@@ -164,7 +166,7 @@ namespace Humason
                 lg.LogIt("Turning off FlatMan panel");
                 flmn.Light = false;
                 //If Manual Setup is selected, then pause for user to position the FlatMan for flats
-                if (FormHumason.openSession.IsFlatManManualSetupEnabled)
+                if (openSession.IsFlatManManualSetupEnabled)
                 {
                     lg.LogIt("Pausing to detach FlatMan panel");
                     MessageBox.Show("Detach the FlatMan, then press OK");
@@ -281,8 +283,9 @@ namespace Humason
         private Flat GetLeastRotatedFlat()
         {
             //Get the current rotation position, if any
+            SessionControl openSession = new SessionControl();
             double nowRotAngle = 0;
-            if (FormHumason.openSession.IsRotationEnabled)
+            if (openSession.IsRotationEnabled)
             {
                 nowRotAngle = Rotator.RealRotatorPA;
             }

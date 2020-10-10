@@ -28,8 +28,8 @@ namespace Humason
             //Create default sequence
             imgseq = new Sequencer();
             //Subscribe this form to the log event 
-            imgseq.PrgUpdate.ProgressUpdateEventHandler += ProgressUpdate_Handler;
-            FormHumason.AbortFlag = false;
+            ProgressEvent prgEvent = new ProgressEvent();
+            prgEvent.ProgressUpdateEventHandler += ProgressUpdate_Handler;
             //Set command button colors
             NHUtil.ButtonGreen(UpdateButton);
             NHUtil.ButtonGreen(SaveDefaultButton);
@@ -37,10 +37,10 @@ namespace Humason
             targetreset.TargetEventHandler += TargetResetEvent_Handler;
         }
 
-        private void UpdateButton_Click(object sender, EventArgs e)
+        public void UpdateButton_Click(object sender, EventArgs e)
         {
             NHUtil.ButtonRed(UpdateButton);
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             //If the targetname is empty, then check for a target name in TSX Find,
             //If still empty then just return
             string currentPlan = TargetBox.Text;
@@ -64,20 +64,21 @@ namespace Humason
             //     (note that the contents could be null)
             //  In any case, open or create a new tPlan and populate the data boxes
             //
+            SessionControl openSession = new SessionControl();
             if (FormHumason.InitializingHumason)
             { return; }
             else
             {
-                FormHumason.openSession.CurrentTargetName = TargetBox.Text;
-                TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+                openSession.CurrentTargetName = TargetBox.Text;
             }
         }
 
         private void LRGBRatioBox_ValueChanged(object sender, EventArgs e)
         {
-            if (FormHumason.InitializingHumason)
-            { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            if (FormHumason.InitializingHumason) return;
+
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 LRGBRatio = (int)LRGBRatioBox.Value
             };
@@ -86,16 +87,19 @@ namespace Humason
             UpdateTimesFromSequence();
         }
 
-        private void StartTimeBox_TextChanged(object sender, EventArgs e)
+        private void StartTimeBox_ValueChanged(object sender, EventArgs e)
         {
-            //Do nothing
+            //Save to Session
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            tPlan.SequenceStartTime = StartTimeBox.Value;
         }
 
         private void ExposureVal_ValueChanged(object sender, EventArgs e)
         {
-            if (FormHumason.InitializingHumason)
-            { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName) { ImageExposureTime = (double)ExposureVal.Value };
+            if (FormHumason.InitializingHumason) return;
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName) { ImageExposureTime = (double)ExposureVal.Value };
             try { imgseq.SequenceGenerator(); }
             catch { return; }
             UpdateTimesFromSequence();
@@ -103,9 +107,9 @@ namespace Humason
 
         private void LoopsVal_ValueChanged(object sender, EventArgs e)
         {
-            if (FormHumason.InitializingHumason)
-            { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName) { Loops = (int)LoopsVal.Value };
+            if (FormHumason.InitializingHumason) return;
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName) { Loops = (int)LoopsVal.Value };
             try { imgseq.SequenceGenerator(); }
             catch { return; }
             UpdateTimesFromSequence();
@@ -113,9 +117,10 @@ namespace Humason
 
         private void DelayVal_ValueChanged(object sender, EventArgs e)
         {
-            if (FormHumason.InitializingHumason)
-            { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName) { Delay = (double)DelayVal.Value };
+            if (FormHumason.InitializingHumason) return;
+
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName) { Delay = (double)DelayVal.Value };
             try { imgseq.SequenceGenerator(); }
             catch { return; }
             UpdateTimesFromSequence();
@@ -123,6 +128,7 @@ namespace Humason
 
         private void UpdateTimesFromSequence()
         {
+            SessionControl openSession = new SessionControl();
             //Save the configuration
             UpdateFormFromPlan();
             //Update time boxes if valid (not Default Target Plan)
@@ -132,11 +138,12 @@ namespace Humason
                 FlipTimeBox.Text = imgseq.FlipText;
                 DoneTimeBox.Text = imgseq.DoneText;
                 TransitBox.Text = imgseq.TransitText;
-                LimitBox.Text = imgseq.LimitText;
-                LimitLabel.Text = "Alt<" + FormHumason.openSession.MinimumAltitude;
+                LimitLabel.Text = "Alt<" + openSession.MinimumAltitude;
                 DawnTimeBox.Value = imgseq.DawnDateTime;
+                SetLimitBox.Text = imgseq.SetLimitText;
+                RiseLimitBox.Text = imgseq.RiseLimitText;
             }
-            catch { }  //Just ignor, if there is an error
+            catch { }  //Just ignore, if there is an error
             Show();
         }
 
@@ -144,7 +151,8 @@ namespace Humason
         {
             //Update Sequence will load the target name (or adjusted location) into the Find
             //  function and update all the location information, then run a new calculation on times, etc
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             sky6ObjectInformation tsxo = new sky6ObjectInformation();
             string targetName = tPlan.TargetName;
             //if the targetName is null, then pull the targetName from TSX, load into the textbox and store in configuration file
@@ -176,28 +184,27 @@ namespace Humason
 
             //Update the start time in the target plan
             tPlan.SequenceStartTime = StartTimeBox.Value;
+            tPlan.SequenceDawnTime = DawnTimeBox.Value;
 
             //Save the new configuration information
             UpdateFormFromPlan();
             RegenerateSequence();
-            FormHumason.AbortFlag = false;
         }
 
         public void RegenerateSequence()
         {
             //Close out the current sequence class and open a new one with the current configuration file
             //  including reseting the progress update handler, if needed
-            //  and the abort flag
             imgseq = new Sequencer();
-            //Subscribe this form to the log event 
-            imgseq.PrgUpdate.ProgressUpdateEventHandler += ProgressUpdate_Handler;
-            //Recalculate the imaging sequence and display the times.  Clear abort flag.
+            //Reset the progress to 0 using the event chain
+            ProgressEvent prgEvent = new ProgressEvent();
+            prgEvent.ProgressUpdate(0);
+            //Recalculate the imaging sequence and display the times.
             imgseq.SequenceGenerator();
             UpdateTimesFromSequence();
-            FormHumason.AbortFlag = false;
         }
 
-        public void Update_Status_Bar(int newlen)
+        public void UpdateStatusBar(int newlen)
         {
             if (newlen > ProgressBar.Maximum)
             {
@@ -216,7 +223,8 @@ namespace Humason
             //Initialize form fields from current target plan, which will be the default target plan
             //  when first booting up
 
-            string currentTarget = FormHumason.openSession.CurrentTargetName;
+            SessionControl openSession = new SessionControl();
+            string currentTarget = openSession.CurrentTargetName;
             if (currentTarget != null)
             {
                 TargetPlan tPlan = new TargetPlan(currentTarget);
@@ -234,6 +242,8 @@ namespace Humason
                 //Set start time to current time and update the (default) target plan start time
                 StartTimeBox.Value = DateTime.Now;
                 tPlan.SequenceStartTime = StartTimeBox.Value;
+                //Save the dawn time as the hard stop for the sequence, if needed
+                tPlan.SequenceDawnTime = DawnTimeBox.Value;
                 if (tPlan.TargetAdjustEnabled)
                 {
                     AdjustedTargetLabel.Visible = true;
@@ -247,7 +257,8 @@ namespace Humason
 
         public void UpdateFormFromPlan()
         {//Update form fields with the content of a new target plan from the session control file
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             if (tPlan.TargetName == "Default")
             {
                 TargetBox.Text = "";
@@ -277,15 +288,11 @@ namespace Humason
             }
         }
 
-        private void ProgressUpdate_Handler(object sender, Progress.ProgressUpdateEventArgs e)
-        {
-            Update_Status_Bar(e.ProgressPercent);
-        }
-
         private void MakeFlatsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            SessionControl openSession = new SessionControl();
             if (FormHumason.InitializingHumason) { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 MakeFlatsEnabled = MakeFlatsCheckBox.Checked
             };
@@ -293,9 +300,10 @@ namespace Humason
 
         private void TargetRABox_ValueChanged(object sender, EventArgs e)
         {
+            SessionControl openSession = new SessionControl();
             if (FormHumason.InitializingHumason)
             { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 TargetRA = (double)TargetRABox.Value
             };
@@ -303,9 +311,10 @@ namespace Humason
 
         private void TargetDecBox_ValueChanged(object sender, EventArgs e)
         {
+            SessionControl openSession = new SessionControl();
             if (FormHumason.InitializingHumason)
             { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 TargetDec = (double)TargetDecBox.Value
             };
@@ -313,9 +322,10 @@ namespace Humason
 
         private void TargetPABox_ValueChanged(object sender, EventArgs e)
         {
+            SessionControl openSession = new SessionControl();
             if (FormHumason.InitializingHumason)
             { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 TargetPA = (double)TargetPABox.Value
             };
@@ -323,9 +333,10 @@ namespace Humason
 
         private void AutoDarkCheck_CheckedChanged(object sender, EventArgs e)
         {
+            SessionControl openSession = new SessionControl();
             if (FormHumason.InitializingHumason)
             { return; }
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 AutoDarkEnabled = AutoDarkCheck.Checked
             };
@@ -334,19 +345,36 @@ namespace Humason
         private void StartTimeBox_DoubleClick(object sender, EventArgs e)
         {
             //Resets the StartTimeBox datetime to the current time when double clicked
+            //var picker = new DateTimePicker();
+            //Form f = new Form();
+            //f.Controls.Add(picker);
+
+            //var result = f.ShowDialog();
+            //if (result == DialogResult.OK)
+            //{
+            //    StartTimeBox.Value = picker.Value;
+            //}
             StartTimeBox.Value = DateTime.Now;
         }
+
+        private void SaveDefaultButton_Click(object sender, EventArgs e)
+        {
+            //Saves the current active target file as the default file
+            SessionControl openSession = new SessionControl();
+            NHUtil.ButtonRed(SaveDefaultButton);
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            tPlan.SavePlanAsDefaultPlan();
+            NHUtil.ButtonGreen(SaveDefaultButton);
+        }
+
 
         #region Event Handlers
 
         private void TargetResetEvent_Handler(object sender, TargetEvent.TargetEventArgs e)
         {
-            //TargetBox.Text = e.TargetEntry;
-            //AdjustTargetCheck.Checked = e.TargetAdjust;
-            //TargetRABox.Value = (decimal)e.TargetRA;
-            //TargetDecBox.Value = (decimal)e.TargetDec;
-            //TargetPABox.Value = (decimal)e.TargetPA;
-
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            TargetBox.Text = tPlan.TargetName;
             RegenerateSequence();
             UpdateFormFromPlan();
 
@@ -355,16 +383,12 @@ namespace Humason
             return;
         }
 
-        #endregion
-
-        private void SaveDefaultButton_Click(object sender, EventArgs e)
+        protected void ProgressUpdate_Handler(object sender, ProgressEvent.ProgressUpdateEventArgs e)
         {
-            //Saves the current active target file as the default file
-            NHUtil.ButtonRed(SaveDefaultButton);
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-            tPlan.SavePlanAsDefaultPlan();
-            NHUtil.ButtonGreen(SaveDefaultButton);
+            UpdateStatusBar(e.ProgressPercent);
         }
+
+        #endregion
 
 
     }

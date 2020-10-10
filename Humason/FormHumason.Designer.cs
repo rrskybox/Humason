@@ -41,8 +41,6 @@
             this.DomeTab = new System.Windows.Forms.TabPage();
             this.ConnectButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
-            this.StatusStripLine = new System.Windows.Forms.ToolStripStatusLabel();
-            this.HumasonStatus = new System.Windows.Forms.StatusStrip();
             this.OnTopCheck = new System.Windows.Forms.CheckBox();
             this.DisconnectButton = new System.Windows.Forms.Button();
             this.HomeMountCheckBox = new System.Windows.Forms.CheckBox();
@@ -53,8 +51,8 @@
             this.AboutButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.StatusBox = new System.Windows.Forms.TextBox();
             this.HumasonTabs.SuspendLayout();
-            this.HumasonStatus.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
@@ -183,29 +181,11 @@
             this.CloseButton.UseVisualStyleBackColor = true;
             this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
-            // StatusStripLine
-            // 
-            this.StatusStripLine.AutoSize = false;
-            this.StatusStripLine.Name = "StatusStripLine";
-            this.StatusStripLine.Size = new System.Drawing.Size(280, 17);
-            this.StatusStripLine.Text = "Status Line";
-            this.StatusStripLine.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // HumasonStatus
-            // 
-            this.HumasonStatus.BackColor = System.Drawing.Color.White;
-            this.HumasonStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.StatusStripLine});
-            this.HumasonStatus.Location = new System.Drawing.Point(0, 539);
-            this.HumasonStatus.Name = "HumasonStatus";
-            this.HumasonStatus.Size = new System.Drawing.Size(305, 22);
-            this.HumasonStatus.SizingGrip = false;
-            this.HumasonStatus.TabIndex = 8;
-            this.HumasonStatus.Text = "StatusText";
-            // 
             // OnTopCheck
             // 
             this.OnTopCheck.AutoSize = true;
+            this.OnTopCheck.Checked = true;
+            this.OnTopCheck.CheckState = System.Windows.Forms.CheckState.Checked;
             this.OnTopCheck.ForeColor = System.Drawing.Color.White;
             this.OnTopCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.OnTopCheck.Location = new System.Drawing.Point(78, 16);
@@ -319,23 +299,32 @@
             this.groupBox3.Controls.Add(this.OnTopCheck);
             this.groupBox3.Controls.Add(this.OptionsButton);
             this.groupBox3.ForeColor = System.Drawing.Color.White;
-            this.groupBox3.Location = new System.Drawing.Point(154, 422);
+            this.groupBox3.Location = new System.Drawing.Point(146, 423);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(147, 76);
             this.groupBox3.TabIndex = 20;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Auto";
             // 
+            // StatusBox
+            // 
+            this.StatusBox.Location = new System.Drawing.Point(12, 533);
+            this.StatusBox.Multiline = true;
+            this.StatusBox.Name = "StatusBox";
+            this.StatusBox.Size = new System.Drawing.Size(281, 170);
+            this.StatusBox.TabIndex = 21;
+            this.StatusBox.Text = "Status Box";
+            // 
             // FormHumason
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkCyan;
-            this.ClientSize = new System.Drawing.Size(305, 561);
+            this.ClientSize = new System.Drawing.Size(305, 715);
+            this.Controls.Add(this.StatusBox);
             this.Controls.Add(this.AboutButton);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.HumasonStatus);
             this.Controls.Add(this.HumasonTabs);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -345,8 +334,6 @@
             this.Text = "Humason V2.0";
             this.TransparencyKey = System.Drawing.Color.Red;
             this.HumasonTabs.ResumeLayout(false);
-            this.HumasonStatus.ResumeLayout(false);
-            this.HumasonStatus.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -367,8 +354,6 @@
         private System.Windows.Forms.TabPage DevicesTab;
         private System.Windows.Forms.TabPage RotatorTab;
         private System.Windows.Forms.TabPage PlanTab;
-        internal System.Windows.Forms.ToolStripStatusLabel StatusStripLine;
-        public System.Windows.Forms.StatusStrip HumasonStatus;
         private System.Windows.Forms.TabPage TargetTab;
         private System.Windows.Forms.CheckBox OnTopCheck;
         private System.Windows.Forms.TabPage SessionTab;
@@ -382,6 +367,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TabPage DomeTab;
+        private System.Windows.Forms.TextBox StatusBox;
     }
 }
 

@@ -63,8 +63,9 @@ namespace Humason
         {
             //Checks to see if a default target file exists.  If not, a warning is issued
             //
+            SessionControl openSession = new SessionControl();
             string csErrors = null;
-            if (!System.IO.File.Exists(FormHumason.openSession.DefaultTargetPlanPath))
+            if (!System.IO.File.Exists(openSession.DefaultTargetPlanPath))
             {
                 AllGoodFlag = false;
                 ErrorList += "Default Target Plan is missing.";
@@ -75,8 +76,9 @@ namespace Humason
         private static string CheckTargetLoaded()
         {
             //returns either an error message or null string
+            SessionControl openSession = new SessionControl();
             string csErrors = null;
-            if (FormHumason.openSession.CurrentTargetName == "")
+            if (openSession.CurrentTargetName == "")
             {
                 AllGoodFlag = false;
                 ErrorList += "No target plan has been entered.\r\n";

@@ -26,8 +26,8 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>185</ApplicationRevision>
-    <ApplicationVersion>2.9.2.%2a</ApplicationVersion>
+    <ApplicationRevision>199</ApplicationRevision>
+    <ApplicationVersion>3.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -77,9 +77,9 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AstroMath, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AstroMath, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\AstroMath\AstroMath\bin\Release\AstroMath.dll</HintPath>
+      <HintPath>..\..\AstroMath\AstroMath\bin\Debug\AstroMath.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -150,6 +150,7 @@
     <Compile Include="FormTarget.Designer.cs">
       <DependentUpon>FormTarget.cs</DependentUpon>
     </Compile>
+    <Compile Include="Operations.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -178,7 +179,7 @@
     </Compile>
     <Compile Include="Mosaic.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Progress.cs" />
+    <Compile Include="ProgressEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FormRotate.cs">
       <SubType>Form</SubType>

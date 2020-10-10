@@ -22,14 +22,15 @@ namespace Humason
         {
             //The NH image directory originates from the NH form and stored in the Session class.
             //Get Humason directory name, create image directory if it doesn't exist yet
-            LogEvent lg = FormHumason.lg;
-            string nhDirName = FormHumason.openSession.HumasonDirectoryPath;
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            string nhDirName = openSession.HumasonDirectoryPath;
             string nhImageDirName = nhDirName + "\\Images";
             if (!Directory.Exists(nhImageDirName))
             { Directory.CreateDirectory(nhImageDirName); }
 
             //Create date name for image sub-directory, create if it doesn't exist yet
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             DateTime sequenceStartDate = tPlan.SequenceStartTime;
             string targetImageDir = nhImageDirName + "\\" + sequenceStartDate.ToString("yyyyMMdd") + "_" + targetName;
@@ -49,7 +50,7 @@ namespace Humason
                                             targetPA +
                                             sidePoint +
                                             "." +
-                                            FormHumason.openSession.SequentialFileNumber.ToString() +
+                                            openSession.SequentialFileNumber.ToString() +
                                             ".fit";
             //open TSX camera and get the last image
             ccdsoftImage tsxi = new ccdsoftImage();
@@ -77,10 +78,11 @@ namespace Humason
         {
             //The NH image directory originates from the SetUp form and stored in the
             //Configuration file.
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             //Get Humason directory name, create image directory if it doesn't exist yet
-            string nhDirName = FormHumason.openSession.HumasonDirectoryPath;
+            string nhDirName = openSession.HumasonDirectoryPath;
             string nhImageDirName = nhDirName + "\\Images";
             if (!Directory.Exists(nhImageDirName))
             { Directory.CreateDirectory(nhImageDirName); }
@@ -104,7 +106,7 @@ namespace Humason
                                             "PA" +
                                             sidePoint +
                                             "." +
-                                            FormHumason.openSession.SequentialFileNumber.ToString() +
+                                            openSession.SequentialFileNumber.ToString() +
                                             ".fit";
             //open TSX camera and get the last image
             ccdsoftImage tsxi = new ccdsoftImage();

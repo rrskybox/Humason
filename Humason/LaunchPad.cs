@@ -23,15 +23,21 @@ namespace Humason
 {
     class LaunchPad
     {
+        private static bool AbortFlag { get; set; } = false;
+
         public static bool WaitLoop(DateTime endTime)
         {
-            LogEvent lg = FormHumason.lg;
+            AbortFlag = false;
+            AbortEvent ag = new AbortEvent();
+            ag.AbortEventHandler += AbortReportEvent_Handler;
+
+            LogEvent lg = new LogEvent();
             lg.LogIt("Waiting until " + endTime.ToString("HH:mm"));
             do
             {
                 System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(1000); //wait a second
-                if (FormHumason.AbortFlag)
+                if (AbortFlag)
                 {
                     lg.LogIt("Wait Loop Aborted");
                     return false;
@@ -48,9 +54,10 @@ namespace Humason
 
             //Check to see if AutoRun and Staging executable has been enabled
             //  If so, then wait until the current time is greater than stage system time
-            if (FormHumason.openSession.IsStagingEnabled)
+            SessionControl openSession = new SessionControl();
+            if (openSession.IsStagingEnabled)
             {
-                if (WaitLoop(FormHumason.openSession.StagingTime)) { RunStagingApp(); }
+                if (WaitLoop(openSession.StagingTime)) { RunStagingApp(); }
             }
         }
 
@@ -62,9 +69,10 @@ namespace Humason
 
             //Check to see if AutoRun and StartUp executable has been enabled
             //  If so, then wait until the current time is greater than stage system time
-            if (FormHumason.openSession.IsStartUpEnabled)
+            SessionControl openSession = new SessionControl();
+            if (openSession.IsStartUpEnabled)
             {
-                if (WaitLoop(FormHumason.openSession.StartUpTime)) { RunStartUpApp(); }
+                if (WaitLoop(openSession.StartUpTime)) { RunStartUpApp(); }
             }
 
             return;
@@ -76,9 +84,10 @@ namespace Humason
             //   if the datetime exceeds the end time
             // this is intended to be used to periodically check if 
             // a photoshoot has lasted past the configured shutdown time
-            if (FormHumason.openSession.IsAutoRunEnabled && FormHumason.openSession.IsShutDownEnabled)
+            SessionControl openSession = new SessionControl();
+            if (openSession.IsAutoRunEnabled && openSession.IsShutDownEnabled)
             {
-                DateTime endTime = FormHumason.openSession.ShutDownTime;
+                DateTime endTime = openSession.ShutDownTime;
                 if (endTime < DateTime.Now) { return (true); }
                 else { return (false); }
             }
@@ -90,14 +99,15 @@ namespace Humason
             //If StageSystemOn is set, then RunStageSystem gets the StageSystem filepath from the Humason config file, if any
             //  then launches it and waits for completion.
 
+            SessionControl openSession = new SessionControl();
             Process pSystemExe = new Process();
-            if (FormHumason.openSession.StagingFilePath != null)
+            if (openSession.StagingFilePath != null)
             {
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
                 lg.LogIt("Running Staging Process");
-                pSystemExe.StartInfo.FileName = FormHumason.openSession.StagingFilePath;
+                pSystemExe.StartInfo.FileName = openSession.StagingFilePath;
                 pSystemExe.Start();
-                if (FormHumason.openSession.IsStagingWaitEnabled)
+                if (openSession.IsStagingWaitEnabled)
                 {
                     pSystemExe.WaitForExit();
                 }
@@ -112,14 +122,15 @@ namespace Humason
             //If StageSystemOn is set, then RunStageSystem gets the StageSystem filepath from the Humason config file, if any
             //  then launches it and waits for completion.
 
+            SessionControl openSession = new SessionControl();
             Process pSystemExe = new Process();
-            if (FormHumason.openSession.StartUpFilePath != null)
+            if (openSession.StartUpFilePath != null)
             {
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
                 lg.LogIt("Running Start Up Process");
-                pSystemExe.StartInfo.FileName = FormHumason.openSession.StartUpFilePath;
+                pSystemExe.StartInfo.FileName = openSession.StartUpFilePath;
                 pSystemExe.Start();
-                if (FormHumason.openSession.IsStartUpWaitEnabled)
+                if (openSession.IsStartUpWaitEnabled)
                 {
                     pSystemExe.WaitForExit();
                 }
@@ -134,16 +145,17 @@ namespace Humason
             //If ShutDownOn is set, then RunShutDown gets the postscan filepath from the Humason config file, if any
             //  then launches it and waits for completion.
 
+            SessionControl openSession = new SessionControl();
             Process pSystemExe = new Process();
-            if (FormHumason.openSession.ShutDownFilePath != null)
+            if (openSession.ShutDownFilePath != null)
             {
-                LogEvent lg = FormHumason.lg;
+                LogEvent lg = new LogEvent();
                 lg.LogIt("Running Shut Down Process");
-                pSystemExe.StartInfo.FileName = FormHumason.openSession.ShutDownFilePath;
+                pSystemExe.StartInfo.FileName = openSession.ShutDownFilePath;
                 try
                 {
                     pSystemExe.Start();
-                    if (FormHumason.openSession.IsShutDownWaitEnabled)
+                    if (openSession.IsShutDownWaitEnabled)
                     {
                         pSystemExe.WaitForExit();
                     }
@@ -151,6 +163,12 @@ namespace Humason
                 catch { }
                 lg.LogIt("Shut Down Process Complete");
             }
+            return;
+        }
+
+        private static void AbortReportEvent_Handler(object sender, AbortEvent.AbortEventArgs e)
+        {
+            AbortFlag = true;
             return;
         }
 

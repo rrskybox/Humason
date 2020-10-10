@@ -12,12 +12,13 @@ namespace Humason
         {
             sessionFormInit = true;
             InitializeComponent();
-            AutoRunCheck.Checked = FormHumason.openSession.IsAutoRunEnabled;
+            SessionControl openSession = new SessionControl();
+            AutoRunCheck.Checked = openSession.IsAutoRunEnabled;
             //Update the autorun types checked 
-            StagingEnabledCheckBox.Checked = FormHumason.openSession.IsStagingEnabled;
-            StartupEnabledCheckBox.Checked = FormHumason.openSession.IsStartUpEnabled;
-            ShutdownEnabledCheckBox.Checked = FormHumason.openSession.IsShutDownEnabled;
-            MinimumAltitudeBox.Value = FormHumason.openSession.MinimumAltitude;
+            StagingEnabledCheckBox.Checked = openSession.IsStagingEnabled;
+            StartupEnabledCheckBox.Checked = openSession.IsStartUpEnabled;
+            ShutdownEnabledCheckBox.Checked = openSession.IsShutDownEnabled;
+            MinimumAltitudeBox.Value = openSession.MinimumAltitude;
             sessionFormInit = false;
             return;
         }
@@ -31,15 +32,16 @@ namespace Humason
             //First, if the forms are still initializing, then just ignore
             if (sessionFormInit)
             { return; }
-            FormHumason.openSession.IsAutoRunEnabled = AutoRunCheck.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsAutoRunEnabled = AutoRunCheck.Checked;
             if (AutoRunCheck.Checked)
             {
                 FormAutoRun arf = new FormAutoRun();
                 arf.ShowDialog();
             }
-            FormHumason.openSession.IsStagingEnabled = StagingEnabledCheckBox.Checked;
-            FormHumason.openSession.IsStartUpEnabled = StartupEnabledCheckBox.Checked;
-            FormHumason.openSession.IsShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+            openSession.IsStagingEnabled = StagingEnabledCheckBox.Checked;
+            openSession.IsStartUpEnabled = StartupEnabledCheckBox.Checked;
+            openSession.IsShutDownEnabled = ShutdownEnabledCheckBox.Checked;
             return;
         }
 
@@ -54,22 +56,26 @@ namespace Humason
 
         private void StagingEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.IsStagingEnabled = StagingEnabledCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsStagingEnabled = StagingEnabledCheckBox.Checked;
         }
 
         private void StartupEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.IsStartUpEnabled = StartupEnabledCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsStartUpEnabled = StartupEnabledCheckBox.Checked;
         }
 
         private void ShutdownEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.IsShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsShutDownEnabled = ShutdownEnabledCheckBox.Checked;
         }
 
         private void MinAltitudeBox_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.MinimumAltitude = (int)MinimumAltitudeBox.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.MinimumAltitude = (int)MinimumAltitudeBox.Value;
         }
     }
 }

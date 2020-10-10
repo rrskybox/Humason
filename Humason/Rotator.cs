@@ -45,8 +45,9 @@ namespace Humason
             const double TestAngle = 10;
 
             //Turn on the logger
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             lg.LogIt("Plate solving current rotator position");
             if (!PlateSolveIt()) { return false; }
@@ -85,7 +86,7 @@ namespace Humason
             else { rotatorDirection = 1; }
 
             RotatorDirection = rotatorDirection;
-            FormHumason.openSession.RotatorDirection = rotatorDirection;
+            openSession.RotatorDirection = rotatorDirection;
             lg.LogIt("Rotator behavior successfully calibrated");
             return true;
         }
@@ -96,14 +97,19 @@ namespace Humason
             //  Assumes that a plate solve has been performed, and/or rotator position angle variables
             //  are current
 
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             TSXLink.Rotator trot = new TSXLink.Rotator();
-            int rotDir = Convert.ToInt32(FormHumason.openSession.RotatorDirection);
+            int rotDir = Convert.ToInt32(openSession.RotatorDirection);
+            //Plate solve for current PA
+            PlateSolveIt();
             //target rotation PA = current image PA + current rotator PA - target image PA 
             // double tgtRotationPA = ((startImagePA - endImagePA) * rotdir) + rotPA;
             double destRotationPA = ((ImagePA - tgtImagePA) * -rotDir) + AstroMath.Transform.NormalizeDegreeRange(RealRotatorPA);
             double destRotationPAnormalized = AstroMath.Transform.NormalizeDegreeRange(destRotationPA);
             trot.SetRotatorPositionAngle(destRotationPAnormalized);
+            //Plate solve for current PA
+            PlateSolveIt();
             //ImagePA = tgtImagePA;
             return;
         }
@@ -120,8 +126,9 @@ namespace Humason
 
         public static bool PlateSolveIt()
         {
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             AstroImage asti = new AstroImage
             {
                 Exposure = tPlan.PlateSolveExposureTime,

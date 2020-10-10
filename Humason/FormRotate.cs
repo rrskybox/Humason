@@ -9,8 +9,9 @@ namespace Humason
         public FormRotate()
         {
             InitializeComponent();
+            SessionControl openSession = new SessionControl();
             //bool rstat = Rotator.Connect();  //get around to handling problems later...
-            if (FormHumason.openSession.RotatorDirection == 1)
+            if (openSession.RotatorDirection == 1)
             {
                 RotatorDirectionBox.Text = "CW";
             }
@@ -19,7 +20,7 @@ namespace Humason
                 RotatorDirectionBox.Text = "CCW";
             }
 
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             if (tPlan.TargetPlanPath != null)
             {
                 if (tPlan.PlateSolveExposureTime != 0)
@@ -51,7 +52,7 @@ namespace Humason
             //Set autosave.
             //Take an image
             NHUtil.ButtonRed(PlateSolveButton);
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             if (!Rotator.PlateSolveIt())
             {
 
@@ -65,7 +66,8 @@ namespace Humason
 
         private void PlateSolveExposure_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 PlateSolveExposureTime = (double)PlateSolveExposure.Value
             };
@@ -76,7 +78,7 @@ namespace Humason
         {
             //Get location and PA of FOV on chart
             NHUtil.ButtonRed(InitializeButton);
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             DisplayResults();
             Show();
             Rotator.CalibrateRotator();
@@ -98,12 +100,10 @@ namespace Humason
             //POint telescope at target RA/Dec and rotate to PA
             //Slew scope to RA,Dec
             NHUtil.ButtonRed(TargetButton);
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             TSXLink.StarChart.ChartRA = tPlan.TargetRA;
             TSXLink.StarChart.ChartDec = tPlan.TargetDec;
-            //tsxs.Rotation = Convert.ToDouble(tPlan.GetItem(Configuration.sbTargetPAName));
-            Rotator.PlateSolveIt();
             DisplayResults();
             Rotator.RotateToImagePA(tPlan.TargetPA);
             DisplayResults();
@@ -114,11 +114,9 @@ namespace Humason
         private void RotateToIPAButton_Click(object sender, EventArgs e)
         {
             NHUtil.ButtonRed(RotateToIPAButton);
-            Rotator.PlateSolveIt();
             DisplayResults();
             double rotate = (double)MoveToIPANum.Value;
             Rotator.RotateToImagePA(rotate);
-            Rotator.PlateSolveIt();
             DisplayResults();
             NHUtil.ButtonGreen(RotateToIPAButton);
             return;

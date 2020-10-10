@@ -11,7 +11,8 @@ namespace Humason
 
         public FlatMan()
         {
-            Port = FormHumason.openSession.FlatManComPort;
+            SessionControl openSession = new SessionControl();
+            Port = openSession.FlatManComPort;
             return;
         }
 
@@ -21,7 +22,8 @@ namespace Humason
             set
             {
                 flatManComPort = value;
-                FormHumason.openSession.FlatManComPort = value;
+                SessionControl openSession = new SessionControl();
+                openSession.FlatManComPort = value;
                 return;
             }
         }
@@ -57,15 +59,16 @@ namespace Humason
             //The mount will then be sent to that position and tracking turned off
 
             LogEvent lg = new LogEvent();
-            
+            SessionControl openSession = new SessionControl();
+
             lg.LogIt("Establishing TSX interfaces: star chart, mount, dome.");
             //If the dome is enabled,  Home it and disconnect
-            if (FormHumason.openSession.IsDomeAddOnEnabled)
+            if (openSession.IsDomeAddOnEnabled)
             {
                 //Complete any dome commands, including homing and closing the dome, if needed
                 //The mount will be parked and disconnected during this operation
                 //Dome will be decoupled from mount
-                if (FormHumason.openSession.IsDomeAddOnEnabled)
+                if (openSession.IsDomeAddOnEnabled)
                 {
                     lg.LogIt("Homing and Closing Dome");
                     lg.LogIt("Connecting Dome");
@@ -89,7 +92,7 @@ namespace Humason
             //  and ask the user for permission to continue, abort if user cancels, otherwise continue.
             lg.LogIt("Connecting mount");
             TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
-            if (FormHumason.openSession.IsFlatManManualSetupEnabled)
+            if (openSession.IsFlatManManualSetupEnabled)
             {
                 lg.LogIt("Parking mount to wait for manual flatman set up");
                 TSXLink.Mount.Park();

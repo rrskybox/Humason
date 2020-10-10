@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Humason
 {
-    public partial class SessionControl
+    public class SessionControl
     {
         const string SBQueryFolder = "Software Bisque\\TheSkyX Professional Edition\\Database Queries";
         const string SBFocusDataFolder = "Software Bisque\\TheSkyX Professional Edition\\Focuser Data";
@@ -208,19 +208,35 @@ namespace Humason
 
         public bool IsAutoRunEnabled
         {
-            get => Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName));
+            get
+            {
+                if (Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName)); }
+                else { return false; }
+            }
             set => DirectXcess.ReplaceItem(AutoRunCheckedXName, value);
         }
 
         public bool IsHomeMountEnabled
         {
-            get => Convert.ToBoolean(DirectXcess.GetItem(HomeMountEnabledXName));
+            get
+            {
+                if (Convert.ToBoolean(DirectXcess.GetItem(HomeMountEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(HomeMountEnabledXName)); }
+                else { return false; }
+            }
             set => DirectXcess.ReplaceItem(HomeMountEnabledXName, value);
         }
 
         public bool IsParkMountEnabled
         {
-            get => Convert.ToBoolean(DirectXcess.GetItem(ParkMountEnabledXName));
+            get
+            {
+                if (Convert.ToBoolean(DirectXcess.GetItem(ParkMountEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(ParkMountEnabledXName)); }
+                else { return false; }
+            }
+
             set => DirectXcess.ReplaceItem(ParkMountEnabledXName, value);
         }
 

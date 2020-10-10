@@ -10,7 +10,8 @@ namespace Humason
             InitializeComponent();
             ColorButtonsGreen();
             //Populate entries with stored entries, if any
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             if (tPlan.TargetPlanPath != null)
             {
                 try { ResetConfiguration(); } catch { };  //ignore problems in target plan file, fix later
@@ -19,7 +20,8 @@ namespace Humason
 
         public void ResetConfiguration()
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             if (tPlan.HasValue(TargetPlan.GuideExposureTimeXName))
             { GuideExposureTimeBox.Value = (decimal)tPlan.GuideExposure; }
             else
@@ -112,7 +114,8 @@ namespace Humason
             //  if (not calibrated,) { abort
             //  Find guidestar
             //  Turn on Autoguide
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             if (NHUtil.IsButtonRed(AutoGuideOnButton))
             {
                 AutoGuide.AutoGuideStop();
@@ -136,7 +139,8 @@ namespace Humason
         {
             NHUtil.ButtonRed(FindStarButton);
 
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             bool fsbresult = AutoGuide.SetAutoGuideStar();
             //if there is an error, then assume that the exposure is just too low
@@ -167,7 +171,8 @@ namespace Humason
 
         private void OptimizeExposureButton_Click(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             NHUtil.ButtonRed(OptimizeExposureButton);
             double optExposure = AutoGuide.OptimizeExposure();
             GuideExposureTimeBox.Value = (decimal)optExposure;
@@ -178,7 +183,8 @@ namespace Humason
 
         private void AOCheck_CheckedChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 AOEnabled = AOCheckBox.Checked
             };
@@ -186,7 +192,8 @@ namespace Humason
 
         private void GuideExposureTimeBox_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 GuideExposure = (double)GuideExposureTimeBox.Value
             };
@@ -194,7 +201,8 @@ namespace Humason
 
         private void MaximumGuideExposureTimeBox_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 MaximumGuiderExposure = (double)MaximumGuideExposureTimeBox.Value
             };
@@ -202,7 +210,8 @@ namespace Humason
 
         private void MinimumGuideExposureTimeBox_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 MinimumGuiderExposure = (double)MinimumGuideExposureTimeBox.Value
             };
@@ -210,7 +219,8 @@ namespace Humason
 
         private void GuideStarADUNum_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 GuideStarADU = (Int32)GuideStarADUNum.Value
             };
@@ -227,7 +237,8 @@ namespace Humason
 
         private void Binning1x1RadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 GuiderBinning = 1
             };
@@ -235,7 +246,8 @@ namespace Humason
 
         private void Binning2x2RadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 GuiderBinning = 2
             };
@@ -250,7 +262,8 @@ namespace Humason
 
         private void SubframeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 GuiderSubframeEnabled = SubframeCheckBox.Checked
             };
@@ -259,7 +272,8 @@ namespace Humason
 
         private void XAxisMoveTime_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 XAxisMoveTime = (double)XAxisMoveTime.Value
             };
@@ -267,7 +281,8 @@ namespace Humason
 
         private void YAxisMoveTime_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 YAxisMoveTime = (double)YAxisMoveTime.Value
             };
@@ -275,12 +290,14 @@ namespace Humason
 
         private void GuideStarEdgeMarginNum_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.GuideStarEdgeMargin = (Int16)GuideStarEdgeMarginNum.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.GuideStarEdgeMargin = (Int16)GuideStarEdgeMarginNum.Value;
         }
 
         private void SubframeCheckBox_CheckedChanged_1(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 GuiderSubframeEnabled = SubframeCheckBox.Checked
             };

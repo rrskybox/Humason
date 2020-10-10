@@ -88,7 +88,8 @@ namespace Humason
             //   Set for asynchronous execution
             //   Start exposure and wait until completed or aborted
             //   Clean up mess and return;
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
 
             //Save the current time so we can calculate an overhead later
             DateTime imageStart = DateTime.Now;
@@ -117,7 +118,7 @@ namespace Humason
             DateTime imageEnd = DateTime.Now;
             TimeSpan imageDuration = imageEnd - imageStart;
 
-            FormHumason.openSession.Overhead = imageDuration.TotalSeconds;
+            openSession.Overhead = imageDuration.TotalSeconds;
             return tcam.LastImageFilename();
         }
 
@@ -133,7 +134,7 @@ namespace Humason
             //   For the number of repetions:
             //       Start exposure and wait until completed or aborted
             //   Clean up mess and return;
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
 
             AstroImage asti = new AstroImage
             {
@@ -173,7 +174,7 @@ namespace Humason
             //       Start exposure and wait until completed or aborted
             //   Clean up mess and return;
 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             AstroImage asti = new AstroImage
             {
                 Exposure = 0.001,
@@ -200,7 +201,7 @@ namespace Humason
         {
             //Take a small subframed flat image and return the average pixel value
             const double subframeFactor = .1;  //fraction of frame that will be subframed
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             lg.LogIt("Taking Flat Sample Frame");
 
             AstroImage asti = new AstroImage
@@ -264,7 +265,7 @@ namespace Humason
             //   Also determine starting and ending times based on time of day
             //  ) {..
             //   Clean up mess and return;
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
 
             TwilightFlatsLoop(iFlat, TimeOfDay);
 
@@ -288,13 +289,14 @@ namespace Humason
             //   Loop
 
             //we//re done here
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
 
             int MinExpTime = 4;
             int MaxExpTime = 60;
             //int MinADUVal = 20000;
             //int MaxADUVal = 40000;
-            double tgtADU = FormHumason.openSession.FlatsTargetADU;
+            double tgtADU = openSession.FlatsTargetADU;
             int MinADUVal = (int)(tgtADU * 0.8);
             int MaxADUVal = (int)(tgtADU * 1.2);
             //int SaturatedADUVal = 65000
@@ -305,7 +307,7 @@ namespace Humason
             int filternumber = iFlat.FlatFilter.Index;
             AstroImage asti = new AstroImage
             {
-                Exposure = FormHumason.openSession.FlatsExposureTime,
+                Exposure = openSession.FlatsExposureTime,
                 Frame = AstroImage.ImageType.Flat,
                 ImageReduction = AstroImage.ReductionType.None,
                 Filter = iFlat.FlatFilter.Index,
@@ -416,16 +418,17 @@ namespace Humason
             /// Create a string for the calibration directory path
             /// 
 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
 
             //Turn light on, if off
             FlatMan flmn = new FlatMan { Light = true };
 
             //try to find the best brightness that is near, but less than the target
-            int brightness = FlatManBrightnessCalibration(filter, FormHumason.openSession.FlatsExposureTime, FormHumason.openSession.FlatManBrightness, FormHumason.openSession.FlatsTargetADU);
+            int brightness = FlatManBrightnessCalibration(filter, openSession.FlatsExposureTime, openSession.FlatManBrightness, openSession.FlatsTargetADU);
             lg.LogIt("FlatMan brightness level set to " + brightness.ToString("0"));
             //try to find the best exposure that is close to the target
-            double exposure = FlatManExposureCalibration(filter, FormHumason.openSession.FlatsExposureTime, brightness, FormHumason.openSession.FlatsTargetADU);
+            double exposure = FlatManExposureCalibration(filter, openSession.FlatsExposureTime, brightness, openSession.FlatsTargetADU);
             lg.LogIt("FlatMan exposure set to " + exposure.ToString("0.00"));
             flmn.Bright = brightness;
             int imagecount = filter.Repeat;
@@ -438,7 +441,7 @@ namespace Humason
 
         private void FlatManFlatsLoop(string targetName, Filter filter, int imagecount, double exposure, double rotationPA, string meridianSide)
         {
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             AstroImage asti = new AstroImage
             {
                 Frame = AstroImage.ImageType.Flat,
@@ -484,7 +487,7 @@ namespace Humason
             //2. It the currentADU is within 20% of the targetADU, and it is less than the targetADU, then return that brightness level
             //3.   Otherwise, increment the brightness level up or down by 5 and try again.
 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
 
             int currentADU;
             int currentBrightness = startingBrightness;
@@ -528,7 +531,7 @@ namespace Humason
             //1. Take flat image with given filter at exposure and initial brightness level
             //2. Calculate new exposure needed to that is within 90% of Max ADU
             //
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             lg.LogIt("Calibrating FlatMan exposure");
             int currentADU;
             double currentExposure = startingexposure;

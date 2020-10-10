@@ -1,0 +1,275 @@
+﻿using Planetarium;
+using System;
+
+namespace Humason
+{
+    public partial class Operations
+    {
+        public static bool AbortFlag { get; set; }
+        //public static SessionControl openSession;
+
+        public static bool ImagingControl()
+        {
+            //Runs the photo shoot shebang
+            //First a little housekeeping -- configuration update and make sure the clock is set right
+            //if Autorun staging is set, wait on autostaging time, then run the staging app
+            //if Autorun start is set, wait on autostart time, then run the starting app
+            //Wait on Sequence start
+            //
+            //LogEvent lg = new LogEvent();
+            LogEvent lg = FormHumason.StatusReportEvent;
+
+            TargetEvent tg = new TargetEvent();
+
+            SessionControl openSession = new SessionControl();
+
+            //Run a quick check on all the things that might be wrong, based on past history
+            //  the main thing being that there is at least one target plan queued.
+            lg.LogIt("Running diagnostics");
+            if (!Diagnostics.CheckUp())
+            {
+                lg.LogIt("Diagnostics abort");
+                return false; ;
+            }
+            lg.LogIt("Diagnostics success");
+
+            AbortFlag = false;
+
+            //All selected devices should be on-line and connected
+            //Load the first target plan so we can pull some information for this session
+            lg.LogIt("Loading first session target plan");
+            if (!FormHumason.fPlanForm.IsTopPlanTargetName())
+            {
+                lg.LogIt("No Target Plan");
+                return false;
+            }
+            openSession.CurrentTargetName = FormHumason.fPlanForm.GetTopPlanTargetName();
+            TargetPlan ftPlan = new TargetPlan(openSession.CurrentTargetName);
+            //Flush it out, if we have to
+            if (ftPlan.IsSparsePlan())
+            {
+                lg.LogIt("Sparse Plan -- filling out from default");
+                ftPlan.FlushOutFromDefaultPlan();
+            }
+            //Update the form and regenerate the sequence
+            tg.RaiseNewTargetPlan(ftPlan.TargetName);
+
+            //Get the staging, start and shut down times from this initial target, although may not be used
+            openSession.StagingTime = DateTime.Now;
+            openSession.StartUpTime = ftPlan.SequenceStartTime;
+            // openSession.ShutDownTime = fSequenceForm.DawnTimeBox.Value;
+            openSession.ShutDownTime = ftPlan.SequenceDawnTime;
+
+            //Save configuration set up, reset the progess bar and make sure that the TSX clock is set to current time
+            //fSequenceForm.UpdateFormFromPlan();
+            TSXLink.StarChart.SetClock(0, true);
+
+            //Await Staging and Start Up
+            //Potentially nothing is powered or initialized at this point
+            AwaitStaging();
+            //  If autorun enabled, then run the staging time autorun script/app
+            if (openSession.IsAutoRunEnabled && openSession.IsStagingEnabled) { LaunchPad.WaitStaging(); }
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+
+            AwaitStartUp();
+            //  If autorun enabled, then run the start up time autorun script/app
+            if (openSession.IsAutoRunEnabled && openSession.IsStartUpEnabled) { LaunchPad.WaitStartUp(); }
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+
+            //Both Staging and Start Up have been run. All devices should be powered, but not necessarily connected
+            //Power up and connect devices (if not done already)
+            lg.LogIt("Initializing system");
+            InitializeSystem();
+
+            //Remove all flat requests from the flats file
+            //   No, don't
+            //FlatManager nhFlat = new FlatManager();
+            //nhFlat.FlatSetClearAll();
+            //nhFlat = null;
+
+            //Check for proximity to meridian flip
+            //  if HA of target is within 10 minutes, then just wait it out at 
+            //Get target HA
+            TSXLink.Target tgto;
+            lg.LogIt("Checking for new target to clear meridian");
+            tgto = TSXLink.StarChart.FindTarget(ftPlan.TargetName);
+            double ha = tgto.HA.TotalMinutes;
+            while ((ha >= -10) && (ha <= 0))
+            {
+                System.Threading.Thread.Sleep(10000);
+                tgto = TSXLink.StarChart.FindTarget(ftPlan.TargetName);
+                ha = tgto.HA.TotalMinutes;
+            }
+            lg.LogIt("New target is clear of meridian");
+
+            //Make sure the mount is unparked
+            TSXLink.Mount.UnPark();
+            //Make sure tracking is turned on
+            TSXLink.Mount.TurnTrackingOn();
+
+            //Bring camera to temperature (if not already), then clear the objects
+            AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Imaging };
+            TSXLink.Camera cCam = new TSXLink.Camera(asti);
+            cCam.CCDTemperature = ftPlan.CameraTemperatureSet;
+            cCam = null; asti = null;
+
+            //************************  Starting up the target plans  *************************
+            //
+            //  This loop is to run each of the plans in the schedule list sequentially.
+            //  The current plan has already progressed through any staging and starting scripts
+            //      and the next step will be to wait on the starting time, if it hasn't passed already
+            //  At the end of the loop, the current plan will be deleted from the schedule and the next one, if any
+            //      loaded.  If none, then the shutdown script of the last plan will be run (if autorun is set for that plan).
+            //
+            while (FormHumason.fPlanForm.IsTopPlanTargetName())
+            {
+
+                //Load the top scheduled plan
+                string tgtName = FormHumason.fPlanForm.GetTopPlanTargetName();
+                openSession.CurrentTargetName = tgtName;
+                TargetPlan tPlan = new TargetPlan(tgtName);
+
+                lg.LogIt(" ******************* Imaging Target: " + openSession.CurrentTargetName);
+                if (tPlan.IsSparsePlan())
+                {
+                    lg.LogIt("Sparse Plan -- filling out from default");
+                    tPlan.FlushOutFromDefaultPlan();
+                }
+                //Try to move to target, if this fails just abort
+                Sequencer imgseq = new Sequencer();
+                if (!imgseq.CLSToTargetPlanCoordinates()) { AbortFlag = true; break; }
+
+                //check for abort having been set.  Gracefully shut everything back down if it has.
+                if (AbortFlag) { GracefulAbort(); break; }
+
+                //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
+                if (tPlan.RotatorEnabled)
+                {
+                    lg.LogIt("Rotating to PA @ " + tPlan.TargetPA.ToString("0.00"));
+                    Rotator.RotateToImagePA(tPlan.TargetPA);
+                    lg.LogIt("Rotation complete and verified");
+                }
+                else lg.LogIt("Rotator not enabled");
+
+                //check for abort having been set.  Gracefully shut everything back down if it has.
+                if (AbortFlag) { GracefulAbort(); break; }
+
+                //Update the sequence for whatever time it is now
+                try { imgseq.SeriesGenerator(); }
+                catch
+                {
+                    lg.LogIt("Make Series Error");
+                    GracefulAbort(); break;
+                }
+                //
+                // Run Imaging Sequence
+                imgseq.PhotoShoot();
+                //
+                //
+                //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
+                AutoGuide.AutoGuideStop();
+                //check for abort having been set.  Gracefully shut everything back down if it has.
+                if (AbortFlag) { GracefulAbort(); break; }
+                //Done with imaging on this plan.  
+                //Store the ending time
+                tPlan.SequenceEndTime = DateTime.Now;
+                //Save the plan in the sequence complete summary file
+                openSession.AddSequenceCompleteSummary();
+                //string tName = tPlan.GetItem(TargetPlan.sbTargetNameName); //why??
+                //Remove the plan from the schedule and look for the next
+                FormHumason.fPlanForm.RemoveTopPlan();
+            }
+
+            //done with imaging.  Check on flats  See if any flats have been requested
+
+            FlatManager fmgr = new FlatManager();
+            if (fmgr.HaveFlatsToDo() && !AbortFlag)
+            { fmgr.TakeFlats(); }
+
+            //If autorun set, then run it, or... just park the mount
+            if (openSession.IsAutoRunEnabled) { LaunchPad.RunShutDownApp(); }
+            else
+            {
+                try { TSXLink.Mount.Park(); }
+                catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
+            }
+            return true;
+        }
+
+        private static void GracefulAbort()
+        {
+            //Abort has been pushed or automatically called by procedure due to some error
+            //If start is not active then we want to just park the scope and disconnect all
+            //devices.
+            //If start is active, then we want to treat this as a catastrophic event and simply
+            //stop everything by parking
+            SessionControl openSession = new SessionControl();
+
+            LogEvent lg = new LogEvent();
+            lg.LogIt("Aborting and Closing Down");
+            //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
+            AutoGuide.AutoGuideStop();
+
+            //If autorun set, then run it, or... just park the mount, home the dome and disconnect
+            if (openSession.IsAutoRunEnabled) { LaunchPad.RunShutDownApp(); }
+            else
+            {
+                lg.LogIt("Parking Mount");
+                try { TSXLink.Mount.Park(); }
+                catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
+                //home dome (don't close as autorun is not enabled
+                lg.LogIt("Homing Dome");
+                if (openSession.IsDomeAddOnEnabled) { TSXLink.Dome.HomeDome(); }
+                lg.LogIt("Disconnecting all devices");
+                TSXLink.Connection.DisconnectAllDevices();
+            }
+            lg.LogIt("Abort Completed -- awaiting new orders, Captain");
+            return;
+        }
+
+        /// <summary>
+        /// Wait loop control for Staging and Start Up
+        /// </summary>
+        private static void AwaitStaging()
+        {
+            SessionControl openSession = new SessionControl();
+            //Wait until Staging Time
+            LaunchPad.WaitLoop(openSession.StagingTime);
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+        }
+
+        /// <summary>
+        /// Wait loop control for Staging and Start Up
+        /// </summary>
+        private static void AwaitStartUp()
+        {
+            SessionControl openSession = new SessionControl();
+            TargetPlan ftPlan = new TargetPlan(openSession.CurrentTargetName);
+            //Wait until Start Up Time
+            LaunchPad.WaitLoop(ftPlan.SequenceStartTime);
+            //check for abort having been set.  Gracefully shut everything back down if it has.
+            if (AbortFlag) { GracefulAbort(); }
+        }
+
+        public static void InitializeSystem()
+        {
+            SessionControl openSession = new SessionControl();
+
+            //Power on and connect devices as configured
+            LogEvent lg = new LogEvent();
+            lg.LogIt("Connecting");
+            openSession = new SessionControl();
+            if (openSession.IsHomeMountEnabled) { TSXLink.Connection.DeployMount(); }
+            //Make sure themount is Parked
+            TSXLink.Mount.Park();
+            TSXLink.Connection.ConnectAllDevices();
+            //fCameraForm.RefreshFilterList();
+            lg.LogIt("Devices Connected");
+        }
+
+    }
+}
+

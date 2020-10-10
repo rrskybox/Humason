@@ -77,12 +77,13 @@ namespace Humason
         public void AbortIt(string abortmessage)
         {
             //Logs the abort event
-            LogEvent lg = FormHumason.lg;
-            lg.LogIt("Abort set: " + abortmessage);
+            LogEvent lg = new LogEvent();
+            lg.LogIt("Abort Initiated: " + abortmessage);
 
             //Raises an abort event for anyone who is listening
             RaiseAbortEvent(abortmessage);
-            System.Windows.Forms.Application.DoEvents();
+            //tell the operations class that there is an abort
+            Operations.AbortFlag = true;
         }
 
     }

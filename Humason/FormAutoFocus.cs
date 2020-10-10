@@ -23,7 +23,8 @@ namespace Humason
         public void ResetConfiguration()
         {
             //Populate entries with stored entries, if any
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             if (tPlan.TargetPlanPath != null)
             {
                 FocusFilterBox.Text = tPlan.FocusFilter.ToString();
@@ -43,11 +44,12 @@ namespace Humason
             //   Moves focuser to new position from current position
 
             NHUtil.ButtonRed(Presetbutton);
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             //Get a filter focus file path from the configuration file, then validate/change via dialog
-            FilterFileDialog.InitialDirectory = FormHumason.openSession.FocuserDataFolder;
+            FilterFileDialog.InitialDirectory = openSession.FocuserDataFolder;
             FilterFileDialog.FileName = "";
 
             DialogResult focusfilelist = FilterFileDialog.ShowDialog();
@@ -119,7 +121,8 @@ namespace Humason
 
         private void FocusExposureBox_ValueChanged(object sender, EventArgs e)
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 FocusExposure = (double)FocusExposureBox.Value
             };

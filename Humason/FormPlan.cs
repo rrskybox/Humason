@@ -14,7 +14,7 @@ namespace Humason
         {
             InitializeComponent();
 
-            PlanTargetBox.Text = FormHumason.fSequenceForm.TargetBox.Text;
+            PlanTargetBox.Text = FormHumason.fTargetForm.TargetBox.Text;
             NHUtil.ButtonGreen(AcquireButton);
             NHUtil.ButtonGreen(SelectButton);
             NHUtil.ButtonGreen(AdjustButton);
@@ -41,7 +41,8 @@ namespace Humason
              * and make it the target plan for the current session
              */
 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
             //get the current target name from TSX and save it.
             NHUtil.ButtonRed(AcquireButton);
             //Retrieve current target from TSX
@@ -70,7 +71,7 @@ namespace Humason
                     PlanTargetBox.Text = newtPlan.TargetName;
                     TSXLink.StarChart.SetFOV(2);
                     LoadTargetPlanList();
-                    FormHumason.openSession.CurrentTargetName = newtPlan.TargetName;
+                    openSession.CurrentTargetName = newtPlan.TargetName;
                     lg.LogIt("A new target plan has been created for " + newtPlan.TargetName);
                 }
             }
@@ -85,8 +86,9 @@ namespace Humason
             //and and center the star chart and FOV on the target.
             //If not throw a log entry and return;
             //Remove spaces from target name if any
-            PlanTargetBox.Text = PlanTargetBox.Text.Replace(" ", "");
-            LogEvent lg = FormHumason.lg;
+            //PlanTargetBox.Text = PlanTargetBox.Text.Replace(" ", "");
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
             NHUtil.ButtonRed(SelectButton);
             TSXLink.Target tgt = TSXLink.StarChart.FindTarget(PlanTargetBox.Text);
             if (tgt != null)
@@ -98,7 +100,7 @@ namespace Humason
                 PlanTargetBox.Text = newtPlan.TargetName;
                 TSXLink.StarChart.SetFOV(2);
                 LoadTargetPlanList();
-                FormHumason.openSession.CurrentTargetName = newtPlan.TargetName;
+                openSession.CurrentTargetName = newtPlan.TargetName;
                 lg.LogIt("A new target plan has been created for " + newtPlan.TargetName);
             }
             else
@@ -119,11 +121,12 @@ namespace Humason
             //  if button red, then an adjustment has been completed.
             //      Get the current StarChart values from TSX
             //          and saves tPlan RA/Dec/PA with those StarChart values.
+            SessionControl openSession = new SessionControl();
             if (NHUtil.IsButtonGreen(AdjustButton))
             {
                 NHUtil.ButtonRed(AdjustButton);
                 this.AdjustButton.Text = "Save Adjustment";
-                TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
                 TSXLink.Target tgt = TSXLink.StarChart.FindTarget(tPlan.TargetName);
                 double totalPA = AstroMath.Transform.NormalizeDegreeRange(Rotator.RealRotatorPA + TSXLink.FOVI.GetFOVPA);
                 tPlan.TargetRA = tgt.RA;
@@ -135,7 +138,7 @@ namespace Humason
             else
             {
                 TSXLink tLink = new TSXLink();
-                TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
                 double totalPA = AstroMath.Transform.NormalizeDegreeRange(Rotator.RealRotatorPA + TSXLink.FOVI.GetFOVPA);
                 tPlan.TargetRA = TSXLink.StarChart.ChartRA;
                 tPlan.TargetDec = TSXLink.StarChart.ChartDec;
@@ -151,11 +154,12 @@ namespace Humason
         {
             //Deletes the plan selected in the TargetListBox
             //Remove spaces from target name if any
-            PlanTargetBox.Text = PlanTargetBox.Text.Replace(" ", "");
+            //PlanTargetBox.Text = PlanTargetBox.Text.Replace(" ", "");
+            SessionControl openSession = new SessionControl();
             if (!(PlanListBox.SelectedItem == null))
             {
                 string tname = PlanListBox.SelectedItem.ToString();
-                TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
                 tPlan.DeleteTargetPlan(tname);
                 LoadTargetPlanList();
             }
@@ -168,12 +172,14 @@ namespace Humason
             // 
             // Button will be held red until the user has prepared mosaic in TSX and
             //  copied to clipboard
+            SessionControl openSession = new SessionControl();
             if (NHUtil.IsButtonGreen(MosaicButton))
             {
                 //Verify that a target has been loaded, if not, post error and return
                 //  otherwise, set the button color to read, change the text and zero the FOVI
                 //  in anticipation of loading a mosaic target set
-                if (TSXLink.StarChart.IsValidTarget(FormHumason.openSession.CurrentTargetName))
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+                if (TSXLink.StarChart.IsValidTarget(tPlan))
                 {
                     NHUtil.ButtonRed(MosaicButton);
                     MosaicButton.Text = "Clipboard Ready";
@@ -191,7 +197,7 @@ namespace Humason
                     // For each of the entries in the mosaic,
                     //  Load the values into the configuration file
                     //  Save the configuration file with a prefix tName-Set-Frame
-                    string tName = FormHumason.openSession.CurrentTargetName;
+                    string tName = openSession.CurrentTargetName;
                     foreach (Mosaic.MosaicTarget mt in nhmtgts)
                     {
                         string prefixName = tName + "-" + mt.Set + "-" + mt.Frame;
@@ -306,7 +312,8 @@ namespace Humason
             //then merge the default target file into it.  Update the other forms with the new
             //target plan fields.  lthen reload the target plan list.
 
-            FormHumason.openSession.CurrentTargetName = tname;
+            SessionControl openSession = new SessionControl();
+            openSession.CurrentTargetName = tname;
             TargetPlan tPlan = new TargetPlan(tname);
             if (tPlan.IsSparsePlan())
             { tPlan.FlushOutFromDefaultPlan(); }
@@ -314,7 +321,7 @@ namespace Humason
             UpdateHumasonSequencer();
             try //If there are problems in the target plan file, this is where they show up
             {
-                FormHumason.fCameraForm.ResetConfiguration();
+                FormHumason.fDeviceForm.ResetConfiguration();
                 FormHumason.fFocusForm.ResetConfiguration();
                 FormHumason.fGuideForm.ResetConfiguration();
             }
@@ -330,7 +337,8 @@ namespace Humason
         {
             //loads the list of target files into the the target list box
             PlanListBox.Items.Clear();
-            List<string> tgtfiles = FormHumason.openSession.GetTargetFiles();
+            SessionControl openSession = new SessionControl();
+            List<string> tgtfiles = openSession.GetTargetFiles();
             foreach (string fn in tgtfiles)
             {
                 if (fn.Split('.')[0] != "Default")
@@ -373,7 +381,8 @@ namespace Humason
         private void UpdateHumasonSequencer()
         {
             //Causes the sequencer form to be updated with new values
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             //Raise target event so target sequence form can update its fields accordingly
             TargetEvent reTarget = FormTarget.targetreset;
             reTarget.TargetEntry(tPlan.TargetName);
@@ -390,13 +399,14 @@ namespace Humason
         {
             if (!FormHumason.InitializingHumason)
             {
-                TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName)
+                SessionControl openSession = new SessionControl();
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
                 {
                     SmallSolarSystemBodyEnabled = SolarSystemBodyCheckBox.Checked
                 };
                 //If this is getting checked, then acquire the deltaRA and deltaDec rates
                 //  Find target name, then get rates
-                TSXLink.Target tsxtgt = TSXLink.StarChart.FindTarget(FormHumason.openSession.CurrentTargetName);
+                TSXLink.Target tsxtgt = TSXLink.StarChart.FindTarget(openSession.CurrentTargetName);
                 tPlan.DeltaRARate = tsxtgt.DeltaRARate;
                 tPlan.DeltaDecRate = tsxtgt.DeltaDecRate;
             }

@@ -43,11 +43,6 @@ namespace Humason
             // a race condition if the last subscriber unsubscribes
             // immediately after the null check and before the event is raised.
             LogEventHandler?.Invoke(this, e);
-            //         LogEventHandler thisEvent = ThisEvent;  //assign the event to a local variable
-            //         If(thisEvent != null)
-            //         {
-            //             thisEvent(this, args);
-            //         }
         }
 
         //Class to hold logging event arguments, i.e. log entry string
@@ -61,10 +56,7 @@ namespace Humason
 
             public string LogEntry
             {
-                get
-                {
-                    return privateEntry;
-                }
+                get { return privateEntry; }
             }
         }
 
@@ -77,7 +69,8 @@ namespace Humason
             //Closes log file
             //Raises a log event for anyone who is listening
 
-            string logdirpath = FormHumason.openSession.HumasonDirectoryPath + "\\Logs";
+            SessionControl openSession = new SessionControl();
+            string logdirpath = openSession.HumasonDirectoryPath + "\\Logs";
             if (!Directory.Exists(logdirpath))
             { Directory.CreateDirectory(logdirpath); }
             string logdate = DateTime.Now.ToString("yyyy-MM-dd");
@@ -89,7 +82,8 @@ namespace Humason
                 sfw.Close();
             }
             File.AppendAllText(logfilepath, (logtime + " " + logline + "\r\n"));
-            LogEntry(logline);
+            //LogEntry(logline);
+            FormHumason.StatusReportEvent.LogEntry(logline);
             System.Windows.Forms.Application.DoEvents();
             return;
         }
@@ -99,7 +93,8 @@ namespace Humason
             //Creates a new log directory if  not created
             //Creates a new log file, if  not created
 
-            string logdirpath = FormHumason.openSession.HumasonDirectoryPath + "\\Logs";
+            SessionControl openSession = new SessionControl();
+            string logdirpath = openSession.HumasonDirectoryPath + "\\Logs";
             if (!Directory.Exists(logdirpath))
             { Directory.CreateDirectory(logdirpath); }
             return;

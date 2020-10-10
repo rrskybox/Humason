@@ -17,8 +17,9 @@ namespace Humason
         public static double GuideStarMaxPixel(double exposure)
         {
             //Take a subframe image on the guider, assuming it has been already set
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             lg.LogIt("Creating Guider Subframe Image");
             AstroImage asti = new AstroImage
@@ -65,8 +66,9 @@ namespace Humason
             //Determines the ADU for the X/Y centroid of the maximum FWHM star in a subframe
             //
             //Take a subframe image on the guider using TSX guide star coordinates and trackbox size 
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             lg.LogIt("Creating Guider Subframe Image");
 
@@ -137,7 +139,8 @@ namespace Humason
         //Grease slick to check if autoguiding is already running
         public static bool IsAutoGuideOn()
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             AstroImage asti = new AstroImage { Camera = AstroImage.CameraType.Guider };
             TSXLink.Camera gCam = new TSXLink.Camera(asti);
             return gCam.IsAutoGuideOn();
@@ -147,8 +150,9 @@ namespace Humason
         public static void AutoGuideStart()
         {
             //Turns on autoguiding, assuming that everything has been initialized correctly
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             double autoguideExposureTime = tPlan.GuideExposure;
 
             lg.LogIt("Starting Autoguiding");
@@ -209,9 +213,10 @@ namespace Humason
             //Reload current location and closed loop slew to it
             //Create list of local stars, using the autofocus query
             //  Open DataWizard, set path to AtFocus2.dbq, Open query and run
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
             lg.LogIt("Calibrating Autoguider");
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             //Select star for calibration and set guide star location in TSX
             SetAutoGuideStar();
             //Calibrate using existing calibration parameters, i.e. calibration times, etc
@@ -310,8 +315,9 @@ namespace Humason
             // 
             // 
 
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
             lg.LogIt("Finding guide star coordinates");
             AstroImage asti = new AstroImage
@@ -453,7 +459,7 @@ namespace Humason
                 SourceCount += 1;
 
                 // Remove neighbors and edge liers
-                edgekeepout = FormHumason.openSession.GuideStarEdgeMargin;
+                edgekeepout = openSession.GuideStarEdgeMargin;
 
                 if (IsOnEdge((int)XPosArr[i], (int)YPosArr[i], Xsize, Ysize, edgekeepout)) { NormArr[i] = -1; }
                 else
@@ -528,8 +534,9 @@ namespace Humason
             //If not within 20% of targetADU, then recalculate and rerun
             //If within 20% then recalculate and done, then update the exposure settings and return the exposure
             //
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             double exposure = tPlan.GuideExposure;
             double tgtADU = tPlan.GuideStarADU;
             double maxExposure = tPlan.MaximumGuiderExposure;
@@ -606,8 +613,9 @@ namespace Humason
         //*** Logs calibration vectors in configuration file
         public static void LogVectors()
         {
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
-            LogEvent lg = FormHumason.lg;
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
             //Get calibration vectors
             //Make null image def to retrieve directly from TSX
             //Null definition
@@ -645,9 +653,10 @@ namespace Humason
             const int MaxDitherPixels = 5;
             const double MinGuiderError = 1;
 
+            SessionControl openSession = new SessionControl();
             //Prep class invocations: configuration, logging and TSX autoguider
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             lg.LogIt("Dithering: Autoguide off");
             AutoGuideStop();
             AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Guider };

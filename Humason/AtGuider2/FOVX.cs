@@ -44,7 +44,8 @@ namespace AtGuider2
         public FOVX()
         {
 
-            fovdir = FormHumason.openSession.FOVIDataFolder;
+            SessionControl openSession = new SessionControl();
+            fovdir = openSession.FOVIDataFolder;
             fovfile = fovdir + "\\My Equipment.txt";
             fovXfile = fovdir + "\\My Equipment.xml";
             System.IO.TextReader fovDataFile = System.IO.File.OpenText(fovfile);

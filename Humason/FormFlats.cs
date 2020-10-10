@@ -10,25 +10,26 @@ namespace Humason
         {
             InitializeComponent();
 
+            SessionControl openSession = new SessionControl();
             FlatMan flmn = new FlatMan();
-            if (FormHumason.openSession.FlatsTargetADU != 0) { FlatsTargetADU.Value = FormHumason.openSession.FlatsTargetADU; }
-            else { FormHumason.openSession.FlatsTargetADU = (int)FlatsTargetADU.Value; }
-            if (FormHumason.openSession.FlatsRepetitions != 0) { FlatsRepetitionsBox.Value = FormHumason.openSession.FlatsRepetitions; }
-            else { FormHumason.openSession.FlatsRepetitions = (int)FlatsRepetitionsBox.Value; }
-            if (FormHumason.openSession.FlatManBrightness != 0) { FlatManBrightnessNum.Value = FormHumason.openSession.FlatManBrightness; }
-            else { FormHumason.openSession.FlatManBrightness = (int)FlatManBrightnessNum.Value; }
-            if (FormHumason.openSession.FlatsExposureTime != 0) { FlatManExposureNum.Value = (decimal)FormHumason.openSession.FlatsExposureTime; }
-            else { FormHumason.openSession.FlatsExposureTime = (int)FlatManExposureNum.Value; }
-            if (FormHumason.openSession.IsFlatFlipEnabled) { FlatFlipCheckBox.Checked = FormHumason.openSession.IsFlatFlipEnabled; }
-            else { FormHumason.openSession.IsFlatFlipEnabled = FlatFlipCheckBox.Checked; }
-            if (FormHumason.openSession.IsFlatManEast) { FlatManEastCheckBox.Checked = FormHumason.openSession.IsFlatManEast; }
-            else { FormHumason.openSession.IsFlatManEast = FlatManEastCheckBox.Checked; }
-            if (FormHumason.openSession.IsFlatsRotationEnabled) { FlatsRotationCheckBox.Checked = FormHumason.openSession.IsFlatsRotationEnabled; }
-            else { FormHumason.openSession.IsFlatsRotationEnabled = FlatsRotationCheckBox.Checked; }
-            if (FormHumason.openSession.IsFlatManManualSetupEnabled) { FlatManManualSetupCheckbox.Checked = FormHumason.openSession.IsFlatManManualSetupEnabled; }
-            else { FormHumason.openSession.IsFlatManManualSetupEnabled = FlatManManualSetupCheckbox.Checked; }
+            if (openSession.FlatsTargetADU != 0) { FlatsTargetADU.Value = openSession.FlatsTargetADU; }
+            else { openSession.FlatsTargetADU = (int)FlatsTargetADU.Value; }
+            if (openSession.FlatsRepetitions != 0) { FlatsRepetitionsBox.Value = openSession.FlatsRepetitions; }
+            else { openSession.FlatsRepetitions = (int)FlatsRepetitionsBox.Value; }
+            if (openSession.FlatManBrightness != 0) { FlatManBrightnessNum.Value = openSession.FlatManBrightness; }
+            else { openSession.FlatManBrightness = (int)FlatManBrightnessNum.Value; }
+            if (openSession.FlatsExposureTime != 0) { FlatManExposureNum.Value = (decimal)openSession.FlatsExposureTime; }
+            else { openSession.FlatsExposureTime = (int)FlatManExposureNum.Value; }
+            if (openSession.IsFlatFlipEnabled) { FlatFlipCheckBox.Checked = openSession.IsFlatFlipEnabled; }
+            else { openSession.IsFlatFlipEnabled = FlatFlipCheckBox.Checked; }
+            if (openSession.IsFlatManEast) { FlatManEastCheckBox.Checked = openSession.IsFlatManEast; }
+            else { openSession.IsFlatManEast = FlatManEastCheckBox.Checked; }
+            if (openSession.IsFlatsRotationEnabled) { FlatsRotationCheckBox.Checked = openSession.IsFlatsRotationEnabled; }
+            else { openSession.IsFlatsRotationEnabled = FlatsRotationCheckBox.Checked; }
+            if (openSession.IsFlatManManualSetupEnabled) { FlatManManualSetupCheckbox.Checked = openSession.IsFlatManManualSetupEnabled; }
+            else { openSession.IsFlatManManualSetupEnabled = FlatManManualSetupCheckbox.Checked; }
 
-            FlatManager.LightSource flatLightSource = FormHumason.openSession.FlatLightSource;
+            FlatManager.LightSource flatLightSource = openSession.FlatLightSource;
             // FlatManager.LightSource flatLightSource = (FlatManager.LightSource)Enum.Parse(typeof(FlatManager.LightSource), sflatLightSource);
             switch (flatLightSource)
             {
@@ -39,10 +40,10 @@ namespace Humason
                 default: { FlatManRadioButton.Checked = false; break; }
             }
 
-            FlatManPortNum.Value = FormHumason.openSession.FlatManComPort;
+            FlatManPortNum.Value = openSession.FlatManComPort;
 
             //If FlatMan has been chosen for flats, make sure the panel is turned off
-            if (FormHumason.openSession.IsFlatManEnabled)
+            if (openSession.IsFlatManEnabled)
             { flmn.Light = false; }
 
             //Paint buttons green
@@ -57,9 +58,10 @@ namespace Humason
         private void TakeFlatsButton_Click(object sender, EventArgs e)
         {
             NHUtil.ButtonRed(TakeFlatsButton);
+            SessionControl openSession = new SessionControl();
             FlatManager fmgr = new FlatManager();
             fmgr.TakeFlats();
-            FlatManBrightnessNum.Value = FormHumason.openSession.FlatManBrightness;
+            FlatManBrightnessNum.Value = openSession.FlatManBrightness;
             NHUtil.ButtonGreen(TakeFlatsButton);
             return;
         }
@@ -75,7 +77,8 @@ namespace Humason
 
         private void FlatManOnButton_Click(object sender, EventArgs e)
         {
-            SessionControl tplan = FormHumason.openSession;
+            SessionControl openSession = new SessionControl();
+            SessionControl tplan = openSession;
             if (NHUtil.IsButtonGreen(FlatManOnButton))
             {
                 FlatMan flmn = new FlatMan();
@@ -94,45 +97,53 @@ namespace Humason
 
         private void FlatManBrightnessNum_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.FlatManBrightness = (int)FlatManBrightnessNum.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.FlatManBrightness = (int)FlatManBrightnessNum.Value;
         }
 
         private void FlatManExposureNum_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.FlatsExposureTime = (int)FlatManExposureNum.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.FlatsExposureTime = (int)FlatManExposureNum.Value;
         }
 
         private void FlatsTargetADU_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.FlatsTargetADU = (int)FlatsTargetADU.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.FlatsTargetADU = (int)FlatsTargetADU.Value;
         }
 
         private void FlatsRepetitionsBox_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.FlatsRepetitions = (int)FlatsRepetitionsBox.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.FlatsRepetitions = (int)FlatsRepetitionsBox.Value;
         }
 
         private void FlatManEastCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.IsFlatManEast = FlatManEastCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsFlatManEast = FlatManEastCheckBox.Checked;
         }
 
         private void FlatFlipCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.IsFlatFlipEnabled = FlatFlipCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsFlatFlipEnabled = FlatFlipCheckBox.Checked;
         }
 
         private void FlatManPortNum_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.FlatManComPort = (int)FlatManPortNum.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.FlatManComPort = (int)FlatManPortNum.Value;
         }
 
         private void FlatManCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            SessionControl openSession = new SessionControl();
             //Update the configuration file when this button changes
             if (FlatManRadioButton.Checked)
             {
-                FormHumason.openSession.FlatLightSource = FlatManager.LightSource.lsFlatMan;
+                openSession.FlatLightSource = FlatManager.LightSource.lsFlatMan;
             }
 
             return;
@@ -142,9 +153,10 @@ namespace Humason
         {
             //Update the configuration file when this button changes
             //Update the configuration file when this button changes
+            SessionControl openSession = new SessionControl();
             if (DawnRadioButton.Checked)
             {
-                FormHumason.openSession.FlatLightSource = FlatManager.LightSource.lsDawn;
+                openSession.FlatLightSource = FlatManager.LightSource.lsDawn;
             }
         }
 
@@ -152,17 +164,19 @@ namespace Humason
         {
             //Update the configuration file when this button changes
             //Update the configuration file when this button changes
+            SessionControl openSession = new SessionControl();
             if (DuskRadioButton.Checked)
             {
-                FormHumason.openSession.FlatLightSource = FlatManager.LightSource.lsDusk;
+                openSession.FlatLightSource = FlatManager.LightSource.lsDusk;
             }
         }
 
         private void MakeFlatsButton_Click(object sender, EventArgs e)
         {
             //Make flat request entries based on current target name and rotator info
-            LogEvent lg = FormHumason.lg;
-            TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             FlatManager nhFlat = new FlatManager();
 
             //Get filter set
@@ -174,25 +188,25 @@ namespace Humason
             }
             string tname = tPlan.TargetName;
             double rPA = (double)RotatorPANum.Value;
-            int flatRepetitions = FormHumason.openSession.FlatsRepetitions;
+            int flatRepetitions = openSession.FlatsRepetitions;
             //If the last image was shot to the west, then the rotator should alread be in the west position,
             //  which will mean that a single set will have the rotator already positioned collectly
             string sop = "East";
             foreach (Filter fi in fset)
             {
                 fi.Repeat = flatRepetitions;
-                Flat iFlat = new Flat(tname, sop, rPA, fi, FormHumason.openSession.IsFlatFlipEnabled);
+                Flat iFlat = new Flat(tname, sop, rPA, fi, openSession.IsFlatFlipEnabled);
                 nhFlat.AddFlat(iFlat);
             }
             //Check to see if there is a rotator enabled, if so, and flip is enabled, then make a second set for the east side
-            if ((FormHumason.openSession.IsFlatsRotationEnabled) && (FormHumason.openSession.IsFlatFlipEnabled))
+            if ((openSession.IsFlatsRotationEnabled) && (openSession.IsFlatFlipEnabled))
             {
                 rPA = AstroMath.Transform.NormalizeDegreeRange(rPA + 180);
                 sop = "West";
                 foreach (Filter fi in fset)
                 {
                     fi.Repeat = flatRepetitions;
-                    Flat iFlat = new Flat(tname, sop, rPA, fi, FormHumason.openSession.IsFlatFlipEnabled);
+                    Flat iFlat = new Flat(tname, sop, rPA, fi, openSession.IsFlatFlipEnabled);
                     nhFlat.AddFlat(iFlat);
                 }
             }
@@ -207,12 +221,14 @@ namespace Humason
 
         private void FlatsRotationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.IsFlatsRotationEnabled = FlatsRotationCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsFlatsRotationEnabled = FlatsRotationCheckBox.Checked;
         }
 
         private void FlatManManualSetupCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.IsFlatManManualSetupEnabled = FlatManManualSetupCheckbox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsFlatManManualSetupEnabled = FlatManManualSetupCheckbox.Checked;
 
         }
     }

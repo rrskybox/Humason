@@ -28,9 +28,10 @@ namespace Humason
 
         private void SaveButton_Click(object sender, System.EventArgs e)
         {
-            FormHumason.openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
-            FormHumason.openSession.IsRotationEnabled = RotatorCheckBox.Checked;
-            FormHumason.openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
+            openSession.IsRotationEnabled = RotatorCheckBox.Checked;
+            openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
             MessageBox.Show("Restart Humason for new settings to take effect");
             settings.Save();
             Close();
@@ -40,7 +41,8 @@ namespace Humason
         {
             //Record the rotator device control selection in the session control file
             //  and to the settings
-            FormHumason.openSession.IsRotationEnabled = RotatorCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsRotationEnabled = RotatorCheckBox.Checked;
             settings.RotatorDeviceEnabled = RotatorCheckBox.Checked;
         }
 
@@ -48,22 +50,23 @@ namespace Humason
         {
             //If WeatherCheck is checked, now, then open the file dialog to pick up
             //  the location of the weather data file, then store it
+            SessionControl openSession = new SessionControl();
             if (WeatherCheckBox.Checked && (!optionsFormInit))
             {
                 DialogResult weatherFilePath = WeatherFileDialog.ShowDialog();
-                FormHumason.openSession.WeatherDataFilePath = WeatherFileDialog.FileName;
+                openSession.WeatherDataFilePath = WeatherFileDialog.FileName;
             }
             //Check to see if the Weather file is valid
-            WeatherReader wrf = new WeatherReader(FormHumason.openSession.WeatherDataFilePath);
+            WeatherReader wrf = new WeatherReader(openSession.WeatherDataFilePath);
             if (wrf.IsWeatherValid())
             {
-                FormHumason.openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
+                openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
                 settings.WeatherMonitorEnabled = WeatherCheckBox.Checked;
             }
             else
             {
                 MessageBox.Show("Invalid Weather Data File");
-                FormHumason.openSession.IsWeatherEnabled = false;
+                openSession.IsWeatherEnabled = false;
                 settings.WeatherMonitorEnabled = false;
                 WeatherCheckBox.Checked = false;
             }
@@ -71,7 +74,8 @@ namespace Humason
 
         private void DomeAddOnCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
-            FormHumason.openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
+            SessionControl openSession = new SessionControl();
+            openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
             settings.HasDomeAddOn = DomeAddOnCheckBox.Checked;
             return;
         }

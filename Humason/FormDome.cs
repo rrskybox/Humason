@@ -11,7 +11,8 @@ namespace Humason
         {
             InitializeComponent();
             //This tab will not be enabled if the DomeAddOnCheckBox is not checked
-            DomeHomeAz.Value = (int)FormHumason.openSession.DomeHomeAz;
+            SessionControl openSession = new SessionControl();
+            DomeHomeAz.Value = (int)openSession.DomeHomeAz;
             HomeDomeButton.BackColor = Color.LightGreen;
             OpenSlitButton.BackColor = Color.LightGreen;
             CloseSlitButton.BackColor = Color.LightGreen;
@@ -20,7 +21,8 @@ namespace Humason
 
         private void DomeHomeAz_ValueChanged(object sender, EventArgs e)
         {
-            FormHumason.openSession.DomeHomeAz = (int)DomeHomeAz.Value;
+            SessionControl openSession = new SessionControl();
+            openSession.DomeHomeAz = (int)DomeHomeAz.Value;
             return;
         }
 

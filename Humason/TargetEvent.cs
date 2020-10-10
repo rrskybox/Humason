@@ -57,7 +57,8 @@ namespace Humason
         {
             //Method to raise a new target plan event for anyone who is listening
             TargetEntry(target);
-            System.Windows.Forms.Application.DoEvents();
+            //Update the target form
+            FormHumason.fTargetForm.UpdateFormFromPlan();
             return;
         }
 

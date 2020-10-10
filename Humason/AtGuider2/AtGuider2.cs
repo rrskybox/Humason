@@ -25,7 +25,8 @@ namespace AtGuider2
 
             //Open text output form
 
-            LogEvent lg = FormHumason.lg;
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
 
             //Lets get started...
             //plate solve current location to prime target star search and to acquire image camera position angle
@@ -101,7 +102,7 @@ namespace AtGuider2
                 string calDone = CalibrateGuideCam(optExposure, false); //No AO
                 lg.LogIt("Direct guide " + calDone);
                 //Calibrate the AO, if enabled
-                TargetPlan tPlan = new TargetPlan(FormHumason.openSession.CurrentTargetName);
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
                 lg.LogIt("Starting AO guide calibration");
                 calDone = CalibrateGuideCam(optExposure, true); // AO
                 lg.LogIt("AO guide " + calDone);
