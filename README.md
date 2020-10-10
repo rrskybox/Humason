@@ -2,7 +2,7 @@ Humason
 
 Imaging Automation Front End for TheSkyX Professional on Windows 10 Desktop
 
-V 2.4
+V 3.0
 
 Overview
 
