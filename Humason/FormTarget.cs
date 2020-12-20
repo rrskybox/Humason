@@ -375,7 +375,7 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             TargetBox.Text = tPlan.TargetName;
-            RegenerateSequence();
+            UpdateSequence();
             UpdateFormFromPlan();
 
             this.Show();

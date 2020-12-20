@@ -153,6 +153,8 @@ namespace Humason
         {
             NHUtil.ButtonRed(StartButton);
             StartButton.Text = "Running";
+            //Minimize TSX to help with performance
+            ManageTSX.MinimizeTSX();
             //Set the form to display the target tab
             HumasonTabs.SelectedIndex = 1;
             //Light off the overall imaging control process

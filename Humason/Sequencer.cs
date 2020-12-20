@@ -14,7 +14,6 @@ namespace Humason
         //
         //Author: Rick McAlister
         //Date: 6/18/15 (and much, much earlier...)dome        //
-        //Modified for Paramount MX+ control in Kilolani Observatory
         //
         //Primary purpose is to set up and run quick sequences and calibration frames when CCDAP is either too
         //    slow or fails.

@@ -94,7 +94,9 @@ namespace Humason
             //Get target HA
             TSXLink.Target tgto;
             lg.LogIt("Checking for new target to clear meridian");
-            tgto = TSXLink.StarChart.FindTarget(ftPlan.TargetName);
+            string raS = ftPlan.TargetRA.ToString();
+            string decS = ftPlan.TargetDec.ToString();
+            tgto = TSXLink.StarChart.FindTarget(raS+","+decS);
             double ha = tgto.HA.TotalMinutes;
             while ((ha >= -10) && (ha <= 0))
             {
