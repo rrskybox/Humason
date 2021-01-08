@@ -91,27 +91,27 @@ namespace Humason
             return true;
         }
 
-        public static void RotateToImagePA(double tgtImagePA)
+        public static bool RotateToImagePA(double tgtImagePA)
         {
             //Move the rotator to a position that gives an image position angle of tImagePA
             //  Assumes that a plate solve has been performed, and/or rotator position angle variables
             //  are current
+            //Returns false if failure, true if good
 
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             TSXLink.Rotator trot = new TSXLink.Rotator();
             int rotDir = Convert.ToInt32(openSession.RotatorDirection);
             //Plate solve for current PA
-            PlateSolveIt();
+            if (!PlateSolveIt()) return false;
             //target rotation PA = current image PA + current rotator PA - target image PA 
             // double tgtRotationPA = ((startImagePA - endImagePA) * rotdir) + rotPA;
             double destRotationPA = ((ImagePA - tgtImagePA) * -rotDir) + AstroMath.Transform.NormalizeDegreeRange(RealRotatorPA);
             double destRotationPAnormalized = AstroMath.Transform.NormalizeDegreeRange(destRotationPA);
             trot.SetRotatorPositionAngle(destRotationPAnormalized);
             //Plate solve for current PA
-            PlateSolveIt();
-            //ImagePA = tgtImagePA;
-            return;
+            if (!PlateSolveIt()) return false;
+            return true;
         }
 
         public static void RotateToRotatorPA(double tgtRotatorPA)

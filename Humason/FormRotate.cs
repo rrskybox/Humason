@@ -105,8 +105,8 @@ namespace Humason
             TSXLink.StarChart.ChartRA = tPlan.TargetRA;
             TSXLink.StarChart.ChartDec = tPlan.TargetDec;
             DisplayResults();
-            Rotator.RotateToImagePA(tPlan.TargetPA);
-            DisplayResults();
+            if (Rotator.RotateToImagePA(tPlan.TargetPA))
+                DisplayResults();
             NHUtil.ButtonGreen(TargetButton);
             return;
         }
@@ -116,8 +116,8 @@ namespace Humason
             NHUtil.ButtonRed(RotateToIPAButton);
             DisplayResults();
             double rotate = (double)MoveToIPANum.Value;
-            Rotator.RotateToImagePA(rotate);
-            DisplayResults();
+            if (Rotator.RotateToImagePA(rotate))
+                DisplayResults();
             NHUtil.ButtonGreen(RotateToIPAButton);
             return;
         }

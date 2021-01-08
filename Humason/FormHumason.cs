@@ -220,6 +220,13 @@ namespace Humason
             NHUtil.ButtonGreen(AbortButton);
         }
 
+        private void TabPageSelected_Click(object sender, TabControlEventArgs e)
+        {
+            //a tab page has been selected, if it is the target page, then update the current target
+            if (e.TabPage.Name == "TargetTab") fTargetForm.TabUpdate();
+            return;
+        }
+
         #endregion
 
         #region event handlers

@@ -76,6 +76,7 @@
             this.HumasonTabs.SelectedIndex = 0;
             this.HumasonTabs.Size = new System.Drawing.Size(305, 410);
             this.HumasonTabs.TabIndex = 0;
+            this.HumasonTabs.Selected += new System.Windows.Forms.TabControlEventHandler (this.TabPageSelected_Click);
             // 
             // PlanTab
             // 

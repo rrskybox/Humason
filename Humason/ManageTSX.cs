@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Humason
 {
@@ -25,7 +23,7 @@ namespace Humason
             }
         }
 
-    private const int SW_SHOWNORMAL = 1;
+        private const int SW_SHOWNORMAL = 1;
         private const int SW_SHOWMINIMIZED = 2;
         private const int SW_SHOWMAXIMIZED = 3;
 

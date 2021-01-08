@@ -96,7 +96,7 @@ namespace Humason
             lg.LogIt("Checking for new target to clear meridian");
             string raS = ftPlan.TargetRA.ToString();
             string decS = ftPlan.TargetDec.ToString();
-            tgto = TSXLink.StarChart.FindTarget(raS+","+decS);
+            tgto = TSXLink.StarChart.FindTarget(raS + "," + decS);
             double ha = tgto.HA.TotalMinutes;
             while ((ha >= -10) && (ha <= 0))
             {
@@ -150,8 +150,13 @@ namespace Humason
                 if (tPlan.RotatorEnabled)
                 {
                     lg.LogIt("Rotating to PA @ " + tPlan.TargetPA.ToString("0.00"));
-                    Rotator.RotateToImagePA(tPlan.TargetPA);
-                    lg.LogIt("Rotation complete and verified");
+                    if (!Rotator.RotateToImagePA(tPlan.TargetPA))
+                    {
+                        lg.LogIt("Failed to properly rotate. Aborting.");
+                        AbortFlag = true;
+                    }
+                    else
+                        lg.LogIt("Rotation complete and verified");
                 }
                 else lg.LogIt("Rotator not enabled");
 

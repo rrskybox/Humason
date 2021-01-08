@@ -40,6 +40,12 @@ namespace Humason
         public void UpdateButton_Click(object sender, EventArgs e)
         {
             NHUtil.ButtonRed(UpdateButton);
+            TabUpdate();
+            NHUtil.ButtonGreen(UpdateButton);
+        }
+
+        public void TabUpdate()
+        {
             LogEvent lg = new LogEvent();
             //If the targetname is empty, then check for a target name in TSX Find,
             //If still empty then just return
@@ -53,7 +59,7 @@ namespace Humason
             lg.LogIt("Updating Sequence");
             UpdateSequence();
             lg.LogIt("Sequence Updated");
-            NHUtil.ButtonGreen(UpdateButton);
+            return;
         }
 
         private void TargetBox_TextChanged(object sender, EventArgs e)

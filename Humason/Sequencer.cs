@@ -367,8 +367,14 @@ namespace Humason
             //Prepare for focusing, if (selected
             //Save the current temperature
             double lastFocusTemperature = TSXLink.Focus.GetTemperature();
-            if (tPlan.AutoFocusEnabled) { RunAutoFocus(); }
-
+            if (tPlan.AutoFocusEnabled)
+            {
+                if (!RunAutoFocus())
+                {
+                    lg.LogIt("Autofocus failed during sequencing");
+                    return;
+                }
+            }
             //If autoguiding is checked and calibration requested, then calibrate the guider
             if (tPlan.AutoGuideEnabled && tPlan.CalibrateEnabled)
             { AutoGuide.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
@@ -432,7 +438,7 @@ namespace Humason
                                 //Check for abort
                                 if (AbortSequencer)
                                 {
-                                    lg.LogIt("Sequence aborted by user");
+                                    lg.LogIt("Sequence aborted");
                                     break;
                                 }
                             }
@@ -448,15 +454,19 @@ namespace Humason
                             }
                             lg.LogIt("Unparking telescope");
                             TSXLink.Mount.UnPark();
-                            //CLS to target
-                            CLSToTargetPlanCoordinates();
+                            //CLS to target.  If fails, then the weather must be bad (or something worse) so aboart
+                            if (!CLSToTargetPlanCoordinates())
+                            {
+                                AbortSequencer = true;
+                                break;
+                            };
                         }
                     }
                 }
                 //Check for abort, again
                 if (AbortSequencer)
                 {
-                    lg.LogIt("Sequence aborted by user");
+                    lg.LogIt("Sequence aborted");
                     break;
                 }
                 //Check for shut down time
@@ -502,6 +512,7 @@ namespace Humason
                 // Note that if trying to start autoguiding fails, then we will do a 
                 // precision slew to the target coordinates before continuing just
                 // to make sure that we haven't drifted off somewhere.
+                // If the CLS fails, then we might as well abort.
                 if (tPlan.AutoGuideEnabled)
                 {
                     if (tPlan.ResyncEnabled)
@@ -509,7 +520,11 @@ namespace Humason
                         StopAutoguiding();
                         if (!StartAutoguiding())
                         {
-                            CLSToTargetPlanCoordinates();
+                            if (!CLSToTargetPlanCoordinates())
+                            {
+                                AbortSequencer = true;
+                                break;
+                            };
                         }
                     }
                     else
@@ -520,9 +535,14 @@ namespace Humason
                         //     or if autoguiding was successfully started up.
                         //If not already running or successfully started (StartAutoguiding returns false),
                         //    thenjust CLS to the target to center up
+                        //If the CLS fails, then we might as well abort
                         if (!StartAutoguiding())
                         {
-                            CLSToTargetPlanCoordinates();
+                            if (!CLSToTargetPlanCoordinates())
+                            {
+                                AbortSequencer = true;
+                                break;
+                            };
                         }
                     }
                 }
@@ -531,9 +551,14 @@ namespace Humason
                      //  if so (and the user wants to resync), 
                      //      make a precision slew in order to make up for any incremental drift
                      //  that has occurred since starting the last frame.
+                     //if the CLS fails, then we might as well abort
                      if (tPlan.ResyncEnabled)
                 {
-                    CLSToTargetPlanCoordinates();
+                    if (!CLSToTargetPlanCoordinates())
+                    {
+                        AbortSequencer = true;
+                        break;
+                    };
                 }
                 //Check for SmallSolarSystemObject
                 //  if so, then set the tracking rates based on the sequence deltaRA and deltaDec values, if any
@@ -652,7 +677,7 @@ namespace Humason
             }
         }
 
-        public void MeridianFlipper(bool WestOTAtoEastOTA)
+        public bool MeridianFlipper(bool WestOTAtoEastOTA)
         {
             //
             //This routine executes a meridian flip and resumes session and imaging.
@@ -681,15 +706,25 @@ namespace Humason
 
             //finish flip by finding the target again
             //Relocate to target with a CLS
+            //If the CLS fails, then we might as well abort
             lg.LogIt("Start CLS to target after flip");
-            CLSToTargetPlanCoordinates();
+            if (!CLSToTargetPlanCoordinates())
+            {
+                AbortSequencer = true;
+                return false;
+            };
 
             //Rotate the camera, if enabled
             //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
             if (tPlan.RotatorEnabled)
             {
                 lg.LogIt("Rotating to new PA @ " + tPlan.TargetPA.ToString("0.00"));
-                Rotator.RotateToImagePA(tPlan.TargetPA);
+                //If rotation fails, set abort and flee
+                if (!Rotator.RotateToImagePA(tPlan.TargetPA))
+                {
+                    AbortSequencer = true;
+                    return false;
+                };
                 //////////////////////
                 //
                 // Before we go, because of an apparent TSX AO bug, must recalibrate guider if using AO
@@ -699,6 +734,7 @@ namespace Humason
                 //
                 //////////////////////
             }
+            return true;
 
             //All done
             lg.LogIt("Meridian Flip Completed");
@@ -954,18 +990,23 @@ namespace Humason
             double atDiff = openSession.RefocusAtTemperatureDifference;
             if (Math.Abs(TSXLink.Focus.GetTemperature() - lastFocusTemp) >= atDiff)
             {
-                RunAutoFocus();
-                lastFocusTemp = TSXLink.Focus.GetTemperature();
+                //Run autofocus fails, just return like nothing happened.
+                // If it was because of a failed CLS, then an Abort will have been filed
+                //  Otherwise just let the current focus stay
+                if (!RunAutoFocus())
+                    lastFocusTemp = TSXLink.Focus.GetTemperature();
+                else
+                    lastFocusTemp = TSXLink.Focus.GetTemperature();
             }
             return lastFocusTemp;
         }
 
-        private void RunAutoFocus()
+        private bool RunAutoFocus()
         {
             //Sets up to run either atfocus2 or 3 based on configuration
             //  Save state, selects at focus type, runs it, restores state and collects
             //  **** Turn off Autoguiding, assuming it is on
-            //
+            // Return true if successful, false otherwise
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             LogEvent lg = new LogEvent();
@@ -978,8 +1019,14 @@ namespace Humason
             {
                 //@focus2 will probably need to let us CLS back to the target
                 lg.LogIt("CLS back to target after @Focus2");
-                CLSToTargetPlanCoordinates();
+                if (!CLSToTargetPlanCoordinates())
+                {
+                    lg.LogIt("Could not CLS after @Focus2.  Aborting.");
+                    AbortSequencer = true;
+                    return false;
+                };
             }
+            return true;
         }
 
         private List<Filter> ImageFilterGroup()
