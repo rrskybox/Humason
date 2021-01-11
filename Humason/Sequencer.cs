@@ -707,7 +707,7 @@ namespace Humason
             //finish flip by finding the target again
             //Relocate to target with a CLS
             //If the CLS fails, then we might as well abort
-            lg.LogIt("Start CLS to target after flip");
+            lg.LogIt("CLS to target after flip");
             if (!CLSToTargetPlanCoordinates())
             {
                 AbortSequencer = true;
@@ -722,10 +722,19 @@ namespace Humason
                 //If rotation fails, set abort and flee
                 if (!Rotator.RotateToImagePA(tPlan.TargetPA))
                 {
+                    lg.LogIt("Failed rotation");
                     AbortSequencer = true;
                     return false;
                 };
-                //////////////////////
+                // Because rotation may not be quite symmetrical, do another CLS to make sure
+                //  the guide star and target is still centered
+                lg.LogIt("CLS to center target after rotation");
+                if (!CLSToTargetPlanCoordinates())
+                {
+                    lg.LogIt("Failed to center target after rotation");
+                    AbortSequencer = true;
+                    return false;
+                };
                 //
                 // Before we go, because of an apparent TSX AO bug, must recalibrate guider if using AO
                 //

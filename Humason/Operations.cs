@@ -156,7 +156,20 @@ namespace Humason
                         AbortFlag = true;
                     }
                     else
+                    {
                         lg.LogIt("Rotation complete and verified");
+                        // Because rotation may not be quite symmetrical, do another CLS to make sure
+                        //  the guide star and target is still centered
+
+                        lg.LogIt("CLS to center target after rotation");
+                        if (!imgseq.CLSToTargetPlanCoordinates())
+                        {
+                            lg.LogIt("Failed to center target after rotation");
+                            AbortFlag = true;
+                        };
+                    }
+
+
                 }
                 else lg.LogIt("Rotator not enabled");
 
