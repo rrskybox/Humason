@@ -1553,11 +1553,15 @@ namespace Planetarium
 
             public void SetRotatorPositionAngle(double tgtRotationPA)
             {
-                if (!(tsxc.rotatorIsConnected() == 0))
+                double currentPA = tsxc.rotatorPositionAngle();
+                if ((int)currentPA != (int)tgtRotationPA)
                 {
-                    tsxc.rotatorGotoPositionAngle(tgtRotationPA);
-                    //zero if the rotator is not rotating
-                    while (!(tsxc.rotatorIsRotating() == 0)) { System.Threading.Thread.Sleep(1000); }
+                    if (!(tsxc.rotatorIsConnected() == 0))
+                    {
+                        tsxc.rotatorGotoPositionAngle(tgtRotationPA);
+                        //zero if the rotator is not rotating
+                        while (!(tsxc.rotatorIsRotating() == 0)) { System.Threading.Thread.Sleep(1000); }
+                    }
                 }
                 return;
             }

@@ -78,6 +78,7 @@ namespace Humason
         public const string AutoFocusCheckedXName = "AutoFocusChecked";
         public const string AutoGuideCheckedXName = "AutoGuideChecked";
         public const string RotatorCheckedXName = "RotatorChecked";
+        public const string RecalibrateAfterFlipCheckedXName = "RecalibrateAfterFlipChecked";
         public const string DitherCheckedXName = "DitherChecked";
         public const string CalibrateCheckedXName = "CalibrateChecked";
         public const string GuiderAutoDarkCheckedXName = "GuiderAutoDarkChecked";
@@ -310,6 +311,7 @@ namespace Humason
             defaultTP.SetItem(AutoFocusCheckedXName, false);
             defaultTP.SetItem(AutoGuideCheckedXName, false);
             defaultTP.SetItem(RotatorCheckedXName, false);
+            defaultTP.SetItem(RecalibrateAfterFlipCheckedXName, false);
             defaultTP.SetItem(DitherCheckedXName, false);
             defaultTP.SetItem(GuiderAutoDarkCheckedXName, true);
             defaultTP.SetItem(CalibrateCheckedXName, false);
@@ -614,6 +616,12 @@ namespace Humason
         {
             get => Convert.ToBoolean(hTargetPlanX.GetItem(RotatorCheckedXName));
             set => hTargetPlanX.ReplaceItem(RotatorCheckedXName, value.ToString());
+        }
+
+        public bool RecalibrateAfterFlipEnabled
+        {
+            get => Convert.ToBoolean(hTargetPlanX.GetItem(RecalibrateAfterFlipCheckedXName));
+            set => hTargetPlanX.ReplaceItem(RecalibrateAfterFlipCheckedXName, value.ToString());
         }
 
         public bool DitherEnabled

@@ -195,6 +195,21 @@ namespace Humason
             }
         }
 
+        private void RecalibrateAfterFlipCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            //Store it in the session configuration and move on
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            if (openSession.RecalibrateAfterFlipEnabled)
+            {
+                tPlan.RecalibrateAfterFlipEnabled = RecalibrateAfterFlipCheckbox.Checked;
+            }
+            else
+            {
+                RecalibrateAfterFlipCheckbox.Checked = false;
+            }
+        }
+
         private void CameraTemperatureSet_ValueChanged(object sender, EventArgs e)
         {
             //Store it in the configuration and move on
@@ -279,6 +294,7 @@ namespace Humason
             };
 
         }
+
     }
 }
 

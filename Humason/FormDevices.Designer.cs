@@ -53,6 +53,7 @@
             this.CalibrateCheck = new System.Windows.Forms.CheckBox();
             this.RotatorGroupBox = new System.Windows.Forms.GroupBox();
             this.CameraGroupBox = new System.Windows.Forms.GroupBox();
+            this.RecalibrateAfterFlipCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.FocusFilterNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClearFilterNum)).BeginInit();
             this.FiltersGroupBox.SuspendLayout();
@@ -370,6 +371,7 @@
             // 
             // RotatorGroupBox
             // 
+            this.RotatorGroupBox.Controls.Add(this.RecalibrateAfterFlipCheckbox);
             this.RotatorGroupBox.Controls.Add(this.RotatorCheckBox);
             this.RotatorGroupBox.ForeColor = System.Drawing.Color.White;
             this.RotatorGroupBox.Location = new System.Drawing.Point(12, 348);
@@ -390,6 +392,19 @@
             this.CameraGroupBox.TabIndex = 97;
             this.CameraGroupBox.TabStop = false;
             this.CameraGroupBox.Text = "Camera";
+            // 
+            // RecalibrateAfterFlipCheckbox
+            // 
+            this.RecalibrateAfterFlipCheckbox.AutoSize = true;
+            this.RecalibrateAfterFlipCheckbox.ForeColor = System.Drawing.Color.White;
+            this.RecalibrateAfterFlipCheckbox.Location = new System.Drawing.Point(124, 19);
+            this.RecalibrateAfterFlipCheckbox.Name = "RecalibrateAfterFlipCheckbox";
+            this.RecalibrateAfterFlipCheckbox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.RecalibrateAfterFlipCheckbox.Size = new System.Drawing.Size(124, 17);
+            this.RecalibrateAfterFlipCheckbox.TabIndex = 72;
+            this.RecalibrateAfterFlipCheckbox.Text = "Recalibrate After Flip";
+            this.RecalibrateAfterFlipCheckbox.UseVisualStyleBackColor = true;
+            this.RecalibrateAfterFlipCheckbox.CheckedChanged += new System.EventHandler(this.RecalibrateAfterFlipCheckbox_CheckedChanged);
             // 
             // FormDevices
             // 
@@ -454,5 +469,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
         internal System.Windows.Forms.CheckBox GuiderAutoDarkCheckBox;
+        internal System.Windows.Forms.CheckBox RecalibrateAfterFlipCheckbox;
     }
 }

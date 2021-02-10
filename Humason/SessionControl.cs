@@ -78,7 +78,8 @@ namespace Humason
         //Rotator Definitions
         const string RotationEnabledXName = "RotationEnabled";
         const string RotatorDirectionXName = "RotatorDirection";
-
+        const string RecalibrateAfterFlipXName = "RecalibrateAfterFlipEnabled";
+        
         //Options Definition (for FormOptions)
         const string WeatherCheckedXName = "WeatherMonitorEnabled";
         const string WeatherDataFilePathXName = "WeatherDataFilePath";
@@ -415,6 +416,17 @@ namespace Humason
             }
             set => DirectXcess.ReplaceItem(RotationEnabledXName, value);
         }
+        public bool RecalibrateAfterFlipEnabled
+        {
+            get
+            {
+                if (Convert.ToBoolean(DirectXcess.GetItem(RecalibrateAfterFlipXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(RecalibrateAfterFlipXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(RecalibrateAfterFlipXName, value);
+        }
+
 
         public int RotatorDirection
         {

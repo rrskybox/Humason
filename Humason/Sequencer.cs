@@ -51,7 +51,6 @@ namespace Humason
         public TimeSpan TargetLimitSetting { get; set; }
         public TimeSpan TargetLimitRising { get; set; }
 
-
         public double Progress_Percent { get; set; }
 
         public bool AbortSequencer { get; set; }
@@ -738,7 +737,7 @@ namespace Humason
                 //
                 // Before we go, because of an apparent TSX AO bug, must recalibrate guider if using AO
                 //
-                if (tPlan.AutoGuideEnabled && tPlan.AOEnabled)
+                if (tPlan.RecalibrateAfterFlipEnabled && tPlan.AutoGuideEnabled && tPlan.AOEnabled)
                 { AutoGuide.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
                 //
                 //////////////////////
