@@ -90,6 +90,7 @@ namespace Humason
                 { AtFocus2RadioButton.Checked = true; }
                 RefocustTemperatureChangeBox.Value = (decimal)openSession.RefocusAtTemperatureDifference;
                 RotatorCheckBox.Checked = tPlan.RotatorEnabled;
+                RecalibrateAfterFlipCheckbox.Checked = tPlan.RecalibrateAfterFlipEnabled;
                 DitherCheck.Checked = tPlan.DitherEnabled;
                 GuiderAutoDarkCheckBox.Checked = tPlan.GuiderAutoDarkEnabled;
                 CalibrateCheck.Checked = tPlan.CalibrateEnabled;
@@ -200,7 +201,7 @@ namespace Humason
             //Store it in the session configuration and move on
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
-            if (openSession.RecalibrateAfterFlipEnabled)
+            if (openSession.IsRotationEnabled)
             {
                 tPlan.RecalibrateAfterFlipEnabled = RecalibrateAfterFlipCheckbox.Checked;
             }
