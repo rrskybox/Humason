@@ -83,7 +83,7 @@ namespace Humason
             //Raises an abort event for anyone who is listening
             RaiseAbortEvent(abortmessage);
             //tell the operations class that there is an abort
-            Operations.AbortFlag = true;
+            FormHumason.SetAbort();
         }
 
     }

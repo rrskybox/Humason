@@ -53,8 +53,6 @@ namespace Humason
 
         public double Progress_Percent { get; set; }
 
-        public bool AbortSequencer { get; set; }
-
         public bool LastTargetSideWest { get; set; }    //Records where the mount was pointing for last shot:  true = east, false = West
 
         public bool CurrentTargetSideWest { get; set; }//Records where the mount is pointing for current shot:  true = east, false = West
@@ -80,10 +78,9 @@ namespace Humason
         public Sequencer()
         {
             //Clear abort, if any
-            AbortSequencer = false;
             //Load Abort Event Handler
-            AbortEvent abortEvent = new AbortEvent();
-            abortEvent.AbortEventHandler += SequencerAbortEvent_Handler;
+            //AbortEvent abortEvent = new AbortEvent();
+           // abortEvent.AbortEventHandler += SequencerAbortEvent_Handler;
             //Open target plan for this sequence
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
@@ -340,7 +337,7 @@ namespace Humason
                         ImageSeries[imageidx, si_Filter] = filter.Index;
                         ImageSeries[imageidx, si_Binning] = sb_1x1;
                         ImageSeries[imageidx, si_Exposure] = (int)exposure;
-                        ImageSeries[imageidx, si_Frame] = (int)TheSkyXLib.ccdsoftImageFrame.cdLight;
+                        ImageSeries[imageidx, si_Frame] = (int)TheSky64Lib.ccdsoftImageFrame.cdLight;
                         ImageSeries[imageidx, si_Delay] = (int)delay;
                         imageidx += 1;
                     }
@@ -435,7 +432,7 @@ namespace Humason
                                 if (LaunchPad.IsTimeToShutDown())
                                 { break; };
                                 //Check for abort
-                                if (AbortSequencer)
+                                if (FormHumason.IsAborting())
                                 {
                                     lg.LogIt("Sequence aborted");
                                     break;
@@ -456,14 +453,14 @@ namespace Humason
                             //CLS to target.  If fails, then the weather must be bad (or something worse) so aboart
                             if (!CLSToTargetPlanCoordinates())
                             {
-                                AbortSequencer = true;
+                                FormHumason.SetAbort();
                                 break;
                             };
                         }
                     }
                 }
                 //Check for abort, again
-                if (AbortSequencer)
+                if (FormHumason.IsAborting())
                 {
                     lg.LogIt("Sequence aborted");
                     break;
@@ -521,7 +518,7 @@ namespace Humason
                         {
                             if (!CLSToTargetPlanCoordinates())
                             {
-                                AbortSequencer = true;
+                                FormHumason.SetAbort();
                                 break;
                             };
                         }
@@ -539,7 +536,7 @@ namespace Humason
                         {
                             if (!CLSToTargetPlanCoordinates())
                             {
-                                AbortSequencer = true;
+                                FormHumason.SetAbort();
                                 break;
                             };
                         }
@@ -555,7 +552,7 @@ namespace Humason
                 {
                     if (!CLSToTargetPlanCoordinates())
                     {
-                        AbortSequencer = true;
+                        FormHumason.SetAbort();
                         break;
                     };
                 }
@@ -602,7 +599,7 @@ namespace Humason
                 System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(1000);
                 //Check for abort
-                if (AbortSequencer)
+                if (FormHumason.IsAborting())
                 {
                     lg.LogIt("Sequence aborted by user");
                     tcam.CameraAbort();
@@ -709,7 +706,7 @@ namespace Humason
             lg.LogIt("CLS to target after flip");
             if (!CLSToTargetPlanCoordinates())
             {
-                AbortSequencer = true;
+                FormHumason.SetAbort();
                 return false;
             };
 
@@ -722,7 +719,7 @@ namespace Humason
                 if (!Rotator.RotateToImagePA(tPlan.TargetPA))
                 {
                     lg.LogIt("Failed rotation");
-                    AbortSequencer = true;
+                    FormHumason.SetAbort();
                     return false;
                 };
                 // Because rotation may not be quite symmetrical, do another CLS to make sure
@@ -731,7 +728,7 @@ namespace Humason
                 if (!CLSToTargetPlanCoordinates())
                 {
                     lg.LogIt("Failed to center target after rotation");
-                    AbortSequencer = true;
+                    FormHumason.SetAbort();
                     return false;
                 };
                 //
@@ -1030,7 +1027,7 @@ namespace Humason
                 if (!CLSToTargetPlanCoordinates())
                 {
                     lg.LogIt("Could not CLS after @Focus2.  Aborting.");
-                    AbortSequencer = true;
+                    FormHumason.SetAbort();
                     return false;
                 };
             }
@@ -1104,17 +1101,6 @@ namespace Humason
             }
             return 0;
         }
-
-        #region Event Handlers
-
-        private void SequencerAbortEvent_Handler(object sender, AbortEvent.AbortEventArgs e)
-        {
-            AbortSequencer = true;
-            return;
-        }
-
-        #endregion
-
 
 
     }

@@ -8,7 +8,7 @@
 using Planetarium;
 using System;
 using System.Windows.Forms;
-using TheSkyXLib;
+using TheSky64Lib;
 
 namespace Humason
 {

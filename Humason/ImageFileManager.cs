@@ -4,7 +4,7 @@
 
 using System;
 using System.IO;
-using TheSkyXLib;
+using TheSky64Lib;
 
 namespace Humason
 {

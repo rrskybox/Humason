@@ -5,7 +5,6 @@ namespace Humason
 {
     public partial class Operations
     {
-        public static bool AbortFlag { get; set; }
         //public static SessionControl openSession;
 
         public static bool ImagingControl()
@@ -31,10 +30,8 @@ namespace Humason
                 lg.LogIt("Diagnostics abort");
                 return false; ;
             }
+
             lg.LogIt("Diagnostics success");
-
-            AbortFlag = false;
-
             //All selected devices should be on-line and connected
             //Load the first target plan so we can pull some information for this session
             lg.LogIt("Loading first session target plan");
@@ -65,18 +62,15 @@ namespace Humason
             TSXLink.StarChart.SetClock(0, true);
 
             //Await Staging and Start Up
-            //Potentially nothing is powered or initialized at this point
-            AwaitStaging();
             //  If autorun enabled, then run the staging time autorun script/app
             if (openSession.IsAutoRunEnabled && openSession.IsStagingEnabled) { LaunchPad.WaitStaging(); }
             //check for abort having been set.  Gracefully shut everything back down if it has.
-            if (AbortFlag) { GracefulAbort(); }
+            if (FormHumason.IsAborting()) { GracefulAbort(); }
 
-            AwaitStartUp();
-            //  If autorun enabled, then run the start up time autorun script/app
+             //  If autorun enabled, then run the start up time autorun script/app
             if (openSession.IsAutoRunEnabled && openSession.IsStartUpEnabled) { LaunchPad.WaitStartUp(); }
             //check for abort having been set.  Gracefully shut everything back down if it has.
-            if (AbortFlag) { GracefulAbort(); }
+            if (FormHumason.IsAborting()) { GracefulAbort(); }
 
             //Both Staging and Start Up have been run. All devices should be powered, but not necessarily connected
             //Power up and connect devices (if not done already)
@@ -141,10 +135,10 @@ namespace Humason
                 }
                 //Try to move to target, if this fails just abort
                 Sequencer imgseq = new Sequencer();
-                if (!imgseq.CLSToTargetPlanCoordinates()) { AbortFlag = true; break; }
+                if (!imgseq.CLSToTargetPlanCoordinates()) { GracefulAbort(); break; }
 
                 //check for abort having been set.  Gracefully shut everything back down if it has.
-                if (AbortFlag) { GracefulAbort(); break; }
+                if (FormHumason.IsAborting()) { GracefulAbort(); break; }
 
                 //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
                 if (tPlan.RotatorEnabled)
@@ -153,7 +147,7 @@ namespace Humason
                     if (!Rotator.RotateToImagePA(tPlan.TargetPA))
                     {
                         lg.LogIt("Failed to properly rotate. Aborting.");
-                        AbortFlag = true;
+                        GracefulAbort();
                     }
                     else
                     {
@@ -165,7 +159,7 @@ namespace Humason
                         if (!imgseq.CLSToTargetPlanCoordinates())
                         {
                             lg.LogIt("Failed to center target after rotation");
-                            AbortFlag = true;
+                            GracefulAbort();
                         };
                     }
 
@@ -174,7 +168,7 @@ namespace Humason
                 else lg.LogIt("Rotator not enabled");
 
                 //check for abort having been set.  Gracefully shut everything back down if it has.
-                if (AbortFlag) { GracefulAbort(); break; }
+                if (FormHumason.IsAborting()) { GracefulAbort(); break; }
 
                 //Update the sequence for whatever time it is now
                 try { imgseq.SeriesGenerator(); }
@@ -191,7 +185,7 @@ namespace Humason
                 //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
                 AutoGuide.AutoGuideStop();
                 //check for abort having been set.  Gracefully shut everything back down if it has.
-                if (AbortFlag) { GracefulAbort(); break; }
+                if (FormHumason.IsAborting()) { GracefulAbort(); break; }
                 //Done with imaging on this plan.  
                 //Store the ending time
                 tPlan.SequenceEndTime = DateTime.Now;
@@ -205,7 +199,7 @@ namespace Humason
             //done with imaging.  Check on flats  See if any flats have been requested
 
             FlatManager fmgr = new FlatManager();
-            if (fmgr.HaveFlatsToDo() && !AbortFlag)
+            if (fmgr.HaveFlatsToDo() && !FormHumason.IsAborting())
             { fmgr.TakeFlats(); }
 
             //If autorun set, then run it, or... just park the mount
@@ -229,6 +223,8 @@ namespace Humason
 
             LogEvent lg = new LogEvent();
             lg.LogIt("Aborting and Closing Down");
+            FormHumason.SetAbort();
+
             //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
             AutoGuide.AutoGuideStop();
 
@@ -249,32 +245,7 @@ namespace Humason
             return;
         }
 
-        /// <summary>
-        /// Wait loop control for Staging and Start Up
-        /// </summary>
-        private static void AwaitStaging()
-        {
-            SessionControl openSession = new SessionControl();
-            //Wait until Staging Time
-            LaunchPad.WaitLoop(openSession.StagingTime);
-            //check for abort having been set.  Gracefully shut everything back down if it has.
-            if (AbortFlag) { GracefulAbort(); }
-        }
-
-        /// <summary>
-        /// Wait loop control for Staging and Start Up
-        /// </summary>
-        private static void AwaitStartUp()
-        {
-            SessionControl openSession = new SessionControl();
-            TargetPlan ftPlan = new TargetPlan(openSession.CurrentTargetName);
-            //Wait until Start Up Time
-            LaunchPad.WaitLoop(ftPlan.SequenceStartTime);
-            //check for abort having been set.  Gracefully shut everything back down if it has.
-            if (AbortFlag) { GracefulAbort(); }
-        }
-
-        public static void InitializeSystem()
+         public static void InitializeSystem()
         {
             SessionControl openSession = new SessionControl();
 

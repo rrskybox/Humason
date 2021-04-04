@@ -1,6 +1,6 @@
 ﻿using Planetarium;
 using System;
-using TheSkyXLib;
+using TheSky64Lib;
 
 namespace Humason
 {

@@ -23,21 +23,15 @@ namespace Humason
 {
     class LaunchPad
     {
-        private static bool AbortFlag { get; set; } = false;
-
         public static bool WaitLoop(DateTime endTime)
         {
-            AbortFlag = false;
-            AbortEvent ag = new AbortEvent();
-            ag.AbortEventHandler += AbortReportEvent_Handler;
-
             LogEvent lg = new LogEvent();
             lg.LogIt("Waiting until " + endTime.ToString("HH:mm"));
             do
             {
                 System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(1000); //wait a second
-                if (AbortFlag)
+                if (FormHumason.IsAborting())
                 {
                     lg.LogIt("Wait Loop Aborted");
                     return false;
@@ -55,10 +49,8 @@ namespace Humason
             //Check to see if AutoRun and Staging executable has been enabled
             //  If so, then wait until the current time is greater than stage system time
             SessionControl openSession = new SessionControl();
-            if (openSession.IsStagingEnabled)
-            {
-                if (WaitLoop(openSession.StagingTime)) { RunStagingApp(); }
-            }
+            if (WaitLoop(openSession.StagingTime)) { RunStagingApp(); }
+
         }
 
         public static void WaitStartUp()
@@ -70,11 +62,7 @@ namespace Humason
             //Check to see if AutoRun and StartUp executable has been enabled
             //  If so, then wait until the current time is greater than stage system time
             SessionControl openSession = new SessionControl();
-            if (openSession.IsStartUpEnabled)
-            {
-                if (WaitLoop(openSession.StartUpTime)) { RunStartUpApp(); }
-            }
-
+            if (WaitLoop(openSession.StartUpTime)) { RunStartUpApp(); }
             return;
         }
 
@@ -165,13 +153,6 @@ namespace Humason
             }
             return;
         }
-
-        private static void AbortReportEvent_Handler(object sender, AbortEvent.AbortEventArgs e)
-        {
-            AbortFlag = true;
-            return;
-        }
-
     }
 }
 

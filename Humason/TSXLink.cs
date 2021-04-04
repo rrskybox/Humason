@@ -2,21 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using TheSkyXLib;
+using TheSky64Lib;
 
 //Library of methods and data for interfacing to TSX through .NET (COM) library
 namespace Planetarium
 {
     public partial class TSXLink
     {
-
-        private static bool AbortFlag { get; set; } = false;
-
-        private void AbortReportEvent_Handler(object sender, AbortEvent.AbortEventArgs e)
-        {
-            AbortFlag = true;
-            return;
-        }
 
         #region Connection Class
 
@@ -429,19 +421,19 @@ namespace Planetarium
                 tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_DEC_2000);
                 tgt.Dec = tsxo.ObjInfoPropOut;
                 //Get target events
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
                 tgt.Rise = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
                 tgt.Set = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
                 tgt.Transit = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
                 tgt.HA = TimeSpan.FromHours((double)tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
                 try
                 { tgt.Dusk = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dusk = TimeSpan.FromHours(0); }
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
                 try
                 { tgt.Dawn = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dawn = TimeSpan.FromHours(0); }
@@ -490,9 +482,9 @@ namespace Planetarium
                 tgt.RA = tsxo.ObjInfoPropOut;
                 tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_DEC_2000);
                 tgt.Dec = tsxo.ObjInfoPropOut;
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT);
                 tgt.Altitude = tsxo.ObjInfoPropOut;
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_AZM);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_AZM);
                 tgt.Azimuth = tsxo.ObjInfoPropOut;
 
                 tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RA_RATE_ASPERSEC);
@@ -501,19 +493,19 @@ namespace Planetarium
                 tgt.DeltaDecRate = tsxo.ObjInfoPropOut;
 
                 //Get target events
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
                 tgt.Rise = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
                 tgt.Set = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
                 tgt.Transit = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
                 tgt.HA = TimeSpan.FromHours((double)tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
                 try
                 { tgt.Dusk = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dusk = TimeSpan.FromHours(0); }
-                tsxo.Property(TheSkyXLib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
+                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
                 try
                 { tgt.Dawn = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dawn = TimeSpan.FromHours(0); }
@@ -682,7 +674,7 @@ namespace Planetarium
             public static PlateSolution PlateSolve(string path)
             {
                 LogEvent lg = new LogEvent();
-                ImageLink tsxl = new TheSkyXLib.ImageLink
+                ImageLink tsxl = new TheSky64Lib.ImageLink
                 {
                     pathToFITS = path
                 };
@@ -720,7 +712,7 @@ namespace Planetarium
 
                 ccdsoftCamera tsxc = new ccdsoftCamera
                 {
-                    ImageReduction = TheSkyXLib.ccdsoftImageReduction.cdAutoDark,
+                    ImageReduction = TheSky64Lib.ccdsoftImageReduction.cdAutoDark,
                     Subframe = 0,
                     FilterIndexZeroBased = asti.Filter,
                     ExposureTime = asti.Exposure,
@@ -1271,8 +1263,6 @@ namespace Planetarium
                     catch (Exception ex)
                     {
                         tsxc.Abort();
-                        AbortEvent ab = new AbortEvent();
-                        ab.AbortIt(ex.Message);
                         return ex.HResult;
                     }
                 }
@@ -1472,7 +1462,7 @@ namespace Planetarium
                     catch { return; }
                 }
                 //wait for completion;
-                while (tsxc.State == TheSkyXLib.ccdsoftCameraState.cdStateCalibrate)
+                while (tsxc.State == TheSky64Lib.ccdsoftCameraState.cdStateCalibrate)
                 {
                     System.Windows.Forms.Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
@@ -1486,7 +1476,7 @@ namespace Planetarium
                     catch
                     { return; }
                     //wait for completion;
-                    while (tsxc.State == TheSkyXLib.ccdsoftCameraState.cdStateCalibrate)
+                    while (tsxc.State == TheSky64Lib.ccdsoftCameraState.cdStateCalibrate)
                     {
                         System.Windows.Forms.Application.DoEvents();
                         System.Threading.Thread.Sleep(1000);
@@ -1682,7 +1672,6 @@ namespace Planetarium
             public static void RunTempComp()
             {
                 //Enable Temperature compensation with current data to mode A (for Optec)
-                // lg = FormHumason.LogReport;
 
                 ccdsoftCamera tsxc = new ccdsoftCamera
                 {

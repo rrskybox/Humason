@@ -21,6 +21,7 @@ namespace Humason
         public static FormSessionControl fSessionForm;
         public static FormDome fDomeForm;
 
+
         //public static bool AbortFlag;
         //Open public field for other classes to refer to when raising abort events to this form
         //
@@ -153,16 +154,20 @@ namespace Humason
         {
             NHUtil.ButtonRed(StartButton);
             StartButton.Text = "Running";
-            //Minimize TSX to help with performance
-            ManageTSX.MinimizeTSX();
+            //One can minimize TSX to help with performance, but don't
+            //ManageTSX.MinimizeTSX();
             //Set the form to display the target tab
             HumasonTabs.SelectedIndex = 1;
+            SessionState = SessionStateFlag.Running;
             //Light off the overall imaging control process
             bool successReport = Operations.ImagingControl();
             //All done
-            NHUtil.ButtonGreen(StartButton);
+            //Clear the Running and Abort buttons
             StartButton.Text = "Start";
-        }
+            NHUtil.ButtonGreen(StartButton);
+            AbortButton.Text = "Stop";
+            NHUtil.ButtonGreen(AbortButton);
+         }
 
         private void ColorButtonsGreen()
         {
@@ -215,15 +220,18 @@ namespace Humason
         private void AbortButton_Click(object sender, EventArgs e)
         {
             NHUtil.ButtonRed(AbortButton);
-            AbortEvent ab = new AbortEvent();
-            ab.AbortIt("Abort Button Clicked");
+            //AbortEvent ab = new AbortEvent();
+            SetAbort();
+            //ab.AbortIt("Abort Button Clicked");
             NHUtil.ButtonGreen(AbortButton);
+            StartButton.Text = "Aborted";
+            NHUtil.ButtonRed(StartButton);
         }
 
         private void TabPageSelected_Click(object sender, TabControlEventArgs e)
         {
-            //a tab page has been selected, if it is the target page, then update the current target
-            if (e.TabPage.Name == "TargetTab") fTargetForm.TabUpdate();
+            //a tab page has been selected, if it is the target page and a session is not running, then update the current target
+            if (e.TabPage.Name == "TargetTab" && SessionState != SessionStateFlag.Running) fTargetForm.TabUpdate();
             return;
         }
 
@@ -231,13 +239,7 @@ namespace Humason
 
         #region event handlers
 
-        //private void AbortReportEvent_Handler(object sender, AbortEvent.AbortEventArgs e)
-        //{
-        //    //AbortFlag = true;
-        //    return;
-        //}
-
-        public void LogReportUpdate_Handler(object sender, LogEvent.LogEventArgs e)
+         public void LogReportUpdate_Handler(object sender, LogEvent.LogEventArgs e)
         {
             StatusBox.AppendText(e.LogEntry + "\r\n");
             this.Show();
@@ -245,7 +247,21 @@ namespace Humason
         }
         #endregion
 
+        #region sessionstate
 
+        public enum SessionStateFlag { Stopped, Running, Aborting }
+
+        public static SessionStateFlag SessionState { get; set; } = SessionStateFlag.Stopped;
+
+        public static bool IsAborting()
+        {
+            if (SessionState == SessionStateFlag.Aborting) return true;
+            else return false;
+        }
+
+        public static void SetAbort() { SessionState = SessionStateFlag.Aborting; }
+
+        #endregion
     }
 }
 

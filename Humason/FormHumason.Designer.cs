@@ -76,7 +76,7 @@
             this.HumasonTabs.SelectedIndex = 0;
             this.HumasonTabs.Size = new System.Drawing.Size(305, 410);
             this.HumasonTabs.TabIndex = 0;
-            this.HumasonTabs.Selected += new System.Windows.Forms.TabControlEventHandler (this.TabPageSelected_Click);
+            this.HumasonTabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabPageSelected_Click);
             // 
             // PlanTab
             // 
@@ -312,9 +312,9 @@
             this.StatusBox.Location = new System.Drawing.Point(12, 533);
             this.StatusBox.Multiline = true;
             this.StatusBox.Name = "StatusBox";
+            this.StatusBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.StatusBox.Size = new System.Drawing.Size(281, 170);
             this.StatusBox.TabIndex = 21;
-            this.StatusBox.Text = "Status Box";
             // 
             // FormHumason
             // 
