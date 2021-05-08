@@ -1,6 +1,6 @@
 Humason
 
-Imaging Automation Front End for TheSkyX Professional on Windows 10 Desktop
+Astroimaging Session Manager and Tools using TheSkyX Professional on Windows 10 Desktop
 
 V 4.0 -- Upgraded to work with TheSkyX Pro x64
 
