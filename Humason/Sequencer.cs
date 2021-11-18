@@ -800,30 +800,15 @@ namespace Humason
             //   but it doesnt matter, it seems
             if ((TargetRise == TimeSpan.FromHours(0)) && (TargetSet == TimeSpan.FromHours(0)))
             {
-                //hoursToMinAlt = TimeSpan.FromHours((TargetTransit.TotalHours - 12) * ((meridianAltD - TelescopeLimit) / meridianAltD));
                 hoursToMinAlt = TimeSpan.FromHours(AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc)));
             }
             else
             {
-                //double tLimitR = AstroMath.Transform.DegreesToRadians(TelescopeLimit);
-                //double declination = tSpot.Dec;
-                //if (declination < 0) declination = 1 - declination;
-                //double haRTest1 = (Math.Sin(tLimitR) - (Math.Sin(declination) * Math.Sin(tLoc.Lat))) / (Math.Cos(tSpot.Dec) * Math.Cos(tLoc.Lat));
-                //double haRtest =  Math.Acos(haRTest1);
-
-                //double haR = tSpot.HourAngle(tLimitR, tLoc);
-                //double haHours = AstroMath.Transform.RadiansToHours(haRtest);
-                //hoursToMinAlt = TimeSpan.FromHours(haHours);
+                var test3 = AstroMath.Transform.DegreesToRadians(TelescopeLimit);
+                var test1 = tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc);
+                var test2 = AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc));
                 hoursToMinAlt = TimeSpan.FromHours(AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc)));
-                //if (TargetSet < TargetTransit)
-                //{
-                //    hoursToMinAlt = -hoursToMinAlt;
             }
-            //TimeSpan minAltTime = TargetTransit + hoursToMinAlt;
-            //if (minAltTime > TimeSpan.FromHours(24))
-            //{
-            //    minAltTime -= TimeSpan.FromHours(24);
-            //}
             return hoursToMinAlt;
         }
 
