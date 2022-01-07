@@ -674,9 +674,11 @@ namespace Planetarium
             public static PlateSolution PlateSolve(string path)
             {
                 LogEvent lg = new LogEvent();
-                ImageLink tsxl = new TheSky64Lib.ImageLink
+                ImageLink tsxl = new TheSky64Lib.ImageLink();
+                //set Scale
+                tsxl.scale = TSXLink.FOVI.GetFOVScale();
                 {
-                    pathToFITS = path
+                    tsxl.pathToFITS = path;
                 };
                 try
                 { tsxl.execute(); }
@@ -1602,7 +1604,13 @@ namespace Planetarium
                 tsxf.setProperty(FOVName, 0, sk6MyFOVProperty.sk6MyFOVProp_PositionAngleDegrees, PA);
             }
 
-
+            public static double GetFOVScale()
+            {
+                sky6MyFOVs tsxf = new sky6MyFOVs();
+                tsxf.Property(FOVName, 0, sk6MyFOVProperty.sk6MyFOVProp_Scale);
+                double scale = tsxf.OutVar;
+                return scale;
+            }
         }
 
 
