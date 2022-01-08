@@ -1,6 +1,7 @@
 ﻿using Humason;
 using System;
 using TheSky64Lib;
+using Planetarium;
 
 namespace AtGuider2
 {
@@ -128,6 +129,7 @@ namespace AtGuider2
             ccdsoftImage tsxi = new ccdsoftImage();
             ImageLink tsxil = new ImageLink
             {
+                scale = TSXLink.FOVI.GetFOVScale(),   //set Scale
                 pathToFITS = tsxcc.LastImageFileName
             };
             tsxil.execute();
