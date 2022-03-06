@@ -42,7 +42,9 @@ namespace Planetarium
                     return;
                 }
                 lg.LogIt("Finding Mount Home");
+                System.Threading.Thread.Sleep(1000);
                 tsxt.FindHome();
+                System.Threading.Thread.Sleep(1000);
                 if (openSession.IsParkMountEnabled)
                 {
                     lg.LogIt("Parking Mount");
@@ -706,12 +708,10 @@ namespace Planetarium
                 LogEvent lg = new LogEvent();
                 SessionControl openSession = new SessionControl();
                 int clsResult = 0;
-                //If Dome enabled, check for dome command in progress by clearing the coupling
-                if (openSession.IsDomeAddOnEnabled)
-                {
-                    ToggleDomeCoupling();
-                }
-
+                //Make sure mount is UnParked
+                lg.LogIt("Unparking mount for CLS, if needed");
+                Mount.UnPark();
+                
                 ccdsoftCamera tsxc = new ccdsoftCamera
                 {
                     ImageReduction = TheSky64Lib.ccdsoftImageReduction.cdAutoDark,

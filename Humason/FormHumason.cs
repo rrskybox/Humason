@@ -43,8 +43,6 @@ namespace Humason
             //AbortEvent ag = new AbortEvent();
             //ag.AbortEventHandler += AbortReportEvent_Handler;
 
-            //formHumasonLogSubscriber = new LogEvent();
-            //formHumasonLogSubscriber.LogEventHandler += LogReportUpDate_Handler;
             //Add log event generator
             StatusReportEvent = new LogEvent();
             StatusReportEvent.LogEventHandler += LogReportUpdate_Handler;
@@ -115,7 +113,7 @@ namespace Humason
             TopMost = true;
         }
 
-        #region commands
+        #region command handlers
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
@@ -154,6 +152,7 @@ namespace Humason
         {
             NHUtil.ButtonRed(StartButton);
             StartButton.Text = "Running";
+            SetRunning();
             //One can minimize TSX to help with performance, but don't
             //ManageTSX.MinimizeTSX();
             //Set the form to display the target tab
@@ -167,7 +166,7 @@ namespace Humason
             NHUtil.ButtonGreen(StartButton);
             AbortButton.Text = "Stop";
             NHUtil.ButtonGreen(AbortButton);
-         }
+        }
 
         private void ColorButtonsGreen()
         {
@@ -192,6 +191,12 @@ namespace Humason
             return;
         }
 
+        private void AttendedCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.IsAttended = AttendedCheckBox.Checked;
+            return;
+        }
         private void OptionsButton_Click(object sender, EventArgs e)
         {
             //Open the options form to change options
@@ -239,7 +244,7 @@ namespace Humason
 
         #region event handlers
 
-         public void LogReportUpdate_Handler(object sender, LogEvent.LogEventArgs e)
+        public void LogReportUpdate_Handler(object sender, LogEvent.LogEventArgs e)
         {
             StatusBox.AppendText(e.LogEntry + "\r\n");
             this.Show();
@@ -261,7 +266,12 @@ namespace Humason
 
         public static void SetAbort() { SessionState = SessionStateFlag.Aborting; }
 
+        public static void SetRunning() { SessionState = SessionStateFlag.Running; }
+
+        public static void SetStopped() { SessionState = SessionStateFlag.Stopped; }
+
         #endregion
+
     }
 }
 

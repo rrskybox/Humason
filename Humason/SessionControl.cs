@@ -39,6 +39,7 @@ namespace Humason
         //Humason main form parameters
         const string HomeMountEnabledXName = "HomeMountEnabled";
         const string ParkMountEnabledXName = "ParkMountEnabled";
+        const string IsAttendedXName = "IsAttended";
 
         //Session Form and Autorun parameters
         const string AutoRunCheckedXName = "AutoRunChecked";
@@ -216,6 +217,17 @@ namespace Humason
                 else { return false; }
             }
             set => DirectXcess.ReplaceItem(AutoRunCheckedXName, value);
+        }
+
+        public bool IsAttended
+        {
+            get
+            {
+                if (Convert.ToBoolean(DirectXcess.GetItem(IsAttendedXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(IsAttendedXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(IsAttendedXName, value);
         }
 
         public bool IsHomeMountEnabled

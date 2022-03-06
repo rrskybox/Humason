@@ -818,6 +818,8 @@ namespace Humason
             // as defined in the configuration file
             // in this case we will use the RA,Dec version of find
             // just in case this target RA/Dec has been shifted for the shot
+            //Make sure the mount is connected
+
             LogEvent lg = new LogEvent();
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);

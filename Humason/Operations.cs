@@ -67,7 +67,7 @@ namespace Humason
             //check for abort having been set.  Gracefully shut everything back down if it has.
             if (FormHumason.IsAborting()) { GracefulAbort(); }
 
-             //  If autorun enabled, then run the start up time autorun script/app
+            //  If autorun enabled, then run the start up time autorun script/app
             if (openSession.IsAutoRunEnabled && openSession.IsStartUpEnabled) { LaunchPad.WaitStartUp(); }
             //check for abort having been set.  Gracefully shut everything back down if it has.
             if (FormHumason.IsAborting()) { GracefulAbort(); }
@@ -215,7 +215,7 @@ namespace Humason
         private static void GracefulAbort()
         {
             //Abort has been pushed or automatically called by procedure due to some error
-            //If start is not active then we want to just park the scope and disconnect all
+            //If start is not active or attended is checked then we want to just park the scope and disconnect all
             //devices.
             //If start is active, then we want to treat this as a catastrophic event and simply
             //stop everything by parking
@@ -228,9 +228,9 @@ namespace Humason
             //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
             AutoGuide.AutoGuideStop();
 
-            //If autorun set, then run it, or... just park the mount, home the dome and disconnect
-            if (openSession.IsAutoRunEnabled) { LaunchPad.RunShutDownApp(); }
-            else
+            //If autorun set and we're running unattended, then shut down, or... just park the mount, home the dome and disconnect
+            if (openSession.IsAutoRunEnabled && !openSession.IsAttended) { LaunchPad.RunShutDownApp(); }
+            else if (FormHumason.SessionState != FormHumason.SessionStateFlag.Stopped)
             {
                 lg.LogIt("Parking Mount");
                 try { TSXLink.Mount.Park(); }
@@ -240,12 +240,13 @@ namespace Humason
                 if (openSession.IsDomeAddOnEnabled) { TSXLink.Dome.HomeDome(); }
                 lg.LogIt("Disconnecting all devices");
                 TSXLink.Connection.DisconnectAllDevices();
+                FormHumason.SetStopped();
             }
             lg.LogIt("Abort Completed -- awaiting new orders, Captain");
             return;
         }
 
-         public static void InitializeSystem()
+        public static void InitializeSystem()
         {
             SessionControl openSession = new SessionControl();
 

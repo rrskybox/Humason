@@ -52,6 +52,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.StatusBox = new System.Windows.Forms.TextBox();
+            this.AttendedCheckBox = new System.Windows.Forms.CheckBox();
             this.HumasonTabs.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -189,7 +190,7 @@
             this.OnTopCheck.CheckState = System.Windows.Forms.CheckState.Checked;
             this.OnTopCheck.ForeColor = System.Drawing.Color.White;
             this.OnTopCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.OnTopCheck.Location = new System.Drawing.Point(78, 16);
+            this.OnTopCheck.Location = new System.Drawing.Point(78, 14);
             this.OnTopCheck.Name = "OnTopCheck";
             this.OnTopCheck.Size = new System.Drawing.Size(62, 17);
             this.OnTopCheck.TabIndex = 10;
@@ -248,7 +249,7 @@
             // AbortButton
             // 
             this.AbortButton.ForeColor = System.Drawing.Color.Black;
-            this.AbortButton.Location = new System.Drawing.Point(6, 48);
+            this.AbortButton.Location = new System.Drawing.Point(6, 53);
             this.AbortButton.Name = "AbortButton";
             this.AbortButton.Size = new System.Drawing.Size(66, 23);
             this.AbortButton.TabIndex = 15;
@@ -259,7 +260,7 @@
             // OptionsButton
             // 
             this.OptionsButton.ForeColor = System.Drawing.Color.Black;
-            this.OptionsButton.Location = new System.Drawing.Point(78, 48);
+            this.OptionsButton.Location = new System.Drawing.Point(78, 53);
             this.OptionsButton.Name = "OptionsButton";
             this.OptionsButton.Size = new System.Drawing.Size(63, 23);
             this.OptionsButton.TabIndex = 16;
@@ -286,23 +287,24 @@
             this.groupBox1.Controls.Add(this.ConnectButton);
             this.groupBox1.Controls.Add(this.HomeMountCheckBox);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(12, 422);
+            this.groupBox1.Location = new System.Drawing.Point(12, 417);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(127, 95);
+            this.groupBox1.Size = new System.Drawing.Size(127, 100);
             this.groupBox1.TabIndex = 18;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Manual";
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.AttendedCheckBox);
             this.groupBox3.Controls.Add(this.AbortButton);
             this.groupBox3.Controls.Add(this.StartButton);
             this.groupBox3.Controls.Add(this.OnTopCheck);
             this.groupBox3.Controls.Add(this.OptionsButton);
             this.groupBox3.ForeColor = System.Drawing.Color.White;
-            this.groupBox3.Location = new System.Drawing.Point(146, 423);
+            this.groupBox3.Location = new System.Drawing.Point(146, 417);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(147, 76);
+            this.groupBox3.Size = new System.Drawing.Size(153, 84);
             this.groupBox3.TabIndex = 20;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Auto";
@@ -315,6 +317,21 @@
             this.StatusBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.StatusBox.Size = new System.Drawing.Size(281, 170);
             this.StatusBox.TabIndex = 21;
+            // 
+            // AttendedCheckBox
+            // 
+            this.AttendedCheckBox.AutoSize = true;
+            this.AttendedCheckBox.Checked = true;
+            this.AttendedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AttendedCheckBox.ForeColor = System.Drawing.Color.White;
+            this.AttendedCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.AttendedCheckBox.Location = new System.Drawing.Point(78, 33);
+            this.AttendedCheckBox.Name = "AttendedCheckBox";
+            this.AttendedCheckBox.Size = new System.Drawing.Size(69, 17);
+            this.AttendedCheckBox.TabIndex = 17;
+            this.AttendedCheckBox.Text = "Attended";
+            this.AttendedCheckBox.UseVisualStyleBackColor = true;
+            this.AttendedCheckBox.CheckedChanged += new System.EventHandler(this.AttendedCheckBox_CheckedChanged);
             // 
             // FormHumason
             // 
@@ -369,6 +386,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TabPage DomeTab;
         private System.Windows.Forms.TextBox StatusBox;
+        private System.Windows.Forms.CheckBox AttendedCheckBox;
     }
 }
 
