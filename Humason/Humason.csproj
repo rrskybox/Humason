@@ -26,7 +26,7 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>226</ApplicationRevision>
+    <ApplicationRevision>229</ApplicationRevision>
     <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -120,12 +120,6 @@
     <Compile Include="FormAutoGuide.Designer.cs">
       <DependentUpon>FormAutoGuide.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormAutoRun.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormAutoRun.designer.cs">
-      <DependentUpon>FormAutoRun.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormDome.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -212,9 +206,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormAutoGuide.resx">
       <DependentUpon>FormAutoGuide.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormAutoRun.resx">
-      <DependentUpon>FormAutoRun.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDome.resx">
       <DependentUpon>FormDome.cs</DependentUpon>

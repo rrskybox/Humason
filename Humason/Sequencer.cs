@@ -80,7 +80,7 @@ namespace Humason
             //Clear abort, if any
             //Load Abort Event Handler
             //AbortEvent abortEvent = new AbortEvent();
-           // abortEvent.AbortEventHandler += SequencerAbortEvent_Handler;
+            // abortEvent.AbortEventHandler += SequencerAbortEvent_Handler;
             //Open target plan for this sequence
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
@@ -739,10 +739,9 @@ namespace Humason
                 //
                 //////////////////////
             }
-            return true;
-
             //All done
             lg.LogIt("Meridian Flip Completed");
+            return true;
         }
 
         private bool IsTargetWest()
@@ -846,15 +845,7 @@ namespace Humason
             //TSX has some problems with letting the dome catch up with the telescope in CLS mode
             //  So, as a work around, slew to the coordinates synchronously, then do the CLS
             //
-            //try { TSXLink.Mount.SlewRADec(Convert.ToDouble(sRA), Convert.ToDouble(sDec), sRADecName); }
-            //catch (Exception ex)
-            //{
-            //    lg.LogIt("Initial Slew Failed: " + ex.Message);
-            //    return false;
-            //}
-            //lg.LogIt("Initial Slew Completed");
-
-            //Set the exposure, filter and reduction, unless already set up
+             //Set the exposure, filter and reduction, unless already set up
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Imaging,

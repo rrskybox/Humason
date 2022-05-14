@@ -111,7 +111,15 @@ namespace Humason
             double altitude = ffTarget.Altitude;
             double azimuth = ffTarget.Azimuth;
             lg.LogIt("Slewing to flat panel position");
+            try
+            {
             TSXLink.Mount.SlewRADec(ffTarget.RA, ffTarget.Dec, ffTarget.Name);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Slew to Flats Box failure. " + ex.Message + " \r\n Turn off slew limits.  Ending flats session.");
+                return false;
+            }
             lg.LogIt("Turning off tracking");
             TSXLink.Mount.TurnTrackingOff();
             //Disconnect from mount

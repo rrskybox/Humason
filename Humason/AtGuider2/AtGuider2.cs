@@ -1,7 +1,7 @@
 ﻿using Humason;
+using Planetarium;
 using System;
 using TheSky64Lib;
-using Planetarium;
 
 namespace AtGuider2
 {

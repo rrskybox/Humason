@@ -73,13 +73,12 @@ namespace Humason
             // this is intended to be used to periodically check if 
             // a photoshoot has lasted past the configured shutdown time
             SessionControl openSession = new SessionControl();
-            if (openSession.IsAutoRunEnabled && openSession.IsShutDownEnabled)
-            {
-                DateTime endTime = openSession.ShutDownTime;
-                if (endTime < DateTime.Now) { return (true); }
-                else { return (false); }
-            }
-            else { return (false); }
+
+            DateTime endTime = openSession.ShutDownTime;
+            if (endTime < DateTime.Now)
+                return (true);
+            else
+                return (false);
         }
 
         public static void RunStagingApp()
@@ -89,7 +88,7 @@ namespace Humason
 
             SessionControl openSession = new SessionControl();
             Process pSystemExe = new Process();
-            if (openSession.StagingFilePath != null)
+            if (openSession.StagingEnabled && openSession.StagingFilePath != null)
             {
                 LogEvent lg = new LogEvent();
                 lg.LogIt("Running Staging Process");
@@ -112,7 +111,7 @@ namespace Humason
 
             SessionControl openSession = new SessionControl();
             Process pSystemExe = new Process();
-            if (openSession.StartUpFilePath != null)
+            if (openSession.StartUpEnabled && openSession.StartUpFilePath != null)
             {
                 LogEvent lg = new LogEvent();
                 lg.LogIt("Running Start Up Process");
@@ -135,7 +134,7 @@ namespace Humason
 
             SessionControl openSession = new SessionControl();
             Process pSystemExe = new Process();
-            if (openSession.ShutDownFilePath != null)
+            if (openSession.ShutDownEnabled && openSession.ShutDownFilePath != null)
             {
                 LogEvent lg = new LogEvent();
                 lg.LogIt("Running Shut Down Process");

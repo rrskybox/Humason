@@ -127,8 +127,9 @@ namespace Planetarium
             //Goto home position using goto rather than home
             ReliableGoTo(domeHomeAz);
             tsxd.CloseSlit();
-            System.Threading.Thread.Sleep(10); // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
-            while (tsxd.IsCloseComplete == 0) { System.Threading.Thread.Sleep(1000); }
+            System.Threading.Thread.Sleep(5000); // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
+            while (tsxd.IsCloseComplete == 0)
+                System.Threading.Thread.Sleep(1000);
             //Check to see if slit got closed, if not, then try one more time
             //if (tsxd.SlitState() != SlitState.Closed)
             //{
@@ -214,13 +215,19 @@ namespace Planetarium
         {
             //Slews dome to azimuth while avoiding lockup if already there
             sky6Dome tsxd = new sky6Dome();
+            //Abort any dome command and wait for it to clear
+            tsxd.Abort();
+            System.Threading.Thread.Sleep(1000);
+            //Decouple the dome
+            tsxd.IsCoupled = 0;
             tsxd.GetAzEl();
             double currentAz = tsxd.dAz;
             if (currentAz - az > 1)
             {
                 tsxd.GotoAzEl(az, 0);
-                System.Threading.Thread.Sleep(10);
-                while (tsxd.IsGotoComplete == 0) System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(5000);
+                while (tsxd.IsGotoComplete == 0)
+                    System.Threading.Thread.Sleep(1000);
             }
             return;
         }

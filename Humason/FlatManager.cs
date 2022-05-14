@@ -103,7 +103,7 @@ namespace Humason
                 TSXLink.Mount.UnPark();
                 //point telescope essentially up
                 lg.LogIt("Pointing telescope just west of zenith");
-                TSXLink.Mount.SlewAzAlt(200.0, (60), "Flat Spot");
+                    TSXLink.Mount.SlewAzAlt(200.0, (60), "Flat Spot");
                 //Turn tracking off
                 TSXLink.Mount.TurnTrackingOff();
             }

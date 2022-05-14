@@ -51,8 +51,8 @@
             this.AboutButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.StatusBox = new System.Windows.Forms.TextBox();
             this.AttendedCheckBox = new System.Windows.Forms.CheckBox();
+            this.StatusBox = new System.Windows.Forms.TextBox();
             this.HumasonTabs.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -309,20 +309,9 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Auto";
             // 
-            // StatusBox
-            // 
-            this.StatusBox.Location = new System.Drawing.Point(12, 533);
-            this.StatusBox.Multiline = true;
-            this.StatusBox.Name = "StatusBox";
-            this.StatusBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.StatusBox.Size = new System.Drawing.Size(281, 170);
-            this.StatusBox.TabIndex = 21;
-            // 
             // AttendedCheckBox
             // 
             this.AttendedCheckBox.AutoSize = true;
-            this.AttendedCheckBox.Checked = true;
-            this.AttendedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.AttendedCheckBox.ForeColor = System.Drawing.Color.White;
             this.AttendedCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AttendedCheckBox.Location = new System.Drawing.Point(78, 33);
@@ -332,6 +321,15 @@
             this.AttendedCheckBox.Text = "Attended";
             this.AttendedCheckBox.UseVisualStyleBackColor = true;
             this.AttendedCheckBox.CheckedChanged += new System.EventHandler(this.AttendedCheckBox_CheckedChanged);
+            // 
+            // StatusBox
+            // 
+            this.StatusBox.Location = new System.Drawing.Point(12, 533);
+            this.StatusBox.Multiline = true;
+            this.StatusBox.Name = "StatusBox";
+            this.StatusBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.StatusBox.Size = new System.Drawing.Size(281, 170);
+            this.StatusBox.TabIndex = 21;
             // 
             // FormHumason
             // 

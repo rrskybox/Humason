@@ -1,5 +1,6 @@
 ﻿using Planetarium;
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Humason
@@ -13,35 +14,26 @@ namespace Humason
             sessionFormInit = true;
             InitializeComponent();
             SessionControl openSession = new SessionControl();
-            AutoRunCheck.Checked = openSession.IsAutoRunEnabled;
             //Update the autorun types checked 
-            StagingEnabledCheckBox.Checked = openSession.IsStagingEnabled;
-            StartupEnabledCheckBox.Checked = openSession.IsStartUpEnabled;
-            ShutdownEnabledCheckBox.Checked = openSession.IsShutDownEnabled;
+            StagingEnabledCheckBox.Checked = openSession.StagingEnabled;
+            StartupEnabledCheckBox.Checked = openSession.StartUpEnabled;
+            ShutdownEnabledCheckBox.Checked = openSession.ShutDownEnabled;
             MinimumAltitudeBox.Value = openSession.MinimumAltitude;
-            sessionFormInit = false;
-            return;
-        }
-
-        private void AutoRunCheck_CheckedChanged(object sender, EventArgs e)
-        {
-            //If this is a check, then record the check in the configuration times and open the autorun form window
-            //If this is an uncheck, then just record the uncheck in configuration
-            //In either case, save the selections and times to the session file anyway
-
-            //First, if the forms are still initializing, then just ignore
-            if (sessionFormInit)
-            { return; }
-            SessionControl openSession = new SessionControl();
-            openSession.IsAutoRunEnabled = AutoRunCheck.Checked;
-            if (AutoRunCheck.Checked)
+            StageSystemFilePathBox.Text = Path.GetFileName(openSession.StagingFilePath);
+            StartUpFilePathBox.Text = Path.GetFileName(openSession.StartUpFilePath);
+            ShutDownFilePathBox.Text = Path.GetFileName(openSession.ShutDownFilePath);
+            //Set the default browse locations to the TSX ToolKit Start Up directory
+            string ttdir = "C:\\Users\\" + System.Environment.UserName + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
+            if (Directory.Exists(ttdir))
             {
-                FormAutoRun arf = new FormAutoRun();
-                arf.ShowDialog();
+                StageSystemFileDialog.InitialDirectory = ttdir;
+                StartUpFileDialog.InitialDirectory = ttdir;
+                ShutDownFileDialog.InitialDirectory = ttdir;
             }
-            openSession.IsStagingEnabled = StagingEnabledCheckBox.Checked;
-            openSession.IsStartUpEnabled = StartupEnabledCheckBox.Checked;
-            openSession.IsShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+            openSession.StagingEnabled = StagingEnabledCheckBox.Checked;
+            openSession.StartUpEnabled = StartupEnabledCheckBox.Checked;
+            openSession.ShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+            sessionFormInit = false;
             return;
         }
 
@@ -57,19 +49,19 @@ namespace Humason
         private void StagingEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
-            openSession.IsStagingEnabled = StagingEnabledCheckBox.Checked;
+            openSession.StagingEnabled = StagingEnabledCheckBox.Checked;
         }
 
         private void StartupEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
-            openSession.IsStartUpEnabled = StartupEnabledCheckBox.Checked;
+            openSession.StartUpEnabled = StartupEnabledCheckBox.Checked;
         }
 
         private void ShutdownEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
-            openSession.IsShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+            openSession.ShutDownEnabled = ShutdownEnabledCheckBox.Checked;
         }
 
         private void MinAltitudeBox_ValueChanged(object sender, EventArgs e)
@@ -77,5 +69,87 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             openSession.MinimumAltitude = (int)MinimumAltitudeBox.Value;
         }
+
+        private void StagingEnabledCheckBox_CheckedChanged_1(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.StagingEnabled = StagingEnabledCheckBox.Checked;
+        }
+
+        private void StartupEnabledCheckBox_CheckedChanged_1(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.StartUpEnabled = StartupEnabledCheckBox.Checked;
+        }
+
+        private void ShutdownEnabledCheckBox_CheckedChanged_1(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.ShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+        }
+
+        private void StagingBrowseButton_Click(object sender, EventArgs e)
+        {
+            //Upon clicking the Browse button
+            //  A file selection dialog is run to pick up a filepath for the
+            //  system staging file.  The result, if chosen, is entered in the associated filename box
+            //  in the form, and the superscan configuration file updated accordingly.
+
+            SessionControl openSession = new SessionControl();
+            DialogResult stageSystemPathDiag = StageSystemFileDialog.ShowDialog();
+            if (stageSystemPathDiag == System.Windows.Forms.DialogResult.OK)
+            {
+                openSession.StagingFilePath = StageSystemFileDialog.FileName;
+                StageSystemFilePathBox.Text = Path.GetFileName(StageSystemFileDialog.FileName);
+            }
+            else
+            {
+                openSession.StagingFilePath = null;
+                StageSystemFilePathBox.Text = null;
+            }
+        }
+
+        private void StartUpBrowseButton_Click(object sender, EventArgs e)
+        {
+            //Upon clicking the Browse button
+            //  A file selection dialog is run to pick up a filepath for the
+            //  system staging file.  The result, if chosen, is entered in the associated filename box
+            //  in the form, and the superscan configuration file updated accordingly.
+
+            SessionControl openSession = new SessionControl();
+            DialogResult startupPathDiag = StartUpFileDialog.ShowDialog();
+            if (startupPathDiag == System.Windows.Forms.DialogResult.OK)
+            {
+                openSession.StartUpFilePath = StartUpFileDialog.FileName;
+                StartUpFilePathBox.Text = Path.GetFileName(StartUpFileDialog.FileName);
+            }
+            else
+            {
+                openSession.StartUpFilePath = null;
+                StartUpFilePathBox.Text = null;
+            }
+        }
+
+        private void ShutDownBrowseButton_Click(object sender, EventArgs e)
+        {
+            //Upon clicking the Browse button
+            //  A file selection dialog is run to pick up a filepath for the
+            //  system staging file.  The result, if chosen, is entered in the associated filename box
+            //  in the form, and the superscan configuration file updated accordingly.
+
+            SessionControl openSession = new SessionControl();
+            DialogResult shutdownPathDiag = ShutDownFileDialog.ShowDialog();
+            if (shutdownPathDiag == System.Windows.Forms.DialogResult.OK)
+            {
+                openSession.ShutDownFilePath = ShutDownFileDialog.FileName;
+                ShutDownFilePathBox.Text = Path.GetFileName(ShutDownFileDialog.FileName);
+            }
+            else
+            {
+                openSession.ShutDownFilePath = null;
+                ShutDownFilePathBox.Text = null;
+            }
+        }
+
     }
 }

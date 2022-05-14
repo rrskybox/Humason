@@ -161,6 +161,7 @@ namespace Humason
             //Light off the overall imaging control process
             bool successReport = Operations.ImagingControl();
             //All done
+            SessionState = SessionStateFlag.Stopped;
             //Clear the Running and Abort buttons
             StartButton.Text = "Start";
             NHUtil.ButtonGreen(StartButton);

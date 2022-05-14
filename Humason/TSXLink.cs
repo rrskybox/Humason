@@ -707,11 +707,28 @@ namespace Planetarium
             {
                 LogEvent lg = new LogEvent();
                 SessionControl openSession = new SessionControl();
+                //Clear the observing list for some reason, but Find the target name
+                DataWizard.Clear_Observing_List(asti.TargetName);
+                Target tgt = TSXLink.StarChart.FindTarget(asti.TargetName);
+
                 int clsResult = 0;
+                //If Dome, couple to tele
+                if (openSession.IsDomeAddOnEnabled)
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    tsxd.IsCoupled = 1;
+                }
                 //Make sure mount is UnParked
                 lg.LogIt("Unparking mount for CLS, if needed");
                 Mount.UnPark();
-                
+                try { TSXLink.Mount.SlewRADec(Convert.ToDouble(tgt.RA), Convert.ToDouble(tgt.Dec), tgt.Name); }
+                catch (Exception ex)
+                {
+                    lg.LogIt("Initial Slew Failed: " + ex.Message);
+                    return ex.HResult;
+                }
+                lg.LogIt("Initial Slew Completed");
+
                 ccdsoftCamera tsxc = new ccdsoftCamera
                 {
                     ImageReduction = TheSky64Lib.ccdsoftImageReduction.cdAutoDark,
@@ -724,7 +741,6 @@ namespace Planetarium
                 {
                     exposureTimeAILS = asti.Exposure
                 };
-                DataWizard.Clear_Observing_List(asti.TargetName);
                 ClosedLoopSlew tsxcls = new ClosedLoopSlew();
                 try { clsResult = tsxcls.exec(); }
                 catch (Exception ex)

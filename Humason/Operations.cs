@@ -54,34 +54,34 @@ namespace Humason
             //Get the staging, start and shut down times from this initial target, although may not be used
             openSession.StagingTime = DateTime.Now;
             openSession.StartUpTime = ftPlan.SequenceStartTime;
-            // openSession.ShutDownTime = fSequenceForm.DawnTimeBox.Value;
             openSession.ShutDownTime = ftPlan.SequenceDawnTime;
 
             //Save configuration set up, reset the progess bar and make sure that the TSX clock is set to current time
-            //fSequenceForm.UpdateFormFromPlan();
             TSXLink.StarChart.SetClock(0, true);
 
             //Await Staging and Start Up
-            //  If autorun enabled, then run the staging time autorun script/app
-            if (openSession.IsAutoRunEnabled && openSession.IsStagingEnabled) { LaunchPad.WaitStaging(); }
+            //   run the staging time autorun script/app
+            LaunchPad.WaitStaging();
             //check for abort having been set.  Gracefully shut everything back down if it has.
-            if (FormHumason.IsAborting()) { GracefulAbort(); }
+            if (FormHumason.IsAborting())
+            {
+                GracefulAbort();
+                return false;
+            }
 
-            //  If autorun enabled, then run the start up time autorun script/app
-            if (openSession.IsAutoRunEnabled && openSession.IsStartUpEnabled) { LaunchPad.WaitStartUp(); }
+            //  run the start up time autorun script/app
+            LaunchPad.WaitStartUp();
             //check for abort having been set.  Gracefully shut everything back down if it has.
-            if (FormHumason.IsAborting()) { GracefulAbort(); }
+            if (FormHumason.IsAborting())
+            {
+                GracefulAbort();
+                return false;
+            }
 
             //Both Staging and Start Up have been run. All devices should be powered, but not necessarily connected
             //Power up and connect devices (if not done already)
             lg.LogIt("Initializing system");
             InitializeSystem();
-
-            //Remove all flat requests from the flats file
-            //   No, don't
-            //FlatManager nhFlat = new FlatManager();
-            //nhFlat.FlatSetClearAll();
-            //nhFlat = null;
 
             //Check for proximity to meridian flip
             //  if HA of target is within 10 minutes, then just wait it out at 
@@ -109,7 +109,6 @@ namespace Humason
             AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Imaging };
             TSXLink.Camera cCam = new TSXLink.Camera(asti);
             cCam.CCDTemperature = ftPlan.CameraTemperatureSet;
-            cCam = null; asti = null;
 
             //************************  Starting up the target plans  *************************
             //
@@ -135,10 +134,18 @@ namespace Humason
                 }
                 //Try to move to target, if this fails just abort
                 Sequencer imgseq = new Sequencer();
-                if (!imgseq.CLSToTargetPlanCoordinates()) { GracefulAbort(); break; }
+                if (!imgseq.CLSToTargetPlanCoordinates())
+                {
+                    GracefulAbort();
+                    return false;
+                }
 
                 //check for abort having been set.  Gracefully shut everything back down if it has.
-                if (FormHumason.IsAborting()) { GracefulAbort(); break; }
+                if (FormHumason.IsAborting())
+                {
+                    GracefulAbort();
+                    return false;
+                }
 
                 //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
                 if (tPlan.RotatorEnabled)
@@ -148,6 +155,7 @@ namespace Humason
                     {
                         lg.LogIt("Failed to properly rotate. Aborting.");
                         GracefulAbort();
+                        return false;
                     }
                     else
                     {
@@ -160,22 +168,26 @@ namespace Humason
                         {
                             lg.LogIt("Failed to center target after rotation");
                             GracefulAbort();
+                            return false;
                         };
                     }
-
-
                 }
                 else lg.LogIt("Rotator not enabled");
 
                 //check for abort having been set.  Gracefully shut everything back down if it has.
-                if (FormHumason.IsAborting()) { GracefulAbort(); break; }
+                if (FormHumason.IsAborting())
+                {
+                    GracefulAbort();
+                    return false;
+                }
 
                 //Update the sequence for whatever time it is now
                 try { imgseq.SeriesGenerator(); }
                 catch
                 {
                     lg.LogIt("Make Series Error");
-                    GracefulAbort(); break;
+                    GracefulAbort();
+                    return false;
                 }
                 //
                 // Run Imaging Sequence
@@ -185,9 +197,13 @@ namespace Humason
                 //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
                 AutoGuide.AutoGuideStop();
                 //check for abort having been set.  Gracefully shut everything back down if it has.
-                if (FormHumason.IsAborting()) { GracefulAbort(); break; }
+                if (FormHumason.IsAborting())
+                {
+                    GracefulAbort();
+                    return false;
+                }
                 //Done with imaging on this plan.  
-                //Store the ending time
+                //Set the ending time
                 tPlan.SequenceEndTime = DateTime.Now;
                 //Save the plan in the sequence complete summary file
                 openSession.AddSequenceCompleteSummary();
@@ -203,11 +219,16 @@ namespace Humason
             { fmgr.TakeFlats(); }
 
             //If autorun set, then run it, or... just park the mount
-            if (openSession.IsAutoRunEnabled) { LaunchPad.RunShutDownApp(); }
+            if (openSession.ShutDownEnabled && !openSession.IsAttended)
+            {
+                LaunchPad.RunShutDownApp();
+                return false;
+            }
             else
             {
                 try { TSXLink.Mount.Park(); }
-                catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
+                catch (Exception ex)
+                { lg.LogIt("Could not Park: " + ex.Message); }
             }
             return true;
         }
@@ -229,19 +250,22 @@ namespace Humason
             AutoGuide.AutoGuideStop();
 
             //If autorun set and we're running unattended, then shut down, or... just park the mount, home the dome and disconnect
-            if (openSession.IsAutoRunEnabled && !openSession.IsAttended) { LaunchPad.RunShutDownApp(); }
-            else if (FormHumason.SessionState != FormHumason.SessionStateFlag.Stopped)
+            if (FormHumason.SessionState != FormHumason.SessionStateFlag.Stopped)
             {
                 lg.LogIt("Parking Mount");
                 try { TSXLink.Mount.Park(); }
                 catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
                 //home dome (don't close as autorun is not enabled
-                lg.LogIt("Homing Dome");
-                if (openSession.IsDomeAddOnEnabled) { TSXLink.Dome.HomeDome(); }
+                if (openSession.IsDomeAddOnEnabled)
+                {
+                    lg.LogIt("Homing Dome");
+                    TSXLink.Dome.HomeDome();
+                }
                 lg.LogIt("Disconnecting all devices");
                 TSXLink.Connection.DisconnectAllDevices();
                 FormHumason.SetStopped();
             }
+            if ((!openSession.IsAttended) && openSession.ShutDownEnabled) { LaunchPad.RunShutDownApp(); }
             lg.LogIt("Abort Completed -- awaiting new orders, Captain");
             return;
         }

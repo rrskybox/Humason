@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace Humason
 {
     public class SessionControl
     {
-        const string SBQueryFolder = "Software Bisque\\TheSkyX Professional Edition\\Database Queries";
-        const string SBFocusDataFolder = "Software Bisque\\TheSkyX Professional Edition\\Focuser Data";
-        const string SBFOVIDataFolder = "Software Bisque\\TheSkyX Professional Edition\\Field of View Indicators";
+        const string SBQueryFolder = "Software Bisque\\TheSky Professional Edition 64\\Database Queries";
+        const string SBFocusDataFolder = "Software Bisque\\TheSky Professional Edition 64\\Focuser Data";
+        const string SBFOVIDataFolder = "Software Bisque\\TheSky Professional Edition 64\\Field of View Indicators";
         const string HumasonClearDBQFilename = "ClearTheListTheHardWay.dbq";
         const string HumasonSummaryFilename = "SequenceSummaries.xml";
         const string HumasonSessionControlFilename = "SessionControl.xml";
@@ -42,21 +43,18 @@ namespace Humason
         const string IsAttendedXName = "IsAttended";
 
         //Session Form and Autorun parameters
-        const string AutoRunCheckedXName = "AutoRunChecked";
-        const string StagingDateTimeCheckedXName = "StagingDateChecked";
-        const string StagingDateTimePickerXName = "StagingDateTime";
+        const string StagingEnabledXName = "StagingEnabled";
+        const string StagingDateTimeXName = "StagingDateTime";
         const string StagingFilePathXName = "StagingFilePath";
-        const string StartUpDateTimeCheckedXName = "StartUpDateChecked";
-        const string StartUpDateTimePickerXName = "StartUpDateTime";
+
+        const string StartUpEnabledXName = "StartUpEnabled";
+        const string StartUpDateTimeXName = "StartUpDateTime";
         const string StartUpFilePathName = "StartUpFilePath";
-        const string ShutDownDateTimeCheckedXName = "ShutDownDateChecked";
-        const string ShutDownDateTimePickerXName = "ShutDownDateTime";
+
+        const string ShutDownEnabledXName = "ShutDownEnabled";
+        const string ShutDownDateTimeXName = "ShutDownDateTime";
         const string ShutDownFilePathXName = "ShutDownFilePath";
-        const string StartUpToolsXName = "StartUpTools";
-        const string StartUpToolPathXName = "StartUpToolFilePath";
-        const string StagingWaitEnabledXName = "StagingWaitEnabled";
-        const string StartUpWaitEnabledXName = "StartUpWaitEnabled";
-        const string ShutDownWaitEnabledXName = "ShutDownWaitEnabled";
+
         const string MinimumAltitudeXName = "MinimumAltitude";
 
         const string OverheadXName = "Overhead";
@@ -80,7 +78,7 @@ namespace Humason
         const string RotationEnabledXName = "RotationEnabled";
         const string RotatorDirectionXName = "RotatorDirection";
         const string RecalibrateAfterFlipXName = "RecalibrateAfterFlipEnabled";
-        
+
         //Options Definition (for FormOptions)
         const string WeatherCheckedXName = "WeatherMonitorEnabled";
         const string WeatherDataFilePathXName = "WeatherDataFilePath";
@@ -135,8 +133,9 @@ namespace Humason
             //
             //  Generate the install path from the defaults.     
             string dbqInstallPath = sbQueryPath + "\\" + HumasonClearDBQFilename;
-            bool fileTest = File.Exists(dbqInstallPath);
             if (!File.Exists(dbqInstallPath))
+                 MessageBox.Show("Observing List hard clear DBQ not installed");
+            else
             {
                 Assembly dassembly = Assembly.GetExecutingAssembly();
                 //Collect the file contents to be written
@@ -208,17 +207,6 @@ namespace Humason
         //    set => DirectXcess.ReplaceItem(SessionControl.HumasonDefaultTargetFilePathXName, value);
         //}
 
-        public bool IsAutoRunEnabled
-        {
-            get
-            {
-                if (Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName)); }
-                else { return false; }
-            }
-            set => DirectXcess.ReplaceItem(AutoRunCheckedXName, value);
-        }
-
         public bool IsAttended
         {
             get
@@ -288,103 +276,103 @@ namespace Humason
             set => DirectXcess.SetItem(ShutDownFilePathXName, value);
         }
 
-        public bool IsStagingEnabled
+        public bool StagingEnabled
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(StagingDateTimeCheckedXName)); }
+                if (Convert.ToBoolean(DirectXcess.GetItem(StagingEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(StagingEnabledXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(StagingDateTimeCheckedXName, value);
+            set => DirectXcess.ReplaceItem(StagingEnabledXName, value);
         }
 
-        public bool IsStartUpEnabled
+        public bool StartUpEnabled
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(StartUpDateTimeCheckedXName)); }
+                if (Convert.ToBoolean(DirectXcess.GetItem(StartUpEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(StartUpEnabledXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(StartUpDateTimeCheckedXName, value);
+            set => DirectXcess.ReplaceItem(StartUpEnabledXName, value);
         }
 
-        public bool IsShutDownEnabled
+        public bool ShutDownEnabled
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(AutoRunCheckedXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(ShutDownDateTimeCheckedXName)); }
+                if (Convert.ToBoolean(DirectXcess.GetItem(ShutDownEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(ShutDownEnabledXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(ShutDownDateTimeCheckedXName, value);
+            set => DirectXcess.ReplaceItem(ShutDownEnabledXName, value);
         }
 
         public bool IsStagingWaitEnabled
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(StagingWaitEnabledXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(StagingWaitEnabledXName)); }
+                if (Convert.ToBoolean(DirectXcess.GetItem(StagingEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(StagingEnabledXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(StagingWaitEnabledXName, value);
+            set => DirectXcess.ReplaceItem(StagingEnabledXName, value);
         }
 
         public bool IsStartUpWaitEnabled
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(StartUpWaitEnabledXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(StartUpWaitEnabledXName)); }
+                if (Convert.ToBoolean(DirectXcess.GetItem(StartUpEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(StartUpEnabledXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(StartUpWaitEnabledXName, value);
+            set => DirectXcess.ReplaceItem(StartUpEnabledXName, value);
         }
 
         public bool IsShutDownWaitEnabled
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(ShutDownWaitEnabledXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(ShutDownWaitEnabledXName)); }
+                if (Convert.ToBoolean(DirectXcess.GetItem(ShutDownEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(ShutDownEnabledXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(ShutDownWaitEnabledXName, value);
+            set => DirectXcess.ReplaceItem(ShutDownEnabledXName, value);
         }
 
         public DateTime StagingTime
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(StagingDateTimeCheckedXName)))
-                { return Convert.ToDateTime(DirectXcess.GetItem(StagingDateTimePickerXName)); }
+                if (DirectXcess.GetItem(StagingDateTimeXName) != null)
+                { return Convert.ToDateTime(DirectXcess.GetItem(StagingDateTimeXName)); }
                 else { return DateTime.Now; }
             }
-            set => DirectXcess.ReplaceItem(StagingDateTimePickerXName, value.ToString("yyyy/MM/dd HH:mm:ss"));
+            set => DirectXcess.ReplaceItem(StagingDateTimeXName, value.ToString("yyyy/MM/dd HH:mm:ss"));
         }
 
         public DateTime StartUpTime
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(StartUpDateTimeCheckedXName)))
-                { return Convert.ToDateTime(DirectXcess.GetItem(StartUpDateTimePickerXName)); }
+                if (DirectXcess.GetItem(StartUpDateTimeXName) != null)
+                { return Convert.ToDateTime(DirectXcess.GetItem(StartUpDateTimeXName)); }
                 else { return DateTime.Now; }
             }
-            set => DirectXcess.ReplaceItem(StartUpDateTimePickerXName, value.ToString("yyyy/MM/dd HH:mm:ss"));
+            set => DirectXcess.ReplaceItem(StartUpDateTimeXName, value.ToString("yyyy/MM/dd HH:mm:ss"));
         }
 
         public DateTime ShutDownTime
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(ShutDownDateTimeCheckedXName)))
-                { return Convert.ToDateTime(DirectXcess.GetItem(ShutDownDateTimePickerXName)); }
+                if (DirectXcess.GetItem(ShutDownDateTimeXName) != null)
+                { return Convert.ToDateTime(DirectXcess.GetItem(ShutDownDateTimeXName)); }
                 else { return DateTime.Now; }
             }
-            set => DirectXcess.ReplaceItem(ShutDownDateTimePickerXName, value.ToString("yyyy/MM/dd HH:mm:ss"));
+            set => DirectXcess.ReplaceItem(ShutDownDateTimeXName, value.ToString("yyyy/MM/dd HH:mm:ss"));
         }
 
         public int MinimumAltitude
