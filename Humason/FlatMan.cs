@@ -117,8 +117,16 @@ namespace Humason
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Slew to Flats Box failure. " + ex.Message + " \r\n Turn off slew limits.  Ending flats session.");
-                return false;
+                //If manual set up and slew error, then log and just keep going, otherwise terminate the flats session
+                if (openSession.IsFlatManManualSetupEnabled)
+                {
+                    MessageBox.Show("Slew to Flats Box failure. " + ex.Message + " \r\n Manual setup so continuing flats session.");
+                }
+                else
+                {
+                    MessageBox.Show("Slew to Flats Box failure. " + ex.Message + " \r\n Turn off slew limits.  Ending flats session.");
+                    return false;
+                }
             }
             lg.LogIt("Turning off tracking");
             TSXLink.Mount.TurnTrackingOff();

@@ -133,23 +133,20 @@ namespace Humason
             //
             //  Generate the install path from the defaults.     
             string dbqInstallPath = sbQueryPath + "\\" + HumasonClearDBQFilename;
+            Assembly dassembly = Assembly.GetExecutingAssembly();
+            //Collect the file contents to be written
+            Stream dstream = dassembly.GetManifestResourceStream("Humason." + HumasonClearDBQFilename);
+            int dlen = Convert.ToInt32(dstream.Length);
+            int doff = 0;
+            byte[] dbytes = new byte[dstream.Length];
+            int dreadout = dstream.Read(dbytes, doff, dlen);
+            FileStream dbqfile = File.Create(dbqInstallPath);
+            dbqfile.Close();
+            //write to destination file
+            File.WriteAllBytes(dbqInstallPath, dbytes);
+            dstream.Close();
             if (!File.Exists(dbqInstallPath))
-                 MessageBox.Show("Observing List hard clear DBQ not installed");
-            else
-            {
-                Assembly dassembly = Assembly.GetExecutingAssembly();
-                //Collect the file contents to be written
-                Stream dstream = dassembly.GetManifestResourceStream("Humason." + HumasonClearDBQFilename);
-                int dlen = Convert.ToInt32(dstream.Length);
-                int doff = 0;
-                byte[] dbytes = new byte[dstream.Length];
-                int dreadout = dstream.Read(dbytes, doff, dlen);
-                FileStream dbqfile = File.Create(dbqInstallPath);
-                dbqfile.Close();
-                //write to destination file
-                File.WriteAllBytes(dbqInstallPath, dbytes);
-                dstream.Close();
-            }
+                MessageBox.Show("Observing List hard clear DBQ not installed");
         }
 
         public void AddSequenceCompleteSummary()
