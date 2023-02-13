@@ -1307,7 +1307,8 @@ namespace Planetarium
                 set
                 {
                     tsxc.TemperatureSetPoint = value;
-                    tsxc.RegulateTemperature = 1;
+                    try { tsxc.RegulateTemperature = 1; }
+                    catch { };
                 }
             }
 

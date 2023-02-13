@@ -73,7 +73,6 @@ namespace Humason
         const string FlatsRotationCheckedXName = "FlatsRotationChecked";
         const string FlatManManualSetupCheckedXName = "FlatManManualSetupChecked";
 
-
         //Rotator Definitions
         const string RotationEnabledXName = "RotationEnabled";
         const string RotatorDirectionXName = "RotatorDirection";
