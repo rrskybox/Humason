@@ -53,7 +53,6 @@
             this.DelayVal = new System.Windows.Forms.NumericUpDown();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.StartTimeBox = new System.Windows.Forms.DateTimePicker();
-            this.AutoDarkCheck = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -339,20 +338,6 @@
             this.StartTimeBox.TabIndex = 85;
             this.StartTimeBox.ValueChanged += new System.EventHandler(this.StartTimeBox_ValueChanged);
             // 
-            // AutoDarkCheck
-            // 
-            this.AutoDarkCheck.AutoSize = true;
-            this.AutoDarkCheck.ForeColor = System.Drawing.Color.White;
-            this.AutoDarkCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AutoDarkCheck.Location = new System.Drawing.Point(63, 155);
-            this.AutoDarkCheck.Name = "AutoDarkCheck";
-            this.AutoDarkCheck.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.AutoDarkCheck.Size = new System.Drawing.Size(77, 17);
-            this.AutoDarkCheck.TabIndex = 86;
-            this.AutoDarkCheck.Text = "Auto Dark ";
-            this.AutoDarkCheck.UseVisualStyleBackColor = true;
-            this.AutoDarkCheck.CheckedChanged += new System.EventHandler(this.AutoDarkCheck_CheckedChanged);
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -448,7 +433,7 @@
             this.MakeFlatsCheckBox.AutoSize = true;
             this.MakeFlatsCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.MakeFlatsCheckBox.ForeColor = System.Drawing.Color.White;
-            this.MakeFlatsCheckBox.Location = new System.Drawing.Point(64, 178);
+            this.MakeFlatsCheckBox.Location = new System.Drawing.Point(27, 170);
             this.MakeFlatsCheckBox.Name = "MakeFlatsCheckBox";
             this.MakeFlatsCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.MakeFlatsCheckBox.Size = new System.Drawing.Size(76, 17);
@@ -480,7 +465,7 @@
             // SaveDefaultButton
             // 
             this.SaveDefaultButton.ForeColor = System.Drawing.Color.Black;
-            this.SaveDefaultButton.Location = new System.Drawing.Point(159, 159);
+            this.SaveDefaultButton.Location = new System.Drawing.Point(160, 166);
             this.SaveDefaultButton.Name = "SaveDefaultButton";
             this.SaveDefaultButton.Size = new System.Drawing.Size(95, 23);
             this.SaveDefaultButton.TabIndex = 100;
@@ -502,7 +487,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(122, 253);
+            this.label2.Location = new System.Drawing.Point(120, 176);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 104;
@@ -546,7 +531,6 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.AutoDarkCheck);
             this.Controls.Add(this.StartTimeBox);
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.LRGBRatioBox);
@@ -614,7 +598,6 @@
         internal System.Windows.Forms.Label DelayLabel;
         internal System.Windows.Forms.NumericUpDown DelayVal;
         internal System.Windows.Forms.ProgressBar ProgressBar;
-        internal System.Windows.Forms.CheckBox AutoDarkCheck;
         internal System.Windows.Forms.Label label5;
         internal System.Windows.Forms.Label label6;
         internal System.Windows.Forms.Label label7;

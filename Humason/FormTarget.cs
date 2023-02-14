@@ -239,7 +239,6 @@ namespace Humason
                 TargetRABox.Value = (decimal)tPlan.TargetRA;
                 TargetDecBox.Value = (decimal)tPlan.TargetDec;
                 TargetPABox.Value = (decimal)tPlan.TargetPA;
-                AutoDarkCheck.Checked = tPlan.AutoDarkEnabled;
                 MakeFlatsCheckBox.Checked = tPlan.MakeFlatsEnabled;
                 ExposureVal.Value = (decimal)tPlan.ImageExposureTime;
                 LoopsVal.Value = (decimal)tPlan.Loops;
@@ -278,7 +277,6 @@ namespace Humason
             TargetRABox.Text = tPlan.TargetRA.ToString();
             TargetDecBox.Text = tPlan.TargetDec.ToString();
             TargetPABox.Text = tPlan.TargetPA.ToString();
-            AutoDarkCheck.Checked = tPlan.AutoDarkEnabled;
             MakeFlatsCheckBox.Checked = tPlan.MakeFlatsEnabled;
             ExposureVal.Value = (decimal)tPlan.ImageExposureTime;
             LoopsVal.Value = tPlan.Loops;
@@ -334,17 +332,6 @@ namespace Humason
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 TargetPA = (double)TargetPABox.Value
-            };
-        }
-
-        private void AutoDarkCheck_CheckedChanged(object sender, EventArgs e)
-        {
-            SessionControl openSession = new SessionControl();
-            if (FormHumason.InitializingHumason)
-            { return; }
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
-            {
-                AutoDarkEnabled = AutoDarkCheck.Checked
             };
         }
 

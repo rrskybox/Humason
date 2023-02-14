@@ -26,15 +26,13 @@ namespace Humason
             {
                 Camera = AstroImage.CameraType.Guider,
                 Frame = AstroImage.ImageType.Light,
+                ImageReduction = (AstroImage.ReductionType)openSession.GuiderReductionType,
                 BinX = tPlan.GuiderBinning,
                 BinY = tPlan.GuiderBinning,
                 SubFrame = 1,
                 Delay = 0,
                 Exposure = exposure
             };
-            //Set image reduction
-            if (tPlan.GuiderAutoDarkEnabled) { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
-            else { asti.ImageReduction = AstroImage.ReductionType.None; }
             //Create camera object and turn turn off autosave, if on      
             TSXLink.Camera gCam = new TSXLink.Camera(asti) { AutoSaveOn = 0 };
             //Center up AO, just in case and if enabled
@@ -75,6 +73,7 @@ namespace Humason
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Guider,
+                ImageReduction = (AstroImage.ReductionType)openSession.GuiderReductionType,
                 SubFrame = 1,
                 Frame = AstroImage.ImageType.Light,
                 BinX = tPlan.GuiderBinning,
@@ -82,9 +81,6 @@ namespace Humason
                 Delay = 0,
                 Exposure = exposure
             };
-            //Set image reduction
-            if (tPlan.GuiderAutoDarkEnabled) { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
-            else { asti.ImageReduction = AstroImage.ReductionType.None; }
             TSXLink.Camera gCam = new TSXLink.Camera(asti)
             {
                 AutoSaveOn = 1//Turn on autosave so we can extract a star inventory via ShowInventory()
@@ -161,14 +157,12 @@ namespace Humason
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Guider,
+                ImageReduction = (AstroImage.ReductionType)openSession.GuiderReductionType,
                 BinX = tPlan.GuiderBinning,
                 BinY = tPlan.GuiderBinning,
                 Frame = AstroImage.ImageType.Light,
                 Exposure = tPlan.GuideExposure
             };
-            //Set image reduction
-            if (tPlan.GuiderAutoDarkEnabled) { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
-            else { asti.ImageReduction = AstroImage.ReductionType.None; }
             //Compute delay based on guider cycle time.  Zero means no delay;
             double agDelay = tPlan.GuiderCycleTime;
             if (agDelay > asti.Exposure)
@@ -223,19 +217,15 @@ namespace Humason
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Guider,
+                ImageReduction = (AstroImage.ReductionType)openSession.GuiderReductionType,
                 Frame = AstroImage.ImageType.Light,
                 BinX = tPlan.GuiderBinning,
                 BinY = tPlan.GuiderBinning,
                 SubFrame = 0,
                 Exposure = tPlan.GuideExposure
             };
-            //Set image reduction
-            if (tPlan.GuiderAutoDarkEnabled) { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
-            else { asti.ImageReduction = AstroImage.ReductionType.None; }
             if (subFrameIt)
-            {
                 asti.SubFrame = 1;
-            }
             //Create camera object from parameters, turn on Autosave
             TSXLink.Camera gCam = new TSXLink.Camera(asti) { AutoSaveOn = 0 };
             //Set subframe around star, if enabled.  
@@ -323,6 +313,7 @@ namespace Humason
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Guider,
+                ImageReduction = (AstroImage.ReductionType)openSession.GuiderReductionType,
                 SubFrame = 0,
                 Frame = AstroImage.ImageType.Light,
                 BinX = tPlan.GuiderBinning,
@@ -330,9 +321,6 @@ namespace Humason
                 Delay = 0,
                 Exposure = tPlan.GuideExposure
             };
-            //Set image reduction
-            if (tPlan.GuiderAutoDarkEnabled) { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
-            else { asti.ImageReduction = AstroImage.ReductionType.None; }
             TSXLink.Camera guider = new TSXLink.Camera(asti) { AutoSaveOn = 1 };
             //Center AO, if configured
             if (tPlan.AOEnabled)
@@ -659,10 +647,11 @@ namespace Humason
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             lg.LogIt("Dithering: Autoguide off");
             AutoGuideStop();
-            AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Guider };
-            //Set image reduction
-            if (tPlan.GuiderAutoDarkEnabled) { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
-            else { asti.ImageReduction = AstroImage.ReductionType.None; }
+            AstroImage asti = new AstroImage()
+            {
+                Camera = AstroImage.CameraType.Guider,
+                ImageReduction = (AstroImage.ReductionType)openSession.GuiderReductionType,
+            };
             //Open guider
             TSXLink.Camera gCam = new TSXLink.Camera(asti);
             //Turn off autoguide

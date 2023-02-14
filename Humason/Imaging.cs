@@ -83,7 +83,7 @@ namespace Humason
             //   Turn on autosave
             //   Set exposure length
             //   Set for light frame type
-            //   Set for autodark
+            //   Set for reduction
             //   Check for filter change, if (so) { set for a 5 second delay, otherwise, no delay
             //   Set for asynchronous execution
             //   Start exposure and wait until completed or aborted
@@ -102,7 +102,7 @@ namespace Humason
             TSXLink.Camera tcam = new TSXLink.Camera(asti)
             {
                 //Autosave this image
-                AutoSaveOn = 1
+                AutoSaveOn = 1,
             };
             int camResult = tcam.GetImage();
             if (camResult != 0)

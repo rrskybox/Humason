@@ -48,12 +48,11 @@
             this.AtFocus2RadioButton = new System.Windows.Forms.RadioButton();
             this.DitherCheck = new System.Windows.Forms.CheckBox();
             this.GuiderGroupBox = new System.Windows.Forms.GroupBox();
-            this.GuiderAutoDarkCheckBox = new System.Windows.Forms.CheckBox();
             this.ResyncCheck = new System.Windows.Forms.CheckBox();
-            this.CalibrateCheck = new System.Windows.Forms.CheckBox();
+            this.GuiderCalibrateCheck = new System.Windows.Forms.CheckBox();
             this.RotatorGroupBox = new System.Windows.Forms.GroupBox();
-            this.CameraGroupBox = new System.Windows.Forms.GroupBox();
             this.RecalibrateAfterFlipCheckbox = new System.Windows.Forms.CheckBox();
+            this.CameraGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.FocusFilterNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClearFilterNum)).BeginInit();
             this.FiltersGroupBox.SuspendLayout();
@@ -317,9 +316,8 @@
             // 
             // GuiderGroupBox
             // 
-            this.GuiderGroupBox.Controls.Add(this.GuiderAutoDarkCheckBox);
             this.GuiderGroupBox.Controls.Add(this.ResyncCheck);
-            this.GuiderGroupBox.Controls.Add(this.CalibrateCheck);
+            this.GuiderGroupBox.Controls.Add(this.GuiderCalibrateCheck);
             this.GuiderGroupBox.Controls.Add(this.DitherCheck);
             this.GuiderGroupBox.Controls.Add(this.AutoguideCheck);
             this.GuiderGroupBox.ForeColor = System.Drawing.Color.White;
@@ -329,19 +327,6 @@
             this.GuiderGroupBox.TabIndex = 95;
             this.GuiderGroupBox.TabStop = false;
             this.GuiderGroupBox.Text = "Guider";
-            // 
-            // GuiderAutoDarkCheckBox
-            // 
-            this.GuiderAutoDarkCheckBox.AutoSize = true;
-            this.GuiderAutoDarkCheckBox.ForeColor = System.Drawing.Color.White;
-            this.GuiderAutoDarkCheckBox.Location = new System.Drawing.Point(99, 19);
-            this.GuiderAutoDarkCheckBox.Name = "GuiderAutoDarkCheckBox";
-            this.GuiderAutoDarkCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.GuiderAutoDarkCheckBox.Size = new System.Drawing.Size(71, 17);
-            this.GuiderAutoDarkCheckBox.TabIndex = 73;
-            this.GuiderAutoDarkCheckBox.Text = "AutoDark";
-            this.GuiderAutoDarkCheckBox.UseVisualStyleBackColor = true;
-            this.GuiderAutoDarkCheckBox.CheckedChanged += new System.EventHandler(this.GuiderAutoDarkCheckBox_CheckedChanged);
             // 
             // ResyncCheck
             // 
@@ -356,18 +341,18 @@
             this.ResyncCheck.UseVisualStyleBackColor = true;
             this.ResyncCheck.CheckedChanged += new System.EventHandler(this.ResyncCheck_CheckedChanged);
             // 
-            // CalibrateCheck
+            // GuiderCalibrateCheck
             // 
-            this.CalibrateCheck.AutoSize = true;
-            this.CalibrateCheck.ForeColor = System.Drawing.Color.White;
-            this.CalibrateCheck.Location = new System.Drawing.Point(26, 42);
-            this.CalibrateCheck.Name = "CalibrateCheck";
-            this.CalibrateCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.CalibrateCheck.Size = new System.Drawing.Size(67, 17);
-            this.CalibrateCheck.TabIndex = 71;
-            this.CalibrateCheck.Text = "Calibrate";
-            this.CalibrateCheck.UseVisualStyleBackColor = true;
-            this.CalibrateCheck.CheckedChanged += new System.EventHandler(this.CalibrateCheck_CheckedChanged);
+            this.GuiderCalibrateCheck.AutoSize = true;
+            this.GuiderCalibrateCheck.ForeColor = System.Drawing.Color.White;
+            this.GuiderCalibrateCheck.Location = new System.Drawing.Point(26, 42);
+            this.GuiderCalibrateCheck.Name = "GuiderCalibrateCheck";
+            this.GuiderCalibrateCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.GuiderCalibrateCheck.Size = new System.Drawing.Size(67, 17);
+            this.GuiderCalibrateCheck.TabIndex = 71;
+            this.GuiderCalibrateCheck.Text = "Calibrate";
+            this.GuiderCalibrateCheck.UseVisualStyleBackColor = true;
+            this.GuiderCalibrateCheck.CheckedChanged += new System.EventHandler(this.CalibrateCheck_CheckedChanged);
             // 
             // RotatorGroupBox
             // 
@@ -381,18 +366,6 @@
             this.RotatorGroupBox.TabStop = false;
             this.RotatorGroupBox.Text = "Rotator";
             // 
-            // CameraGroupBox
-            // 
-            this.CameraGroupBox.Controls.Add(this.label4);
-            this.CameraGroupBox.Controls.Add(this.CameraTemperatureSet);
-            this.CameraGroupBox.ForeColor = System.Drawing.Color.White;
-            this.CameraGroupBox.Location = new System.Drawing.Point(12, 3);
-            this.CameraGroupBox.Name = "CameraGroupBox";
-            this.CameraGroupBox.Size = new System.Drawing.Size(254, 40);
-            this.CameraGroupBox.TabIndex = 97;
-            this.CameraGroupBox.TabStop = false;
-            this.CameraGroupBox.Text = "Camera";
-            // 
             // RecalibrateAfterFlipCheckbox
             // 
             this.RecalibrateAfterFlipCheckbox.AutoSize = true;
@@ -405,6 +378,18 @@
             this.RecalibrateAfterFlipCheckbox.Text = "Recalibrate After Flip";
             this.RecalibrateAfterFlipCheckbox.UseVisualStyleBackColor = true;
             this.RecalibrateAfterFlipCheckbox.CheckedChanged += new System.EventHandler(this.RecalibrateAfterFlipCheckbox_CheckedChanged);
+            // 
+            // CameraGroupBox
+            // 
+            this.CameraGroupBox.Controls.Add(this.label4);
+            this.CameraGroupBox.Controls.Add(this.CameraTemperatureSet);
+            this.CameraGroupBox.ForeColor = System.Drawing.Color.White;
+            this.CameraGroupBox.Location = new System.Drawing.Point(12, 3);
+            this.CameraGroupBox.Name = "CameraGroupBox";
+            this.CameraGroupBox.Size = new System.Drawing.Size(254, 40);
+            this.CameraGroupBox.TabIndex = 97;
+            this.CameraGroupBox.TabStop = false;
+            this.CameraGroupBox.Text = "Camera";
             // 
             // FormDevices
             // 
@@ -464,11 +449,10 @@
         private System.Windows.Forms.GroupBox CameraGroupBox;
         private System.Windows.Forms.Button RefreshFiltersButton;
         internal System.Windows.Forms.CheckBox ResyncCheck;
-        internal System.Windows.Forms.CheckBox CalibrateCheck;
+        internal System.Windows.Forms.CheckBox GuiderCalibrateCheck;
         private System.Windows.Forms.NumericUpDown RefocustTemperatureChangeBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
-        internal System.Windows.Forms.CheckBox GuiderAutoDarkCheckBox;
         internal System.Windows.Forms.CheckBox RecalibrateAfterFlipCheckbox;
     }
 }

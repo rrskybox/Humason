@@ -34,6 +34,14 @@
             this.WeatherFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.DomeAddOnCheckBox = new System.Windows.Forms.CheckBox();
+            this.ImageReductionComboBox = new System.Windows.Forms.ComboBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.CLSReductionComboBox = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.GuiderReductionComboBox = new System.Windows.Forms.ComboBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // SaveButton
@@ -43,7 +51,7 @@
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 23);
             this.SaveButton.TabIndex = 1;
-            this.SaveButton.Text = "Save";
+            this.SaveButton.Text = "Close";
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
@@ -94,12 +102,94 @@
             this.DomeAddOnCheckBox.UseVisualStyleBackColor = true;
             this.DomeAddOnCheckBox.CheckedChanged += new System.EventHandler(this.DomeAddOnCheckBox_CheckedChanged);
             // 
+            // ImageReductionComboBox
+            // 
+            this.ImageReductionComboBox.FormattingEnabled = true;
+            this.ImageReductionComboBox.Items.AddRange(new object[] {
+            "None",
+            "AutoDark",
+            "Full"});
+            this.ImageReductionComboBox.Location = new System.Drawing.Point(193, 19);
+            this.ImageReductionComboBox.Name = "ImageReductionComboBox";
+            this.ImageReductionComboBox.Size = new System.Drawing.Size(74, 21);
+            this.ImageReductionComboBox.TabIndex = 107;
+            this.ImageReductionComboBox.SelectedIndexChanged += new System.EventHandler(this.ImageReductionComboBox_SelectedIndexChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.GuiderReductionComboBox);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.CLSReductionComboBox);
+            this.groupBox1.Controls.Add(this.ImageReductionComboBox);
+            this.groupBox1.Location = new System.Drawing.Point(12, 122);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(273, 112);
+            this.groupBox1.TabIndex = 108;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Image Reduction";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(24, 76);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 13);
+            this.label2.TabIndex = 110;
+            this.label2.Text = "CLS Reduction";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(24, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(88, 13);
+            this.label1.TabIndex = 109;
+            this.label1.Text = "Image Reduction";
+            // 
+            // CLSReductionComboBox
+            // 
+            this.CLSReductionComboBox.FormattingEnabled = true;
+            this.CLSReductionComboBox.Items.AddRange(new object[] {
+            "None",
+            "AutoDark",
+            "Full"});
+            this.CLSReductionComboBox.Location = new System.Drawing.Point(193, 73);
+            this.CLSReductionComboBox.Name = "CLSReductionComboBox";
+            this.CLSReductionComboBox.Size = new System.Drawing.Size(74, 21);
+            this.CLSReductionComboBox.TabIndex = 108;
+            this.CLSReductionComboBox.SelectedIndexChanged += new System.EventHandler(this.CLSReductionComboBox_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(24, 49);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 13);
+            this.label3.TabIndex = 112;
+            this.label3.Text = "Guider Reduction";
+            // 
+            // GuiderReductionComboBox
+            // 
+            this.GuiderReductionComboBox.FormattingEnabled = true;
+            this.GuiderReductionComboBox.Items.AddRange(new object[] {
+            "None",
+            "AutoDark",
+            "Full"});
+            this.GuiderReductionComboBox.Location = new System.Drawing.Point(193, 46);
+            this.GuiderReductionComboBox.Name = "GuiderReductionComboBox";
+            this.GuiderReductionComboBox.Size = new System.Drawing.Size(74, 21);
+            this.GuiderReductionComboBox.TabIndex = 111;
+            this.GuiderReductionComboBox.SelectedIndexChanged += new System.EventHandler(this.GuiderReductionComboBox_SelectedIndexChanged);
+            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(297, 544);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.DomeAddOnCheckBox);
             this.Controls.Add(this.WeatherCheckBox);
             this.Controls.Add(this.RotatorCheckBox);
@@ -108,6 +198,8 @@
             this.Name = "FormOptions";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Options";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -120,5 +212,12 @@
         private System.Windows.Forms.OpenFileDialog WeatherFileDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         internal System.Windows.Forms.CheckBox DomeAddOnCheckBox;
+        private System.Windows.Forms.ComboBox ImageReductionComboBox;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox CLSReductionComboBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox GuiderReductionComboBox;
     }
 }

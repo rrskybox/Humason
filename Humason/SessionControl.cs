@@ -85,6 +85,9 @@ namespace Humason
         const string PowerManagerCheckedXName = "PowerManagerEnabled";
         const string RotatorDeviceEnabled = "RotatorDeviceEnabled";
         const string DomeHomeAzXName = "DomeHomeAz";
+        const string CLSReductionXName = "CLSReduction";
+        const string ImagerReductionXName = "ImagerReduction";
+        const string GuiderReductionXName = "GuiderReduction";
 
         //Class data -- just saves some file access time
 
@@ -594,6 +597,38 @@ namespace Humason
             set => DirectXcess.ReplaceItem(DomeHomeAzXName, value);
         }
 
+        public int ImageReductionType
+        {
+            get
+            {
+                if (DirectXcess.GetItem(ImagerReductionXName) != null)
+                { return Convert.ToInt32(DirectXcess.GetItem(ImagerReductionXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(ImagerReductionXName, value);
+        }
+
+        public int CLSReductionType
+        {
+            get
+            {
+                if (DirectXcess.GetItem(CLSReductionXName) != null)
+                { return Convert.ToInt32(DirectXcess.GetItem(CLSReductionXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(CLSReductionXName, value);
+        }
+
+        public int GuiderReductionType
+        {
+            get
+            {
+                if (DirectXcess.GetItem(GuiderReductionXName) != null)
+                { return Convert.ToInt32(DirectXcess.GetItem(GuiderReductionXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(GuiderReductionXName, value);
+        }
         #endregion
 
     }

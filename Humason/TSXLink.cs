@@ -731,7 +731,7 @@ namespace Planetarium
 
                 ccdsoftCamera tsxc = new ccdsoftCamera
                 {
-                    ImageReduction = TheSky64Lib.ccdsoftImageReduction.cdAutoDark,
+                    ImageReduction = (ccdsoftImageReduction)openSession.ImageReductionType,
                     Subframe = 0,
                     FilterIndexZeroBased = asti.Filter,
                     ExposureTime = asti.Exposure,

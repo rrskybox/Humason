@@ -68,7 +68,7 @@ namespace Humason
         public const string SequenceEndTimeXName = "SequenceEndTime";
         public const string SequenceDawnTimeXName = "SequenceDawnTime";
 
-        public const string AutoDarkCheckedXName = "AutoDarkChecked";
+
         public const string ImageExposureTimeXName = "ImageExposureTime";
         public const string LoopsXName = "Loops";
         public const string LRGBRatioXName = "LRGBRatio";
@@ -80,8 +80,7 @@ namespace Humason
         public const string RotatorCheckedXName = "RotatorChecked";
         public const string RecalibrateAfterFlipCheckedXName = "RecalibrateAfterFlipChecked";
         public const string DitherCheckedXName = "DitherChecked";
-        public const string CalibrateCheckedXName = "CalibrateChecked";
-        public const string GuiderAutoDarkCheckedXName = "GuiderAutoDarkChecked";
+        public const string GuiderCalibrateCheckedXName = "CalibrateChecked";
         public const string ResyncCheckedXName = "ResyncChecked";
         public const string ClearFilterXName = "ClearFilter";
         public const string OverheadXName = "ImageOverheadTime";
@@ -300,7 +299,6 @@ namespace Humason
             defaultTP.SetItem(TargetAdjustCheckedXName, false);
             defaultTP.SetItem(SequenceStartTimeXName, 0);
             defaultTP.SetItem(SequenceEndTimeXName, 0);
-            defaultTP.SetItem(AutoDarkCheckedXName, false);
             defaultTP.SetItem(ImageExposureTimeXName, 10);
             defaultTP.SetItem(LoopsXName, 4);
             defaultTP.SetItem(LRGBRatioXName, 4);
@@ -313,8 +311,7 @@ namespace Humason
             defaultTP.SetItem(RotatorCheckedXName, false);
             defaultTP.SetItem(RecalibrateAfterFlipCheckedXName, false);
             defaultTP.SetItem(DitherCheckedXName, false);
-            defaultTP.SetItem(GuiderAutoDarkCheckedXName, true);
-            defaultTP.SetItem(CalibrateCheckedXName, false);
+            defaultTP.SetItem(GuiderCalibrateCheckedXName, false);
             defaultTP.SetItem(ResyncCheckedXName, false);
             defaultTP.SetItem(ClearFilterXName, 3);
             defaultTP.SetItem(OverheadXName, 0);
@@ -564,12 +561,6 @@ namespace Humason
             set => hTargetPlanX.ReplaceItem(SequenceDawnTimeXName, value.ToString());
         }
 
-        public bool AutoDarkEnabled
-        {
-            get => Convert.ToBoolean(hTargetPlanX.GetItem(AutoDarkCheckedXName));
-            set => hTargetPlanX.ReplaceItem(AutoDarkCheckedXName, value.ToString());
-        }
-
         public double ImageExposureTime
         {
             get => Convert.ToDouble(hTargetPlanX.GetItem(ImageExposureTimeXName));
@@ -630,16 +621,10 @@ namespace Humason
             set => hTargetPlanX.ReplaceItem(DitherCheckedXName, value.ToString());
         }
 
-        public bool GuiderAutoDarkEnabled
+        public bool GuiderCalibrateEnabled
         {
-            get => Convert.ToBoolean(hTargetPlanX.GetItem(GuiderAutoDarkCheckedXName));
-            set => hTargetPlanX.ReplaceItem(GuiderAutoDarkCheckedXName, value.ToString());
-        }
-
-        public bool CalibrateEnabled
-        {
-            get => Convert.ToBoolean(hTargetPlanX.GetItem(CalibrateCheckedXName));
-            set => hTargetPlanX.ReplaceItem(CalibrateCheckedXName, value.ToString());
+            get => Convert.ToBoolean(hTargetPlanX.GetItem(GuiderCalibrateCheckedXName));
+            set => hTargetPlanX.ReplaceItem(GuiderCalibrateCheckedXName, value.ToString());
         }
 
         public bool ResyncEnabled

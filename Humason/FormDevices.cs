@@ -92,8 +92,7 @@ namespace Humason
                 RotatorCheckBox.Checked = tPlan.RotatorEnabled;
                 RecalibrateAfterFlipCheckbox.Checked = tPlan.RecalibrateAfterFlipEnabled;
                 DitherCheck.Checked = tPlan.DitherEnabled;
-                GuiderAutoDarkCheckBox.Checked = tPlan.GuiderAutoDarkEnabled;
-                CalibrateCheck.Checked = tPlan.CalibrateEnabled;
+                GuiderCalibrateCheck.Checked = tPlan.GuiderCalibrateEnabled;
                 ResyncCheck.Checked = tPlan.ResyncEnabled;
                 CameraTemperatureSet.Value = (decimal)tPlan.CameraTemperatureSet;
                 //Pre set clear and filter numbers from configuration file
@@ -122,9 +121,8 @@ namespace Humason
                 AutoGuideEnabled = AutoguideCheck.Checked,
                 RotatorEnabled = RotatorCheckBox.Checked,
                 DitherEnabled = DitherCheck.Checked,
-                GuiderAutoDarkEnabled = GuiderAutoDarkCheckBox.Checked,
                 AutoFocusEnabled = AutofocusCheck.Checked,
-                CalibrateEnabled = CalibrateCheck.Checked,
+                GuiderCalibrateEnabled = GuiderCalibrateCheck.Checked,
                 ResyncEnabled = ResyncCheck.Checked,
                 CameraTemperatureSet = (double)CameraTemperatureSet.Value
             };
@@ -266,7 +264,7 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
-                CalibrateEnabled = CalibrateCheck.Checked
+                GuiderCalibrateEnabled = GuiderCalibrateCheck.Checked
             };
         }
 
@@ -274,7 +272,7 @@ namespace Humason
         {
             //Store it in the configuration and move on
             SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
+            _ = new TargetPlan(openSession.CurrentTargetName)
             {
                 ResyncEnabled = ResyncCheck.Checked
             };
@@ -282,18 +280,10 @@ namespace Humason
 
         private void RefocusTemperatureChangeBox_ValueChanged(object sender, EventArgs e)
         {
-            SessionControl openSession = new SessionControl();
-            openSession.RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value;
-        }
-
-        private void GuiderAutoDarkCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
+            SessionControl openSession = new SessionControl
             {
-                GuiderAutoDarkEnabled = GuiderAutoDarkCheckBox.Checked
+                RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value
             };
-
         }
 
     }

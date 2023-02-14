@@ -16,12 +16,15 @@ namespace Humason
             InitializeComponent();
             settings = new Properties.Settings();
             //Fill in checkboxes with existing settings
-
             RotatorCheckBox.Checked = settings.RotatorDeviceEnabled; ;
             WeatherCheckBox.Checked = settings.WeatherMonitorEnabled;
             DomeAddOnCheckBox.Checked = settings.HasDomeAddOn;
+            //Fill in calibrations with existing settings
+            SessionControl openSession = new SessionControl();
+            ImageReductionComboBox.SelectedIndex = openSession.ImageReductionType;
+            GuiderReductionComboBox.SelectedIndex = openSession.GuiderReductionType;
+            CLSReductionComboBox.SelectedIndex = openSession.CLSReductionType;
             //done
-
             optionsFormInit = false;
             return;
         }
@@ -32,7 +35,8 @@ namespace Humason
             openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
             openSession.IsRotationEnabled = RotatorCheckBox.Checked;
             openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
-            MessageBox.Show("Restart Humason for new settings to take effect");
+            openSession.ImageReductionType = ImageReductionComboBox.SelectedIndex;
+            openSession.CLSReductionType = CLSReductionComboBox.SelectedIndex;
             settings.Save();
             Close();
         }
@@ -44,6 +48,8 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             openSession.IsRotationEnabled = RotatorCheckBox.Checked;
             settings.RotatorDeviceEnabled = RotatorCheckBox.Checked;
+            if (!optionsFormInit)
+                MessageBox.Show("Restart Humason for new settings to take effect");
         }
 
         private void WeatherCheck_CheckedChanged(object sender, System.EventArgs e)
@@ -62,10 +68,13 @@ namespace Humason
             {
                 openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
                 settings.WeatherMonitorEnabled = WeatherCheckBox.Checked;
+                if (!optionsFormInit)
+                    MessageBox.Show("Restart Humason for new settings to take effect");
             }
             else
             {
-                MessageBox.Show("Invalid Weather Data File");
+                if (!optionsFormInit)
+                    MessageBox.Show("Invalid Weather Data File");
                 openSession.IsWeatherEnabled = false;
                 settings.WeatherMonitorEnabled = false;
                 WeatherCheckBox.Checked = false;
@@ -77,6 +86,29 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
             settings.HasDomeAddOn = DomeAddOnCheckBox.Checked;
+            if (!optionsFormInit)
+                MessageBox.Show("Restart Humason for new settings to take effect");
+            return;
+        }
+
+        private void ImageReductionComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.ImageReductionType = ImageReductionComboBox.SelectedIndex;
+            return;
+        }
+
+        private void CLSReductionComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.CLSReductionType = CLSReductionComboBox.SelectedIndex;
+            return;
+        }
+
+        private void GuiderReductionComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.GuiderReductionType = GuiderReductionComboBox.SelectedIndex;
             return;
         }
     }

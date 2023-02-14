@@ -133,7 +133,7 @@ namespace Humason
             {
                 Exposure = tPlan.PlateSolveExposureTime,
                 Filter = tPlan.ClearFilter,
-                ImageReduction = AstroImage.ReductionType.AutoDark,
+                ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType,
                 Delay = 0
             };
             lg.LogIt("Plate Solve: Imaging");

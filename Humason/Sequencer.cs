@@ -372,7 +372,7 @@ namespace Humason
                 }
             }
             //If autoguiding is checked and calibration requested, then calibrate the guider
-            if (tPlan.AutoGuideEnabled && tPlan.CalibrateEnabled)
+            if (tPlan.AutoGuideEnabled && tPlan.GuiderCalibrateEnabled)
             { AutoGuide.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
 
             //Set up for shoot loop:
@@ -573,6 +573,7 @@ namespace Humason
                 AstroImage asti = new AstroImage
                 {
                     Camera = AstroImage.CameraType.Imaging,
+                    ImageReduction  = (AstroImage.ReductionType)openSession.ImageReductionType,
                     Exposure = ImageSeries[frmdef, si_Exposure],
                     BinX = 1,//set binning to 1x1
                     BinY = 1,
@@ -581,11 +582,6 @@ namespace Humason
                     Frame = (AstroImage.ImageType)ImageSeries[frmdef, si_Frame],
                     AutoSave = 0
                 };
-                //Set image reduction
-                if (tPlan.AutoDarkEnabled)
-                { asti.ImageReduction = AstroImage.ReductionType.AutoDark; }
-                else
-                { asti.ImageReduction = AstroImage.ReductionType.None; }
                 lg.LogIt("Imaging Filter " + asti.Filter.ToString() +
                                     " @ " + asti.Exposure.ToString() + " sec " +
                                     "(# " + (frmdef + 1).ToString("0") + " of " + totalImageCount.ToString("0") + ")");
@@ -845,17 +841,12 @@ namespace Humason
             //TSX has some problems with letting the dome catch up with the telescope in CLS mode
             //  So, as a work around, slew to the coordinates synchronously, then do the CLS
             //
-            AstroImage.ReductionType reduce;
-            if (tPlan.AutoDarkEnabled)
-                reduce = AstroImage.ReductionType.AutoDark;
-            else
-                reduce = AstroImage.ReductionType.None;
              //Set the exposure, filter and reduction, unless already set up
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Imaging,
+                ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType,
                 TargetName = sRADecName,
-                ImageReduction = reduce,
                 SubFrame = 0,
                 Filter = tPlan.ClearFilter,
                 Exposure = tPlan.PlateSolveExposureTime,

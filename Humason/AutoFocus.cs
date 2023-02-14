@@ -33,7 +33,7 @@ namespace Humason
             AstroImage asti = new Humason.AstroImage
             {
                 Camera = AstroImage.CameraType.Imaging,
-                ImageReduction = AstroImage.ReductionType.AutoDark,
+                ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType ,
                 Frame = AstroImage.ImageType.Light,
                 Filter = tPlan.FocusFilter,
                 Exposure = tPlan.FocusExposure,
