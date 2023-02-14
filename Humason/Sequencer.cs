@@ -845,12 +845,17 @@ namespace Humason
             //TSX has some problems with letting the dome catch up with the telescope in CLS mode
             //  So, as a work around, slew to the coordinates synchronously, then do the CLS
             //
+            AstroImage.ReductionType reduce;
+            if (tPlan.AutoDarkEnabled)
+                reduce = AstroImage.ReductionType.AutoDark;
+            else
+                reduce = AstroImage.ReductionType.None;
              //Set the exposure, filter and reduction, unless already set up
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Imaging,
                 TargetName = sRADecName,
-                ImageReduction = AstroImage.ReductionType.AutoDark,
+                ImageReduction = reduce,
                 SubFrame = 0,
                 Filter = tPlan.ClearFilter,
                 Exposure = tPlan.PlateSolveExposureTime,
