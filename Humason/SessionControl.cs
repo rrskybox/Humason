@@ -36,7 +36,7 @@ namespace Humason
 
         //private Session Control XML Element Names
         const string LastFileSequenceNumberXName = "LastFileSequenceNumber";
-        const string EnableMeridianFlipXName = "DisableMeridianFlip";
+        const string EnableMeridianFlipXName = "EnableMeridianFlip";
 
         //Humason main form parameters
         const string HomeMountEnabledXName = "HomeMountEnabled";

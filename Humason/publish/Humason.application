@@ -7,14 +7,14 @@
     <framework targetVersion="4.8" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Application Files\Humason_4_0_0_233\Humason.exe.manifest" size="5686">
-      <assemblyIdentity name="Humason.exe" version="4.0.0.233" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+    <dependentAssembly dependencyType="install" codebase="Application Files\Humason_4_0_0_232\Humason.exe.manifest" size="5686">
+      <assemblyIdentity name="Humason.exe" version="4.0.0.232" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Y7Y1Mc1+YO0kuzuazCqPtxIHXR1C0/ox695b+zWaOqs=</dsig:DigestValue>
+        <dsig:DigestValue>12y5G9RR8DxjEgk0BL6Htek++9AMKATvLPbP+Qrq0Fc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
