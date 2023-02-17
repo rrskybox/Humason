@@ -182,6 +182,11 @@
             // LoopsVal
             // 
             this.LoopsVal.Location = new System.Drawing.Point(96, 77);
+            this.LoopsVal.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
             this.LoopsVal.Name = "LoopsVal";
             this.LoopsVal.Size = new System.Drawing.Size(44, 20);
             this.LoopsVal.TabIndex = 62;

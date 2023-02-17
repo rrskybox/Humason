@@ -142,7 +142,8 @@ namespace Humason
             string path = imgo.TakeLightFrame(asti);
 
             lg.LogIt("Plate Solve: Image Linking");
-            //tsxl.scale = 1.70;
+            //tsxl.scale = TSXLink.FOVI.GetFOVScale();
+
             //tsxl.unknownScale = true;
             TSXLink.PlateSolution dSolve = TSXLink.ImageSolution.PlateSolve(path);
             if (dSolve == null)

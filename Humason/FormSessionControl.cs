@@ -19,6 +19,7 @@ namespace Humason
             StartupEnabledCheckBox.Checked = openSession.StartUpEnabled;
             ShutdownEnabledCheckBox.Checked = openSession.ShutDownEnabled;
             MinimumAltitudeBox.Value = openSession.MinimumAltitude;
+            EnableMeridianFlipBox.Checked = openSession.IsMeridianFlipEnabled;
             StageSystemFilePathBox.Text = Path.GetFileName(openSession.StagingFilePath);
             StartUpFilePathBox.Text = Path.GetFileName(openSession.StartUpFilePath);
             ShutDownFilePathBox.Text = Path.GetFileName(openSession.ShutDownFilePath);
@@ -33,13 +34,19 @@ namespace Humason
             openSession.StagingEnabled = StagingEnabledCheckBox.Checked;
             openSession.StartUpEnabled = StartupEnabledCheckBox.Checked;
             openSession.ShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+            openSession.IsMeridianFlipEnabled = EnableMeridianFlipBox.Checked;
             sessionFormInit = false;
             return;
         }
 
         private void OTAButton_Click(object sender, EventArgs e)
         {
-            if (TSXLink.Mount.OTASideOfPier == TSXLink.Mount.SOP.East)
+            //
+            // Beyond The Pole = False = Pier E
+            // Beyond The Pole = True = Pier W
+            //
+
+            if (TSXLink.Mount.BeyondThePole == TSXLink.Mount.SOP.PierEast)
             { OTAButton.Text = "East"; }
             else
             { OTAButton.Text = "West"; }
@@ -86,6 +93,12 @@ namespace Humason
         {
             SessionControl openSession = new SessionControl();
             openSession.ShutDownEnabled = ShutdownEnabledCheckBox.Checked;
+        }
+
+        private void EnableMeridianFlipBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.IsMeridianFlipEnabled = EnableMeridianFlipBox.Checked;
         }
 
         private void StagingBrowseButton_Click(object sender, EventArgs e)
@@ -150,6 +163,7 @@ namespace Humason
                 ShutDownFilePathBox.Text = null;
             }
         }
+
 
     }
 }

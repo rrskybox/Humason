@@ -489,14 +489,18 @@ namespace Humason
                 //if (target is currently on the west side of meridian and the mount Side of Pier is also east, then flip east to west
                 if (IsTargetWest())
                 { //target is West, check for OTA on West side, if so, then flip
-                    if (TSXLink.Mount.OTASideOfPier == TSXLink.Mount.SOP.West)
+                  //
+                  // Beyond The Pole = False = Pier E
+                  // Beyond The Pole = True = Pier W
+                  //
+                    if (TSXLink.Mount.BeyondThePole == TSXLink.Mount.SOP.PierWest)
                     {
                         MeridianFlipper(true);   //OTA flips to east side of pier
                     }
                 }
                 else //target is East, check for OTA on East side, if so, then flip
                 {
-                    if (TSXLink.Mount.OTASideOfPier == TSXLink.Mount.SOP.East)
+                    if (TSXLink.Mount.BeyondThePole == TSXLink.Mount.SOP.PierEast)
                     {
                         MeridianFlipper(false); //OTA goes to west side of pier
                     }
@@ -573,7 +577,7 @@ namespace Humason
                 AstroImage asti = new AstroImage
                 {
                     Camera = AstroImage.CameraType.Imaging,
-                    ImageReduction  = (AstroImage.ReductionType)openSession.ImageReductionType,
+                    ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType,
                     Exposure = ImageSeries[frmdef, si_Exposure],
                     BinX = 1,//set binning to 1x1
                     BinY = 1,
@@ -678,6 +682,13 @@ namespace Humason
             LogEvent lg = new LogEvent();
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+
+            if (!openSession.IsMeridianFlipEnabled)
+            {
+                lg.LogIt("Meridian flip conditions detected, but not enabled.\r\n  User intervention required.");
+                //Possibly take some action here -- Abort?
+                return false;
+            }
 
             lg.LogIt("Meridian Flip Underway");
             // stop guiding, if (on
@@ -841,7 +852,7 @@ namespace Humason
             //TSX has some problems with letting the dome catch up with the telescope in CLS mode
             //  So, as a work around, slew to the coordinates synchronously, then do the CLS
             //
-             //Set the exposure, filter and reduction, unless already set up
+            //Set the exposure, filter and reduction, unless already set up
             AstroImage asti = new AstroImage
             {
                 Camera = AstroImage.CameraType.Imaging,

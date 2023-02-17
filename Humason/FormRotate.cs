@@ -55,7 +55,6 @@ namespace Humason
             LogEvent lg = new LogEvent();
             if (!Rotator.PlateSolveIt())
             {
-
                 NHUtil.ButtonGreen(PlateSolveButton);
                 return;
             }

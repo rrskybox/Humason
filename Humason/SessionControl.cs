@@ -36,6 +36,7 @@ namespace Humason
 
         //private Session Control XML Element Names
         const string LastFileSequenceNumberXName = "LastFileSequenceNumber";
+        const string EnableMeridianFlipXName = "DisableMeridianFlip";
 
         //Humason main form parameters
         const string HomeMountEnabledXName = "HomeMountEnabled";
@@ -383,6 +384,17 @@ namespace Humason
                 else { return 0; }
             }
             set => DirectXcess.ReplaceItem(MinimumAltitudeXName, value);
+        }
+
+        public bool IsMeridianFlipEnabled
+        {
+            get
+            {
+                if (DirectXcess.GetItem(EnableMeridianFlipXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(EnableMeridianFlipXName)); }
+                else { return true; }
+            }
+            set => DirectXcess.ReplaceItem(EnableMeridianFlipXName, value);
         }
 
         public int FlatManComPort

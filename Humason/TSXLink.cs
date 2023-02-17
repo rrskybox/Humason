@@ -1098,11 +1098,15 @@ namespace Planetarium
 
         public partial class Mount
         {
-            //Enumerations
             public enum SOP
             {
-                East = 0,
-                West = 1
+                //Side of Pier enumeration in ASCOM Terminology
+                //
+                // Beyond The Pole = False = Pier E
+                // Beyond The Pole = True = Pier W
+                //
+                PierEast = 0,
+                PierWest = 1
             }
             //Methods
 
@@ -1205,12 +1209,16 @@ namespace Planetarium
                 }
             }
 
-            public static SOP OTASideOfPier
+            public static SOP BeyondThePole
             {
 
-                //returns the current side of pier for the mount
-                // east is 0 west is 1
-                // check to see if mount is connected, if not, then return null;
+                //returns the current beyond the pole for the mount
+                // east is 0 (no) west is 1 (yes), unless it isn't, i.e. pointing "above" the pole
+                // check to see if mount is connected, if not, then return 0;
+                //
+                // Beyond The Pole = False = Pier E
+                // Beyond The Pole = True = Pier W
+                //
                 get
                 {
                     sky6RASCOMTele tsxm = new sky6RASCOMTele();
@@ -1221,9 +1229,7 @@ namespace Planetarium
                         return pole;
                     }
                     else
-                    {
                         return 0;
-                    }
                 }
             }
 
@@ -1595,9 +1601,7 @@ namespace Planetarium
                         tsxf.Property(fovName, 0, sk6MyFOVProperty.sk6MyFOVProp_Visible);
                         double vis = tsxf.OutVar;
                         if (vis == 1)
-                        {
                             return fovName;
-                        }
                     }
                     return null;
                 }

@@ -47,6 +47,8 @@
             this.ShutDownFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.StageSystemFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.OTAButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.EnableMeridianFlipBox = new System.Windows.Forms.CheckBox();
             this.groupBox5.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -222,7 +224,7 @@
             // OTAButton
             // 
             this.OTAButton.ForeColor = System.Drawing.Color.Black;
-            this.OTAButton.Location = new System.Drawing.Point(80, 333);
+            this.OTAButton.Location = new System.Drawing.Point(19, 284);
             this.OTAButton.Name = "OTAButton";
             this.OTAButton.Size = new System.Drawing.Size(111, 23);
             this.OTAButton.TabIndex = 77;
@@ -230,12 +232,37 @@
             this.OTAButton.UseVisualStyleBackColor = true;
             this.OTAButton.Click += new System.EventHandler(this.OTAButton_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(16, 319);
+            this.label2.MaximumSize = new System.Drawing.Size(250, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(248, 26);
+            this.label2.TabIndex = 78;
+            this.label2.Text = "If mount does not report Side Of Pier correctly, then do not enable Meridian Flip" +
+    ".\r\n";
+            // 
+            // EnableMeridianFlipBox
+            // 
+            this.EnableMeridianFlipBox.AutoSize = true;
+            this.EnableMeridianFlipBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.EnableMeridianFlipBox.Location = new System.Drawing.Point(141, 288);
+            this.EnableMeridianFlipBox.Name = "EnableMeridianFlipBox";
+            this.EnableMeridianFlipBox.Size = new System.Drawing.Size(121, 17);
+            this.EnableMeridianFlipBox.TabIndex = 79;
+            this.EnableMeridianFlipBox.Text = "Enable Meridian Flip";
+            this.EnableMeridianFlipBox.UseVisualStyleBackColor = true;
+            this.EnableMeridianFlipBox.CheckedChanged += new System.EventHandler(this.EnableMeridianFlipBox_CheckedChanged);
+            // 
             // FormSessionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 402);
+            this.Controls.Add(this.EnableMeridianFlipBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.OTAButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.MinimumAltitudeBox);
@@ -280,5 +307,7 @@
         private System.Windows.Forms.TextBox ShutDownFilePathBox;
         private System.Windows.Forms.Button ShutDownBrowseButton;
         private System.Windows.Forms.Button OTAButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox EnableMeridianFlipBox;
     }
 }
