@@ -1,11 +1,11 @@
-﻿using AtGuider2;
+﻿//using AtGuider2;
 using Planetarium;
 using System;
 using System.Collections.Generic;
 
 namespace Humason
 {
-    public static partial class AutoGuide
+    public static partial class AutoGuiding
     {
         //Execute TSX_AutoGuide class
         //  Image guider camera
@@ -31,10 +31,12 @@ namespace Humason
                 BinY = tPlan.GuiderBinning,
                 SubFrame = 1,
                 Delay = 0,
-                Exposure = exposure
+                Exposure = exposure,
+                AutoSave = 0
             };
-            //Create camera object and turn turn off autosave, if on      
-            TSXLink.Camera gCam = new TSXLink.Camera(asti) { AutoSaveOn = 0 };
+            //Create camera object -- note, autosave is turned off     
+            TSXLink.Camera gCam = new TSXLink.Camera(asti);
+
             //Center up AO, just in case and if enabled
             if (tPlan.AOEnabled) { gCam.CenterAO(); }
 
@@ -79,12 +81,10 @@ namespace Humason
                 BinX = tPlan.GuiderBinning,
                 BinY = tPlan.GuiderBinning,
                 Delay = 0,
-                Exposure = exposure
+                Exposure = exposure,
+                AutoSave = 1
             };
-            TSXLink.Camera gCam = new TSXLink.Camera(asti)
-            {
-                AutoSaveOn = 1//Turn on autosave so we can extract a star inventory via ShowInventory()
-            };
+            TSXLink.Camera gCam = new TSXLink.Camera(asti);
             //Center up AO, just in case and if enabled
             if (tPlan.AOEnabled)
             {
@@ -161,7 +161,8 @@ namespace Humason
                 BinX = tPlan.GuiderBinning,
                 BinY = tPlan.GuiderBinning,
                 Frame = AstroImage.ImageType.Light,
-                Exposure = tPlan.GuideExposure
+                Exposure = tPlan.GuideExposure,
+                AutoSave = 0
             };
             //Compute delay based on guider cycle time.  Zero means no delay;
             double agDelay = tPlan.GuiderCycleTime;
@@ -172,7 +173,8 @@ namespace Humason
 
             //Create new guider object for running the guider
             //then center the AO, if enabled
-            TSXLink.Camera gCam = new TSXLink.Camera(asti) { AutoSaveOn = 0 }
+            //Autosave is off
+            TSXLink.Camera gCam = new TSXLink.Camera(asti);
             ;
             if (tPlan.AOEnabled)
             {
@@ -222,12 +224,13 @@ namespace Humason
                 BinX = tPlan.GuiderBinning,
                 BinY = tPlan.GuiderBinning,
                 SubFrame = 0,
-                Exposure = tPlan.GuideExposure
+                Exposure = tPlan.GuideExposure,
+                AutoSave = 0
             };
             if (subFrameIt)
                 asti.SubFrame = 1;
-            //Create camera object from parameters, turn on Autosave
-            TSXLink.Camera gCam = new TSXLink.Camera(asti) { AutoSaveOn = 0 };
+            //Create camera object from parameters, turn off Autosave
+            TSXLink.Camera gCam = new TSXLink.Camera(asti);
             //Set subframe around star, if enabled.  
             if (subFrameIt)
             {
@@ -255,11 +258,12 @@ namespace Humason
             int tstat = gCam.GetImage();
             //Run Calibration, note that the mount calibration will always be done.  The AO calibration is optional.
             lg.LogIt("Calibrating Direct Guide");
-            gCam.Calibrate(false);
+            
+            gCam.Calibrate(false, (int)tPlan.XAxisMoveTime, (int)tPlan.YAxisMoveTime);
             if (tPlan.AOEnabled)
             {
                 lg.LogIt("Calibrating AO");
-                gCam.Calibrate(true);
+                gCam.Calibrate(true, (int)tPlan.XAxisMoveTime, (int)tPlan.YAxisMoveTime);
             }
             //Store vectors
             tPlan.CalVectorXPosXComponent = gCam.CalibrationVectorXPositiveXComponent;
@@ -319,9 +323,11 @@ namespace Humason
                 BinX = tPlan.GuiderBinning,
                 BinY = tPlan.GuiderBinning,
                 Delay = 0,
-                Exposure = tPlan.GuideExposure
+                Exposure = tPlan.GuideExposure,
+                AutoSave = 1
             };
-            TSXLink.Camera guider = new TSXLink.Camera(asti) { AutoSaveOn = 1 };
+            //Autosave is on
+            TSXLink.Camera guider = new TSXLink.Camera(asti); 
             //Center AO, if configured
             if (tPlan.AOEnabled)
             {

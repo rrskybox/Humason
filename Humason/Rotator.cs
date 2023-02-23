@@ -12,7 +12,6 @@ namespace Humason
             return;
             ;
         }
-
         private static double StartRotatorAngle { get; set; } = 0;
         private static double StartImagePA { get; set; } = 0;
         private static double EndRotatorAngle { get; set; } = 0;
@@ -131,20 +130,25 @@ namespace Humason
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             AstroImage asti = new AstroImage
             {
+                Frame = AstroImage.ImageType.Light,
                 Exposure = tPlan.PlateSolveExposureTime,
                 Filter = tPlan.ClearFilter,
                 ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType,
-                Delay = 0
+                Delay = 0,
+                AutoSave = 1
             };
             lg.LogIt("Plate Solve: Imaging");
             Imaging imgo = new Imaging();
-
-            string path = imgo.TakeLightFrame(asti);
-
+            int rslt = imgo.TakeLightFrame(asti);
+            string path = asti.Path;
+            //TSXLink.Camera gCam = new TSXLink.Camera(asti);
+            //int cStat = gCam.GetImage();
+            if (rslt != 0)
+            {
+                lg.LogIt("Plate Solve: Imaging Failed: ");
+                return false;
+            }
             lg.LogIt("Plate Solve: Image Linking");
-            //tsxl.scale = TSXLink.FOVI.GetFOVScale();
-
-            //tsxl.unknownScale = true;
             TSXLink.PlateSolution dSolve = TSXLink.ImageSolution.PlateSolve(path);
             if (dSolve == null)
             {

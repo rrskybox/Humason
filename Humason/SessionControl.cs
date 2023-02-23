@@ -88,7 +88,9 @@ namespace Humason
         const string DomeHomeAzXName = "DomeHomeAz";
         const string CLSReductionXName = "CLSReduction";
         const string ImagerReductionXName = "ImagerReduction";
+        const string FocusReductionXName = "FocusReduction";
         const string GuiderReductionXName = "GuiderReduction";
+        const string UseTSXAutoSaveXName = "UseTSXAutoSave";
 
         //Class data -- just saves some file access time
 
@@ -620,6 +622,17 @@ namespace Humason
             set => DirectXcess.ReplaceItem(ImagerReductionXName, value);
         }
 
+        public int FocusReductionType
+        {
+            get
+            {
+                if (DirectXcess.GetItem(FocusReductionXName) != null)
+                { return Convert.ToInt32(DirectXcess.GetItem(FocusReductionXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(FocusReductionXName, value);
+        }
+
         public int CLSReductionType
         {
             get
@@ -641,6 +654,18 @@ namespace Humason
             }
             set => DirectXcess.ReplaceItem(GuiderReductionXName, value);
         }
+
+        public int UseTSXAutoSave
+        {
+            get
+            {
+                if (DirectXcess.GetItem(UseTSXAutoSaveXName) != null)
+                { return Convert.ToInt32(DirectXcess.GetItem(UseTSXAutoSaveXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(UseTSXAutoSaveXName, value);
+        }
+
         #endregion
 
     }

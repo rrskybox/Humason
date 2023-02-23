@@ -16,6 +16,7 @@ namespace Humason
             Imaging = 0,
             Guider = 1
         }
+
         public enum ReductionType
         {
             None = ccdsoftImageReduction.cdNone,
@@ -68,6 +69,7 @@ namespace Humason
         public int SubframeBottom { get; set; }
         public int SubframeRight { get; set; }
         public int AutoSave { get; set; }
+        public string Path { get; set; }
     }
     #endregion
 
@@ -75,9 +77,7 @@ namespace Humason
 
     public class Imaging
     {
-        public int FilterChangeDelay = 2;
-
-        public string TakeLightFrame(AstroImage asti)
+        public int TakeLightFrame(AstroImage asti)
         {
             //Image and save light frame
             //   Turn on autosave
@@ -93,22 +93,18 @@ namespace Humason
 
             //Save the current time so we can calculate an overhead later
             DateTime imageStart = DateTime.Now;
-
-            asti.Delay = FilterChangeDelay;
+            //Set up the filter
             TSXLink.FilterWheel.Filter = asti.Filter;
 
             lg.LogIt("Imaging Light: Filter " + asti.Filter.ToString("0") + " for " + asti.Exposure.ToString("0.00") + " Sec");
 
-            TSXLink.Camera tcam = new TSXLink.Camera(asti)
-            {
-                //Autosave this image
-                AutoSaveOn = 1,
-            };
+            TSXLink.Camera tcam = new TSXLink.Camera(asti);
+
             int camResult = tcam.GetImage();
             if (camResult != 0)
             {
                 lg.LogIt("Imaging Light Error: " + camResult);
-                return null;
+                return camResult;
             }
             System.Windows.Forms.Application.DoEvents();
             System.Threading.Thread.Sleep(1000);
@@ -119,10 +115,11 @@ namespace Humason
             TimeSpan imageDuration = imageEnd - imageStart;
 
             openSession.Overhead = imageDuration.TotalSeconds;
-            return tcam.LastImageFilename();
+            asti.Path = tcam.LastImageFilename();
+            return camResult;
         }
 
-        public void TakeDarkFrame(int exposure)
+        public int TakeDarkFrame(double exposure)
         {
             //Image and save dark frames
             //   Turn on autosave
@@ -143,25 +140,24 @@ namespace Humason
                 Frame = AstroImage.ImageType.Dark,
                 Delay = 0,
                 ImageReduction = AstroImage.ReductionType.None,
+                AutoSave = 1
             };
 
             lg.LogIt("Imaging Dark: " + exposure.ToString("0.00") + " Sec ");
-            TSXLink.Camera tcam = new TSXLink.Camera(asti)
-            {
-                AutoSaveOn = 1
-            };
+            TSXLink.Camera tcam = new TSXLink.Camera(asti);
             int camResult = tcam.GetImage();
             if (camResult != 0)
             {
                 lg.LogIt("Imaged Dark Error: " + camResult.ToString("0"));
-                return;
+                return camResult;
             }
             lg.LogIt("Dark Imaging Done");
+            //return tcam.LastImageFilename();
 
-            return;
+            return camResult;
         }
 
-        public void TakeBiasFrame()
+        public int TakeBiasFrame()
         {
             //Image and save bias frames
             //   Turn on autosave
@@ -181,20 +177,18 @@ namespace Humason
                 Frame = AstroImage.ImageType.Bias,
                 Delay = 0,
                 ImageReduction = AstroImage.ReductionType.None,
+                AutoSave = 1
             };
             lg.LogIt("Imaging Bias");
-            TSXLink.Camera tcam = new TSXLink.Camera(asti)
-            {
-                AutoSaveOn = 1
-            };
+            TSXLink.Camera tcam = new TSXLink.Camera(asti);
             int camResult = tcam.GetImage();
             if (camResult != 0)
             {
                 lg.LogIt("Imaged Bias Error: " + camResult.ToString());
-                return;
+                return camResult;
             }
             lg.LogIt("Bias Imaging Done");
-            return;
+            return camResult;
         }
 
         public int TakeFlatSample(Filter fltr, double exposure)
@@ -212,16 +206,14 @@ namespace Humason
                 Delay = 0,
                 ImageReduction = AstroImage.ReductionType.None,
                 Filter = fltr.Index,
-                SubFrame = 0
+                SubFrame = 0,
+                AutoSave = 1
             };
             //Take full image just to start and make sure we have the height and width correct
             lg.LogIt("- Imaging Flat Frame at " + asti.Exposure.ToString("0.00") + "sec");
 
-            TSXLink.Camera tcamF = new TSXLink.Camera(asti)
-            {
-                //turn on autosave -- AttachActive doesn't work otherwise
-                AutoSaveOn = 1
-            };
+            TSXLink.Camera tcamF = new TSXLink.Camera(asti);
+
             //Get image
             int camResultF = tcamF.GetImage();
             if (camResultF != 0)
@@ -243,7 +235,7 @@ namespace Humason
 
             lg.LogIt("- Imaging Flat Subframe at " + asti.Exposure.ToString("0.00") + "sec");
             //Prep camera and turn on autosave -- AttachActive doesn't work otherwise
-            TSXLink.Camera tcamS = new TSXLink.Camera(asti) { AutoSaveOn = 1 };
+            TSXLink.Camera tcamS = new TSXLink.Camera(asti);
             int camResultS = tcamS.GetImage();
             if (camResultS != 0)
             {
@@ -311,6 +303,7 @@ namespace Humason
                 Frame = AstroImage.ImageType.Flat,
                 ImageReduction = AstroImage.ReductionType.None,
                 Filter = iFlat.FlatFilter.Index,
+                AutoSave = openSession.UseTSXAutoSave
             };
 
             while (imagecount > 0)
@@ -323,11 +316,7 @@ namespace Humason
                 //Set the exposure time
                 lg.LogIt("Imaging Flat: " + iFlat.FlatFilter.Name +
                                         " Exp: " + asti.Exposure.ToString("0.00"));
-                TSXLink.Camera tcam = new TSXLink.Camera(asti)
-                {
-                    //Turn off autosave (going to do it ourselves)
-                    AutoSaveOn = 0
-                };
+                TSXLink.Camera tcam = new TSXLink.Camera(asti);
                 int camResult = tcam.GetImage();
                 avgADU = tcam.ImageADU;
                 lg.LogIt("Imaged Flat: " + asti.Filter +
@@ -345,10 +334,11 @@ namespace Humason
                     else  //Good flat, save it
                     {
                         //Save file as flat
-                        ImageFileManager.SaveFlatImage(iFlat.TargetName,
-                               iFlat.FlatFilter.Name,
-                               iFlat.RotationPA.ToString("000"),
-                               iFlat.SideOfPier);
+                        if (openSession.UseTSXAutoSave == 0)
+                            ImageFileManager.SaveFlatImage(iFlat.TargetName,
+                                   iFlat.FlatFilter.Name,
+                                   iFlat.RotationPA.ToString("000"),
+                                   iFlat.SideOfPier);
                     }
                 }
                 else
@@ -361,10 +351,11 @@ namespace Humason
                     else  //Good flat, save it
                     {
                         //Save file as flat
-                        ImageFileManager.SaveFlatImage(iFlat.TargetName,
-                               iFlat.FlatFilter.Name,
-                               iFlat.RotationPA.ToString("000"),
-                               iFlat.SideOfPier);
+                        if (openSession.UseTSXAutoSave == 0)
+                            ImageFileManager.SaveFlatImage(iFlat.TargetName,
+                                   iFlat.FlatFilter.Name,
+                                   iFlat.RotationPA.ToString("000"),
+                                   iFlat.SideOfPier);
                     }
                 }
                 //if (the average ADU is between the min and max, keep it and take the next frame, if (!done
@@ -442,18 +433,17 @@ namespace Humason
         private void FlatManFlatsLoop(string targetName, Filter filter, int imagecount, double exposure, double rotationPA, string meridianSide)
         {
             LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+
             AstroImage asti = new AstroImage
             {
                 Frame = AstroImage.ImageType.Flat,
                 ImageReduction = AstroImage.ReductionType.None,
                 Filter = filter.Index,
                 Exposure = exposure,
+                AutoSave = openSession.UseTSXAutoSave
             };
-            TSXLink.Camera tcam = new TSXLink.Camera(asti)
-            {
-                //Turn autosave off
-                AutoSaveOn = 0
-            };
+            TSXLink.Camera tcam = new TSXLink.Camera(asti);
 
             for (int i = 0; i < imagecount; i++)
             {
@@ -468,7 +458,8 @@ namespace Humason
                 else
                 {
                     //Save file as flat
-                    ImageFileManager.SaveFlatImage(targetName,
+                    if (openSession.UseTSXAutoSave == 0)
+                        ImageFileManager.SaveFlatImage(targetName,
                            filter.Name,
                            rotationPA.ToString("000"),
                            meridianSide);

@@ -97,6 +97,10 @@ namespace Humason
             }
             else { HumasonTabs.TabPages.Remove(DomeTab); }
 
+            //Initialize Home and Park conditions for Connect and Disconnect
+            HomeMountCheckBox.Checked = openSession.IsHomeMountEnabled;
+            ParkMountCheckBox.Checked = openSession.IsParkMountEnabled;
+            
             //Open log and subscribe this form to the log event 
             StatusReportEvent.CreateLog();
 

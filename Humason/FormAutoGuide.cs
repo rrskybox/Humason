@@ -118,7 +118,7 @@ namespace Humason
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             if (NHUtil.IsButtonRed(AutoGuideOnButton))
             {
-                AutoGuide.AutoGuideStop();
+                AutoGuiding.AutoGuideStop();
                 AutoGuideOnButton.Text = "Start\r\nAutoguiding";
                 NHUtil.ButtonGreen(AutoGuideOnButton);
             }
@@ -127,9 +127,9 @@ namespace Humason
                 //First, save the guider cycle time and anything else in the future that might be hanging around
                 tPlan.GuiderCycleTime = (double)GuiderCycleTimeNum.Value;
                 if (tPlan.DitherEnabled)
-                { AutoGuide.DitherAndStart(); }
+                { AutoGuiding.DitherAndStart(); }
                 else
-                { AutoGuide.AutoGuideStart(); }
+                { AutoGuiding.AutoGuideStart(); }
                 AutoGuideOnButton.Text = "Stop\r\nAutoguiding";
                 NHUtil.ButtonRed(AutoGuideOnButton);
             }
@@ -142,14 +142,14 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
-            bool fsbresult = AutoGuide.SetAutoGuideStar();
+            bool fsbresult = AutoGuiding.SetAutoGuideStar();
             //if there is an error, then assume that the exposure is just too low
             // reset the guide exposure to maximum and try again
             if (!fsbresult)
             {
                 tPlan.GuideExposure = tPlan.MaximumGuiderExposure;
                 GuideExposureTimeBox.Value = (decimal)tPlan.MaximumGuiderExposure;
-                fsbresult = AutoGuide.SetAutoGuideStar();
+                fsbresult = AutoGuiding.SetAutoGuideStar();
             }
             //If it worked this time then update the guide star position, otherwise just leave it
             if (fsbresult)
@@ -164,7 +164,7 @@ namespace Humason
         {
             //Calibrate the mount (direct guide), then calibrate AO, if set
             NHUtil.ButtonRed(CalibrateButton);
-            AutoGuide.CalibrateAutoguiding(SubframeCheckBox.Checked, (double)XAxisMoveTime.Value, (double)YAxisMoveTime.Value);
+            AutoGuiding.CalibrateAutoguiding(SubframeCheckBox.Checked, (double)XAxisMoveTime.Value, (double)YAxisMoveTime.Value);
             //Restore original target position if (a new star was used
             NHUtil.ButtonGreen(CalibrateButton);
         }
@@ -174,7 +174,7 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             NHUtil.ButtonRed(OptimizeExposureButton);
-            double optExposure = AutoGuide.OptimizeExposure();
+            double optExposure = AutoGuiding.OptimizeExposure();
             GuideExposureTimeBox.Value = (decimal)optExposure;
             tPlan.GuideExposure = optExposure;
             NHUtil.ButtonGreen(OptimizeExposureButton);
@@ -256,7 +256,8 @@ namespace Humason
         private void GuiderAutoCalibrateButton_Click(object sender, EventArgs e)
         {
             NHUtil.ButtonRed(GuiderAutoCalibrateButton);
-            AtGuider2.AtGuider2.CalibrateGuider();
+            //AtGuider2.AtGuider2.CalibrateGuider();
+            AutoGuiding.CalibrateAutoguiding(SubframeCheckBox.Checked, (double)XAxisMoveTime.Value, (double)YAxisMoveTime.Value);
             NHUtil.ButtonGreen(GuiderAutoCalibrateButton);
         }
 

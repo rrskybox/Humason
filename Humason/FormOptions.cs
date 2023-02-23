@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using WeatherWatch;
 
 namespace Humason
@@ -22,8 +23,10 @@ namespace Humason
             //Fill in calibrations with existing settings
             SessionControl openSession = new SessionControl();
             ImageReductionComboBox.SelectedIndex = openSession.ImageReductionType;
+            FocusReductionComboBox.SelectedIndex = openSession.FocusReductionType;
             GuiderReductionComboBox.SelectedIndex = openSession.GuiderReductionType;
             CLSReductionComboBox.SelectedIndex = openSession.CLSReductionType;
+            UseTSXAutoSaveCheckbox.Checked = Convert.ToBoolean(openSession.UseTSXAutoSave);
             //done
             optionsFormInit = false;
             return;
@@ -98,6 +101,13 @@ namespace Humason
             return;
         }
 
+        private void FocusReductionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.FocusReductionType = FocusReductionComboBox.SelectedIndex;
+            return;
+        }
+
         private void CLSReductionComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             SessionControl openSession = new SessionControl();
@@ -111,5 +121,17 @@ namespace Humason
             openSession.GuiderReductionType = GuiderReductionComboBox.SelectedIndex;
             return;
         }
+
+        private void UseTSXAutoSaveCheckbox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            if (UseTSXAutoSaveCheckbox.Checked)
+                openSession.UseTSXAutoSave = 1;
+            else
+                openSession.UseTSXAutoSave = 0;
+            return;
+        }
+
+
     }
 }

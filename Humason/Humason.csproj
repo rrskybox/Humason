@@ -26,8 +26,8 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>235</ApplicationRevision>
-    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>236</ApplicationRevision>
+    <ApplicationVersion>4.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -95,12 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbortEvent.cs" />
-    <Compile Include="AtGuider2\AtGuider2.cs" />
-    <Compile Include="AtGuider2\FOVMiracles.cs" />
-    <Compile Include="AtGuider2\FOVX.cs" />
-    <Compile Include="AtGuider2\GuideControl.cs" />
-    <Compile Include="AtGuider2\SexTractor.cs" />
-    <Compile Include="AtGuider2\StarProspects.cs" />
     <Compile Include="AutoFocus.cs" />
     <Compile Include="Diagnostics.cs" />
     <Compile Include="DomeControl.cs" />
@@ -113,7 +107,7 @@
     <Compile Include="FormAutoFocus.Designer.cs">
       <DependentUpon>FormAutoFocus.cs</DependentUpon>
     </Compile>
-    <Compile Include="AutoGuide.cs" />
+    <Compile Include="AutoGuiding.cs" />
     <Compile Include="FormAutoGuide.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +138,8 @@
     <Compile Include="FormTarget.Designer.cs">
       <DependentUpon>FormTarget.cs</DependentUpon>
     </Compile>
+    <Compile Include="FOVX.cs" />
+    <Compile Include="GuideCamFOV.cs" />
     <Compile Include="ManageTSX.cs" />
     <Compile Include="Operations.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

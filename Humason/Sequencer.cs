@@ -373,7 +373,7 @@ namespace Humason
             }
             //If autoguiding is checked and calibration requested, then calibrate the guider
             if (tPlan.AutoGuideEnabled && tPlan.GuiderCalibrateEnabled)
-            { AutoGuide.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
+            { AutoGuiding.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
 
             //Set up for shoot loop:
             //For each filter column,
@@ -584,7 +584,7 @@ namespace Humason
                     Filter = ImageSeries[frmdef, si_Filter],
                     Delay = ImageSeries[frmdef, si_Delay],
                     Frame = (AstroImage.ImageType)ImageSeries[frmdef, si_Frame],
-                    AutoSave = 0
+                    AutoSave = openSession.UseTSXAutoSave
                 };
                 lg.LogIt("Imaging Filter " + asti.Filter.ToString() +
                                     " @ " + asti.Exposure.ToString() + " sec " +
@@ -593,8 +593,10 @@ namespace Humason
                 DateTime imageStart = DateTime.Now;
 
                 //Start the imaging
-                TSXLink.Camera tcam = new TSXLink.Camera(asti);
-                int camResult = tcam.GetImage();
+                //TSXLink.Camera tcam = new TSXLink.Camera(asti);
+                //int camResult = tcam.GetImage();
+                Imaging imgo = new Imaging();
+                int camResult = imgo.TakeLightFrame(asti);
                 //Check for a user abort
                 System.Windows.Forms.Application.DoEvents();
                 System.Threading.Thread.Sleep(1000);
@@ -602,6 +604,7 @@ namespace Humason
                 if (FormHumason.IsAborting())
                 {
                     lg.LogIt("Sequence aborted by user");
+                    TSXLink.Camera tcam = new TSXLink.Camera(asti);
                     tcam.CameraAbort();
                     StopAutoguiding();
                     return;
@@ -611,8 +614,8 @@ namespace Humason
                 if (camResult != 0)
                 {
                     lg.LogIt("Imaging Error: " + camResult.ToString());
+                    TSXLink.Camera tcam = new TSXLink.Camera(asti);
                     tcam.CameraAbort();
-                    //return;
                 }
                 else
                 {
@@ -627,12 +630,14 @@ namespace Humason
                     string flatSide;
                     if (LastTargetSideWest)
                     {
-                        ImageFileManager.SaveLightImage(tname, tfilterName, tPA, "W");
+                        if (openSession.UseTSXAutoSave == 0)
+                            ImageFileManager.SaveLightImage(tname, tfilterName, tPA, "W");
                         flatSide = "West";
                     }
                     else
                     {
-                        ImageFileManager.SaveLightImage(tname, tfilterName, tPA, "E");
+                        if (openSession.UseTSXAutoSave == 0)
+                            ImageFileManager.SaveLightImage(tname, tfilterName, tPA, "E");
                         flatSide = "East";
                     }
                     //Save a flats requirement in the configuration file
@@ -692,7 +697,7 @@ namespace Humason
 
             lg.LogIt("Meridian Flip Underway");
             // stop guiding, if (on
-            if (tPlan.AutoGuideEnabled) { AutoGuide.AutoGuideStop(); }
+            if (tPlan.AutoGuideEnabled) { AutoGuiding.AutoGuideStop(); }
 
             //if (WestOTAtoEastOTA is true,{ first slew the scope to point to the west hemisphere, or the inverse
             // in order to imitate an ASCOM "Flip" command
@@ -742,7 +747,7 @@ namespace Humason
                 // Before we go, because of an apparent TSX AO bug, must recalibrate guider if using AO
                 //
                 if (tPlan.RecalibrateAfterFlipEnabled && tPlan.AutoGuideEnabled && tPlan.AOEnabled)
-                { AutoGuide.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
+                { AutoGuiding.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
                 //
                 //////////////////////
             }
@@ -806,14 +811,11 @@ namespace Humason
             //   but it doesnt matter, it seems
             if ((TargetRise == TimeSpan.FromHours(0)) && (TargetSet == TimeSpan.FromHours(0)))
             {
-                hoursToMinAlt = TimeSpan.FromHours(AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc)));
+                hoursToMinAlt = TimeSpan.FromHours(0);
             }
             else
             {
-                var test3 = AstroMath.Transform.DegreesToRadians(TelescopeLimit);
-                var test1 = tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc);
-                var test2 = AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc));
-                hoursToMinAlt = TimeSpan.FromHours(AstroMath.Transform.RadiansToHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc)));
+                hoursToMinAlt = TimeSpan.FromHours(tSpot.HourAngle(AstroMath.Transform.DegreesToRadians(TelescopeLimit), tLoc));
             }
             return hoursToMinAlt;
         }
@@ -912,7 +914,7 @@ namespace Humason
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             LogEvent lg = new LogEvent();
             lg.LogIt("Checking to see if autoguiding is already running");
-            if (AutoGuide.IsAutoGuideOn())
+            if (AutoGuiding.IsAutoGuideOn())
             {
                 lg.LogIt("Autoguider is already runnning");
                 return true;
@@ -925,7 +927,7 @@ namespace Humason
             //    and try again.
 
             lg.LogIt("Attempting to find guide star");
-            while (!AutoGuide.SetAutoGuideStar())
+            while (!AutoGuiding.SetAutoGuideStar())
             {
                 if (tPlan.GuideExposure == tPlan.MaximumGuiderExposure)
                 {
@@ -941,12 +943,12 @@ namespace Humason
 
             //Got a star
             lg.LogIt("Determining optimal guide camera exposure");
-            double agExposure = AutoGuide.OptimizeExposure();
+            double agExposure = AutoGuiding.OptimizeExposure();
             FormHumason.fGuideForm.GuideExposureTimeBox.Value = (decimal)agExposure;
             tPlan.GuideExposure = agExposure;
             if (tPlan.DitherEnabled)
             {
-                if (!AutoGuide.DitherAndStart())
+                if (!AutoGuiding.DitherAndStart())
                 {
                     lg.LogIt("Dither Failed: Runninng unguided");
                     return false;
@@ -958,7 +960,7 @@ namespace Humason
             }
             else
             {
-                AutoGuide.AutoGuideStart();
+                AutoGuiding.AutoGuideStart();
                 return true;
             }
 
@@ -969,7 +971,7 @@ namespace Humason
             //Turn off autoguiding
             LogEvent lg = new LogEvent();
             lg.LogIt("Stopping autoguider");
-            AutoGuide.AutoGuideStop();
+            AutoGuiding.AutoGuideStop();
         }
 
         private double CheckAutoFocus(double lastFocusTemp)

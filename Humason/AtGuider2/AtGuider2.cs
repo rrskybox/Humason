@@ -4,6 +4,7 @@ using System;
 using TheSky64Lib;
 
 namespace AtGuider2
+
 {
     public static class AtGuider2
     {

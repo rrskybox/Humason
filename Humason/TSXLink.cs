@@ -1476,10 +1476,16 @@ namespace Planetarium
                 set => tsxc.SubframeRight = value;
             }
 
-            public void Calibrate(bool AO)
+            public void Calibrate(bool AO, int xCal, int yCal)
             {
                 //Make sure there is a delay for the mount to settle
                 tsxc.Delay = 2;
+                //calibration times in tsx are in 10's of msec -- i.e. multiply by 100
+                tsxc.AutoguiderCalibrationTimeXAxis = xCal * 100;
+                tsxc.AutoguiderCalibrationTimeYAxis = yCal * 100;
+                int testx = tsxc.AutoguiderCalibrationTimeXAxis;
+                int testy = tsxc.AutoguiderCalibrationTimeYAxis;
+
                 if (!AO)
                 {
                     try

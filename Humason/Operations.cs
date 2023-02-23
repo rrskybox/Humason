@@ -195,7 +195,7 @@ namespace Humason
                 //
                 //
                 //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
-                AutoGuide.AutoGuideStop();
+                AutoGuiding.AutoGuideStop();
                 //check for abort having been set.  Gracefully shut everything back down if it has.
                 if (FormHumason.IsAborting())
                 {
@@ -229,6 +229,8 @@ namespace Humason
                 try { TSXLink.Mount.Park(); }
                 catch (Exception ex)
                 { lg.LogIt("Could not Park: " + ex.Message); }
+                //Disconnect devices
+                TSXLink.Connection.DisconnectAllDevices();
             }
             return true;
         }
@@ -247,7 +249,7 @@ namespace Humason
             FormHumason.SetAbort();
 
             //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
-            AutoGuide.AutoGuideStop();
+            AutoGuiding.AutoGuideStop();
 
             //If autorun set and we're running unattended, then shut down, or... just park the mount, home the dome and disconnect
             if (FormHumason.SessionState != FormHumason.SessionStateFlag.Stopped)
