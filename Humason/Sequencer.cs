@@ -161,6 +161,8 @@ namespace Humason
             }
             //turn computer clock back on to return to local time
             TSXLink.StarChart.SetClock(0, true);
+            //return Find to current target
+            //TSXLink.Target tReturn = TSXLink.StarChart.FindTarget(tPlan.TargetName);
         }
 
         public void SequenceGenerator()
@@ -393,6 +395,7 @@ namespace Humason
             ProgressEvent pgrEvent = new ProgressEvent();
             pgrEvent.ProgressIt((int)Math.Ceiling(seriesprogress));
             int totalImageCount = ImageSeries.GetUpperBound(0) + 1;
+            //Assuming all is good, CLS the 
             for (int frmdef = 0; frmdef < totalImageCount; frmdef++)
             {
                 //Check weather:  If the weather monitor deems the weather "unsafe"
@@ -513,6 +516,13 @@ namespace Humason
                 // precision slew to the target coordinates before continuing just
                 // to make sure that we haven't drifted off somewhere.
                 // If the CLS fails, then we might as well abort.
+                //If Autoguide is not enabled, then we must be running unguided on purpose.
+                //  if so (and the user wants to resync), 
+                //      make a precision slew in order to make up for any incremental drift
+                //  that has occurred since starting the last frame.
+                //if the CLS fails, then we might as well abort
+                //If ReSync is not enabled, then this is our last chance to slew to the target before imaging
+                //  on the first image.  The rest will follow accordingly.  if the CLS fails, then we might as well abort
                 if (tPlan.AutoGuideEnabled)
                 {
                     if (tPlan.ResyncEnabled)
@@ -546,20 +556,21 @@ namespace Humason
                         }
                     }
                 }
-                else
-                     //If Autoguide is not enabled, then we must be running unguided on purpose.
-                     //  if so (and the user wants to resync), 
-                     //      make a precision slew in order to make up for any incremental drift
-                     //  that has occurred since starting the last frame.
-                     //if the CLS fails, then we might as well abort
-                     if (tPlan.ResyncEnabled)
+                else if (tPlan.ResyncEnabled)  //(and Autoguide is not enabled)
                 {
                     if (!CLSToTargetPlanCoordinates())
                     {
                         FormHumason.SetAbort();
                         break;
-                    };
+                    }
                 }
+                else if (frmdef == 0) //(and Autoguide is not enabled, and ReSync is not enabled)
+                    if (!CLSToTargetPlanCoordinates())
+                    {
+                        FormHumason.SetAbort();
+                        break;
+                    }
+
                 //Check for SmallSolarSystemObject
                 //  if so, then set the tracking rates based on the sequence deltaRA and deltaDec values, if any
                 if (tPlan.SmallSolarSystemBodyEnabled)
@@ -593,8 +604,6 @@ namespace Humason
                 DateTime imageStart = DateTime.Now;
 
                 //Start the imaging
-                //TSXLink.Camera tcam = new TSXLink.Camera(asti);
-                //int camResult = tcam.GetImage();
                 Imaging imgo = new Imaging();
                 int camResult = imgo.TakeLightFrame(asti);
                 //Check for a user abort
@@ -660,8 +669,10 @@ namespace Humason
                 DateTime imageEnd = DateTime.Now;
                 TimeSpan imageDuration = imageEnd - imageStart;
                 double overhead = imageDuration.TotalSeconds - asti.Exposure;
-                if (overhead >= 0 && overhead < tPlan.ImageExposureTime) tPlan.Overhead = overhead;
-                else tPlan.Overhead = 0;
+                if (overhead >= 0 && overhead < tPlan.ImageExposureTime)
+                    tPlan.Overhead = overhead;
+                else
+                    tPlan.Overhead = 0;
 
                 //  Next image:  loop back to start
             }

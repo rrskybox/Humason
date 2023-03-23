@@ -733,7 +733,6 @@ namespace Planetarium
                 {
                     ImageReduction = (ccdsoftImageReduction)openSession.ImageReductionType,
                     Subframe = 0,
-                    FilterIndexZeroBased = asti.Filter,
                     ExposureTime = asti.Exposure,
                     Delay = asti.Delay
                 };
@@ -903,16 +902,15 @@ namespace Planetarium
         {
             public static List<string> FilterWheelList()
             {
-
                 ccdsoftCamera tsxc = new ccdsoftCamera();
                 //Connect the camera, if fails, then just return after clean up
+                List<string> tfwList = new List<string>();
                 try
-                { tsxc.Connect(); }
+                { tsxc.filterWheelConnect(); }
                 catch
                 {
                     return null;
                 }
-                List<string> tfwList = new List<string>();
                 for (int filterIndex = 0; filterIndex < tsxc.lNumberFilters; filterIndex++)
                 {
                     tfwList.Add(tsxc.szFilterName(filterIndex));
@@ -1192,6 +1190,7 @@ namespace Planetarium
                 get
                 {
                     sky6RASCOMTele tsxm = new sky6RASCOMTele();
+                    tsxm.Connect();
                     tsxm.GetAzAlt();
                     double azm = tsxm.dAz;
                     return azm;
@@ -1203,6 +1202,7 @@ namespace Planetarium
                 get
                 {
                     sky6RASCOMTele tsxm = new sky6RASCOMTele();
+                    tsxm.Connect();
                     tsxm.GetAzAlt();
                     double alt = tsxm.dAlt;
                     return alt;
@@ -1688,8 +1688,8 @@ namespace Planetarium
 
                     case 3:
                         try
-                        { int focstat = tsxc.AtFocus3(3, true); }
-                        catch
+                        { int focstat = tsxc.AtFocus3(3, false); }
+                        catch (Exception ex)
                         {
                             //Just close up, TSX will spawn error window unless this is an abort
                             //lg.LogIt("@Focus3 fails for " + ex.Message);

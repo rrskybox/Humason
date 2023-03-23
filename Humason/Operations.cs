@@ -134,11 +134,6 @@ namespace Humason
                 }
                 //Try to move to target, if this fails just abort
                 Sequencer imgseq = new Sequencer();
-                if (!imgseq.CLSToTargetPlanCoordinates())
-                {
-                    GracefulAbort();
-                    return false;
-                }
 
                 //check for abort having been set.  Gracefully shut everything back down if it has.
                 if (FormHumason.IsAborting())

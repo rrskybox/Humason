@@ -8,11 +8,15 @@ namespace Humason
 {
     public partial class FormDevices : Form
     {
+
+        public bool IsInitializing = false;
         public FormDevices()
         {
+            IsInitializing = true;
             InitializeComponent();
             //Populate entries with stored entries, if any
             ResetConfiguration();
+            IsInitializing = false;
             NHUtil.ButtonGreen(RefreshFiltersButton);
         }
 
@@ -32,6 +36,8 @@ namespace Humason
             //
             //
 
+            //Clear the current filter list box
+            FilterListBox.Items.Clear();
             //Generate a list of filters from tsx, in index order
             List<string> fwlist = TSXLink.FilterWheel.FilterWheelList();
             if (fwlist == null) { return; }
@@ -40,8 +46,6 @@ namespace Humason
             {
                 for (int filterIndex = 0; filterIndex < fwlist.Count(); filterIndex++)
                 { tsxFilterList.Add(new Filter(fwlist[filterIndex], filterIndex, 1)); }
-                //Clear the current filter list box
-                FilterListBox.Items.Clear();
                 //For each filter from tsx, add it to the list, and set it checked, if it is also in the configuration file
                 foreach (Filter tsxFilter in tsxFilterList)
                 {
@@ -110,7 +114,7 @@ namespace Humason
                         FilterListBox.Items.Add(filter.Name + "-" + filter.Index, true);
                     }
                 }
-            }
+             }
         }
 
         public void UploadDevicesConfiguration()
@@ -127,13 +131,16 @@ namespace Humason
                 CameraTemperatureSet = (double)CameraTemperatureSet.Value
             };
             openSession.RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value;
-            if (AtFocus2RadioButton.Checked)
+            if (!IsInitializing)
             {
-                tPlan.AtFocusSelect = 2;
-            }
-            else
-            {
-                tPlan.AtFocusSelect = 3;
+                if (AtFocus2RadioButton.Checked)
+                {
+                    tPlan.AtFocusSelect = 2;
+                }
+                else
+                {
+                    tPlan.AtFocusSelect = 3;
+                }
             }
         }
 
@@ -173,11 +180,7 @@ namespace Humason
             {
                 AutoFocusEnabled = AutofocusCheck.Checked
             };
-            if (AtFocus2RadioButton.Checked)
-            { tPlan.AtFocusSelect = 2; }
-            else
-            { tPlan.AtFocusSelect = 3; }
-        }
+         }
 
         private void RotatorCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -222,22 +225,28 @@ namespace Humason
         private void AtFocus2RadioButton_CheckedChanged(object sender, EventArgs e)
         {
             //Update the configuration file when this button changes
-            SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
-            if (AtFocus2RadioButton.Checked)
+            if (!IsInitializing)
             {
-                tPlan.AtFocusSelect = 2;
+                SessionControl openSession = new SessionControl();
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+                if (AtFocus2RadioButton.Checked)
+                {
+                    tPlan.AtFocusSelect = 2;
+                }
             }
         }
 
         private void AtFocus3RadioButton_CheckedChanged(object sender, EventArgs e)
         {
             //Update the configuration file when this button changes
-            SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
-            if (AtFocus3RadioButton.Checked)
+            if (!IsInitializing)
             {
-                tPlan.AtFocusSelect = 3;
+                SessionControl openSession = new SessionControl();
+                TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+                if (AtFocus3RadioButton.Checked)
+                {
+                    tPlan.AtFocusSelect = 3;
+                }
             }
         }
 

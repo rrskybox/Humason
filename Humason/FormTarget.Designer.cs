@@ -84,6 +84,11 @@
             0,
             0,
             0});
+            this.LRGBRatioBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.LRGBRatioBox.Name = "LRGBRatioBox";
             this.LRGBRatioBox.Size = new System.Drawing.Size(45, 20);
             this.LRGBRatioBox.TabIndex = 81;

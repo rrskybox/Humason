@@ -290,13 +290,11 @@
             // AtFocus2RadioButton
             // 
             this.AtFocus2RadioButton.AutoSize = true;
-            this.AtFocus2RadioButton.Checked = true;
             this.AtFocus2RadioButton.ForeColor = System.Drawing.Color.White;
             this.AtFocus2RadioButton.Location = new System.Drawing.Point(161, 12);
             this.AtFocus2RadioButton.Name = "AtFocus2RadioButton";
             this.AtFocus2RadioButton.Size = new System.Drawing.Size(71, 17);
             this.AtFocus2RadioButton.TabIndex = 69;
-            this.AtFocus2RadioButton.TabStop = true;
             this.AtFocus2RadioButton.Text = "@Focus2";
             this.AtFocus2RadioButton.UseVisualStyleBackColor = true;
             this.AtFocus2RadioButton.CheckedChanged += new System.EventHandler(this.AtFocus2RadioButton_CheckedChanged);
