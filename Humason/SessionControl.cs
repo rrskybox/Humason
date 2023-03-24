@@ -83,6 +83,7 @@ namespace Humason
         const string WeatherCheckedXName = "WeatherMonitorEnabled";
         const string WeatherDataFilePathXName = "WeatherDataFilePath";
         const string DomeAddOnCheckedXName = "DomeAddOnEnabled";
+        const string NoFilterWheelCheckedXName = "NoFilterWheel";
         const string PowerManagerCheckedXName = "PowerManagerEnabled";
         const string RotatorDeviceEnabled = "RotatorDeviceEnabled";
         const string DomeHomeAzXName = "DomeHomeAz";
@@ -598,6 +599,17 @@ namespace Humason
                 else { return false; }
             }
             set => DirectXcess.ReplaceItem(DomeAddOnCheckedXName, value);
+        }
+
+        public bool NoFilterWheel
+        {
+            get
+            {
+                if (DirectXcess.GetItem(NoFilterWheelCheckedXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(NoFilterWheelCheckedXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(NoFilterWheelCheckedXName, value);
         }
 
         public int DomeHomeAz

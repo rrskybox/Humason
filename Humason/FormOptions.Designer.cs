@@ -36,14 +36,15 @@
             this.DomeAddOnCheckBox = new System.Windows.Forms.CheckBox();
             this.ImageReductionComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.FocusReductionComboBox = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.GuiderReductionComboBox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.CLSReductionComboBox = new System.Windows.Forms.ComboBox();
             this.UseTSXAutoSaveCheckbox = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.FocusReductionComboBox = new System.Windows.Forms.ComboBox();
+            this.NoFilterWheelCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -128,12 +129,34 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.CLSReductionComboBox);
             this.groupBox1.Controls.Add(this.ImageReductionComboBox);
-            this.groupBox1.Location = new System.Drawing.Point(12, 104);
+            this.groupBox1.Location = new System.Drawing.Point(12, 121);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(273, 123);
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Image Reduction";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(24, 46);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 13);
+            this.label4.TabIndex = 114;
+            this.label4.Text = "Focus Reduction";
+            // 
+            // FocusReductionComboBox
+            // 
+            this.FocusReductionComboBox.FormattingEnabled = true;
+            this.FocusReductionComboBox.Items.AddRange(new object[] {
+            "None",
+            "AutoDark",
+            "Full"});
+            this.FocusReductionComboBox.Location = new System.Drawing.Point(193, 43);
+            this.FocusReductionComboBox.Name = "FocusReductionComboBox";
+            this.FocusReductionComboBox.Size = new System.Drawing.Size(74, 21);
+            this.FocusReductionComboBox.TabIndex = 113;
+            this.FocusReductionComboBox.SelectedIndexChanged += new System.EventHandler(this.FocusReductionComboBox_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -192,7 +215,7 @@
             // 
             this.UseTSXAutoSaveCheckbox.AutoSize = true;
             this.UseTSXAutoSaveCheckbox.ForeColor = System.Drawing.SystemColors.Control;
-            this.UseTSXAutoSaveCheckbox.Location = new System.Drawing.Point(12, 245);
+            this.UseTSXAutoSaveCheckbox.Location = new System.Drawing.Point(12, 262);
             this.UseTSXAutoSaveCheckbox.Name = "UseTSXAutoSaveCheckbox";
             this.UseTSXAutoSaveCheckbox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.UseTSXAutoSaveCheckbox.Size = new System.Drawing.Size(135, 17);
@@ -201,27 +224,18 @@
             this.UseTSXAutoSaveCheckbox.UseVisualStyleBackColor = true;
             this.UseTSXAutoSaveCheckbox.CheckedChanged += new System.EventHandler(this.UseTSXAutoSaveCheckbox_CheckedChanged);
             // 
-            // label4
+            // NoFilterWheelCheckBox
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 46);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(88, 13);
-            this.label4.TabIndex = 114;
-            this.label4.Text = "Focus Reduction";
-            // 
-            // FocusReductionComboBox
-            // 
-            this.FocusReductionComboBox.FormattingEnabled = true;
-            this.FocusReductionComboBox.Items.AddRange(new object[] {
-            "None",
-            "AutoDark",
-            "Full"});
-            this.FocusReductionComboBox.Location = new System.Drawing.Point(193, 43);
-            this.FocusReductionComboBox.Name = "FocusReductionComboBox";
-            this.FocusReductionComboBox.Size = new System.Drawing.Size(74, 21);
-            this.FocusReductionComboBox.TabIndex = 113;
-            this.FocusReductionComboBox.SelectedIndexChanged += new System.EventHandler(this.FocusReductionComboBox_SelectedIndexChanged);
+            this.NoFilterWheelCheckBox.AutoSize = true;
+            this.NoFilterWheelCheckBox.ForeColor = System.Drawing.SystemColors.Control;
+            this.NoFilterWheelCheckBox.Location = new System.Drawing.Point(12, 86);
+            this.NoFilterWheelCheckBox.Name = "NoFilterWheelCheckBox";
+            this.NoFilterWheelCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.NoFilterWheelCheckBox.Size = new System.Drawing.Size(99, 17);
+            this.NoFilterWheelCheckBox.TabIndex = 111;
+            this.NoFilterWheelCheckBox.Text = "No Filter Wheel";
+            this.NoFilterWheelCheckBox.UseVisualStyleBackColor = true;
+            this.NoFilterWheelCheckBox.CheckedChanged += new System.EventHandler(this.NoFilterWheelCheckBox_CheckedChanged);
             // 
             // FormOptions
             // 
@@ -229,6 +243,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(297, 544);
+            this.Controls.Add(this.NoFilterWheelCheckBox);
             this.Controls.Add(this.UseTSXAutoSaveCheckbox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.DomeAddOnCheckBox);
@@ -263,5 +278,6 @@
         internal System.Windows.Forms.CheckBox UseTSXAutoSaveCheckbox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox FocusReductionComboBox;
+        internal System.Windows.Forms.CheckBox NoFilterWheelCheckBox;
     }
 }

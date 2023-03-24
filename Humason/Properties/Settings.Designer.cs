@@ -58,5 +58,17 @@ namespace Humason.Properties {
                 this["HasDomeAddOn"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NoFilterWheel {
+            get {
+                return ((bool)(this["NoFilterWheel"]));
+            }
+            set {
+                this["NoFilterWheel"] = value;
+            }
+        }
     }
 }

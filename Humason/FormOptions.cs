@@ -27,6 +27,7 @@ namespace Humason
             GuiderReductionComboBox.SelectedIndex = openSession.GuiderReductionType;
             CLSReductionComboBox.SelectedIndex = openSession.CLSReductionType;
             UseTSXAutoSaveCheckbox.Checked = Convert.ToBoolean(openSession.UseTSXAutoSave);
+            NoFilterWheelCheckBox.Checked = Convert.ToBoolean(openSession.NoFilterWheel);
             //done
             optionsFormInit = false;
             return;
@@ -38,6 +39,7 @@ namespace Humason
             openSession.IsWeatherEnabled = WeatherCheckBox.Checked;
             openSession.IsRotationEnabled = RotatorCheckBox.Checked;
             openSession.IsDomeAddOnEnabled = DomeAddOnCheckBox.Checked;
+            openSession.NoFilterWheel = NoFilterWheelCheckBox.Checked;
             openSession.ImageReductionType = ImageReductionComboBox.SelectedIndex;
             openSession.CLSReductionType = CLSReductionComboBox.SelectedIndex;
             settings.Save();
@@ -94,6 +96,16 @@ namespace Humason
             return;
         }
 
+        private void NoFilterWheelCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.NoFilterWheel = NoFilterWheelCheckBox.Checked;
+            settings.NoFilterWheel = NoFilterWheelCheckBox.Checked;
+            if (!optionsFormInit)
+                MessageBox.Show("Restart Humason for new settings to take effect");
+            return;
+        }
+
         private void ImageReductionComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             SessionControl openSession = new SessionControl();
@@ -131,6 +143,7 @@ namespace Humason
                 openSession.UseTSXAutoSave = 0;
             return;
         }
+
 
 
     }

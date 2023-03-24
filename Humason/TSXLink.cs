@@ -905,11 +905,22 @@ namespace Planetarium
                 ccdsoftCamera tsxc = new ccdsoftCamera();
                 //Connect the camera, if fails, then just return after clean up
                 List<string> tfwList = new List<string>();
+                //If NoFilterWheel has been configured, then Add on filter to list:  "NFW" at index 0;
+                SessionControl openSession = new SessionControl();
+                if (openSession.NoFilterWheel == true)
+                {
+                    tfwList.Add("NFW");
+                    return tfwList;
+                }
+                //Otherwise, check for a filter connect, if none then do the same thing.
                 try
                 { tsxc.filterWheelConnect(); }
                 catch
                 {
-                    return null;
+                    //No filterwheel is found, apparently
+                    //Add on filter to list:  "NFW" at index 0;
+                    tfwList.Add("NFW");
+                    return tfwList;
                 }
                 for (int filterIndex = 0; filterIndex < tsxc.lNumberFilters; filterIndex++)
                 {

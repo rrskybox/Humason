@@ -38,9 +38,14 @@ namespace Humason
 
             //Clear the current filter list box
             FilterListBox.Items.Clear();
+            //Clear the filter set from the current target plan
+            List<Filter> oldFilters = tPlan.FilterWheelList;
+            foreach (Filter fltr in oldFilters)
+                tPlan.SetFilter(fltr, false);
             //Generate a list of filters from tsx, in index order
             List<string> fwlist = TSXLink.FilterWheel.FilterWheelList();
-            if (fwlist == null) { return; }
+            if (fwlist == null)
+                return;
             List<Filter> tsxFilterList = new List<Filter>();
             if (fwlist.Count > 0)
             {
@@ -114,7 +119,7 @@ namespace Humason
                         FilterListBox.Items.Add(filter.Name + "-" + filter.Index, true);
                     }
                 }
-             }
+            }
         }
 
         public void UploadDevicesConfiguration()
@@ -158,8 +163,10 @@ namespace Humason
             //Get the current filter list
             //Add to configuration, assuming that it wasn't already
 
-            if (FilterListBox.GetItemChecked(FilterListBox.SelectedIndex)) { tPlan.SetFilter(fobj, true); }
-            else { tPlan.SetFilter(fobj, false); }
+            if (FilterListBox.GetItemChecked(FilterListBox.SelectedIndex))
+            { tPlan.SetFilter(fobj, true); }
+            else
+            { tPlan.SetFilter(fobj, false); }
         }
 
         private void AutoguideCheck_CheckedChanged(object sender, EventArgs e)
@@ -180,7 +187,7 @@ namespace Humason
             {
                 AutoFocusEnabled = AutofocusCheck.Checked
             };
-         }
+        }
 
         private void RotatorCheckBox_CheckedChanged(object sender, EventArgs e)
         {

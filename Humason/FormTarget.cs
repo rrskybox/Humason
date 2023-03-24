@@ -82,12 +82,14 @@ namespace Humason
         private void LRGBRatioBox_ValueChanged(object sender, EventArgs e)
         {
             if (FormHumason.InitializingHumason) return;
-
+            //If the LRGBRatio is set to more than 1 and the filterset count is only 1 (or zero), then reset to 1
             SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
-            {
-                LRGBRatio = (int)LRGBRatioBox.Value
-            };
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            if (LRGBRatioBox.Value > 1 && tPlan.FilterWheelList.Count < 2)
+                tPlan.LRGBRatio = 1;
+            else
+                tPlan.LRGBRatio = (int)LRGBRatioBox.Value;
+
             try { imgseq.SequenceGenerator(); }
             catch { return; }
             UpdateTimesFromSequence();

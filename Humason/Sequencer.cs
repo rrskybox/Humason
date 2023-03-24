@@ -162,7 +162,7 @@ namespace Humason
             //turn computer clock back on to return to local time
             TSXLink.StarChart.SetClock(0, true);
             //return Find to current target
-            //TSXLink.Target tReturn = TSXLink.StarChart.FindTarget(tPlan.TargetName);
+            TSXLink.Target tReturn = TSXLink.StarChart.FindTarget(tPlan.TargetName);
         }
 
         public void SequenceGenerator()
