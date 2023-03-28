@@ -82,7 +82,8 @@ namespace Humason
         public const string DitherCheckedXName = "DitherChecked";
         public const string GuiderCalibrateCheckedXName = "CalibrateChecked";
         public const string ResyncCheckedXName = "ResyncChecked";
-        public const string ClearFilterXName = "ClearFilter";
+        public const string CLSFilterXName = "CLSFilter";
+        public const string LumFilterXName = "LumFilter";
         public const string OverheadXName = "ImageOverheadTime";
         public const string CameraTemperatureSetXName = "CameraTemperatureSet";
         public const string AtFocusPickedXName = "AtFocusPicked";
@@ -313,7 +314,8 @@ namespace Humason
             defaultTP.SetItem(DitherCheckedXName, false);
             defaultTP.SetItem(GuiderCalibrateCheckedXName, false);
             defaultTP.SetItem(ResyncCheckedXName, false);
-            defaultTP.SetItem(ClearFilterXName, 3);
+            defaultTP.SetItem(CLSFilterXName, 3);
+            defaultTP.SetItem(LumFilterXName, 3);
             defaultTP.SetItem(OverheadXName, 0);
             defaultTP.SetItem(CameraTemperatureSetXName, 0);
             defaultTP.SetItem(AtFocusPickedXName, 1);
@@ -633,10 +635,16 @@ namespace Humason
             set => hTargetPlanX.ReplaceItem(ResyncCheckedXName, value.ToString());
         }
 
-        public int ClearFilter
+        public int CLSFilter
         {
-            get => Convert.ToInt32(hTargetPlanX.GetItem(ClearFilterXName));
-            set => hTargetPlanX.ReplaceItem(ClearFilterXName, value.ToString());
+            get => Convert.ToInt32(hTargetPlanX.GetItem(CLSFilterXName));
+            set => hTargetPlanX.ReplaceItem(CLSFilterXName, value.ToString());
+        }
+
+        public int LumFilter
+        {
+            get => Convert.ToInt32(hTargetPlanX.GetItem(LumFilterXName));
+            set => hTargetPlanX.ReplaceItem(LumFilterXName, value.ToString());
         }
 
         public double Overhead

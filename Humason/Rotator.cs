@@ -132,7 +132,7 @@ namespace Humason
             {
                 Frame = AstroImage.ImageType.Light,
                 Exposure = tPlan.PlateSolveExposureTime,
-                Filter = tPlan.ClearFilter,
+                FilterIndex = tPlan.CLSFilter,
                 ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType,
                 Delay = 0,
                 AutoSave = 1

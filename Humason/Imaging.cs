@@ -33,6 +33,8 @@ namespace Humason
         }
 
         private int filter;
+        private string filterName;
+
         //private int subframeRight;
 
         public AstroImage()
@@ -59,7 +61,7 @@ namespace Humason
         public CameraType Camera { get; set; }
         public int BinX { get; set; }
         public int BinY { get; set; }
-        public int Filter { get => filter; set => filter = value; }
+        public int FilterIndex { get => filter; set => filter = value; }
         public double Delay { get; set; }
         public ImageType Frame { get; set; }
         public ReductionType ImageReduction { get; set; }
@@ -94,9 +96,9 @@ namespace Humason
             //Save the current time so we can calculate an overhead later
             DateTime imageStart = DateTime.Now;
             //Set up the filter
-            TSXLink.FilterWheel.Filter = asti.Filter;
+            TSXLink.FilterWheel.FilterIndex = asti.FilterIndex;
 
-            lg.LogIt("Imaging Light: Filter " + asti.Filter.ToString("0") + " for " + asti.Exposure.ToString("0.00") + " Sec");
+            lg.LogIt("Imaging Light: Filter " + asti.FilterIndex.ToString("0") + " for " + asti.Exposure.ToString("0.00") + " Sec");
 
             TSXLink.Camera tcam = new TSXLink.Camera(asti);
 
@@ -205,7 +207,7 @@ namespace Humason
                 Frame = AstroImage.ImageType.Flat,
                 Delay = 0,
                 ImageReduction = AstroImage.ReductionType.None,
-                Filter = fltr.Index,
+                FilterIndex = fltr.Index,
                 SubFrame = 0,
                 AutoSave = 1
             };
@@ -302,7 +304,7 @@ namespace Humason
                 Exposure = openSession.FlatsExposureTime,
                 Frame = AstroImage.ImageType.Flat,
                 ImageReduction = AstroImage.ReductionType.None,
-                Filter = iFlat.FlatFilter.Index,
+                FilterIndex = iFlat.FlatFilter.Index,
                 AutoSave = openSession.UseTSXAutoSave
             };
 
@@ -319,7 +321,7 @@ namespace Humason
                 TSXLink.Camera tcam = new TSXLink.Camera(asti);
                 int camResult = tcam.GetImage();
                 avgADU = tcam.ImageADU;
-                lg.LogIt("Imaged Flat: " + asti.Filter +
+                lg.LogIt("Imaged Flat: " + asti.FilterIndex +
                                                 " Exp: " + asti.Exposure.ToString("0.00") +
                                                 "s ADU: " + avgADU.ToString("0") +
                                                 " Shot: " + imagecount.ToString("0"));
@@ -439,7 +441,7 @@ namespace Humason
             {
                 Frame = AstroImage.ImageType.Flat,
                 ImageReduction = AstroImage.ReductionType.None,
-                Filter = filter.Index,
+                FilterIndex = filter.Index,
                 Exposure = exposure,
                 AutoSave = openSession.UseTSXAutoSave
             };
@@ -447,7 +449,7 @@ namespace Humason
 
             for (int i = 0; i < imagecount; i++)
             {
-                lg.LogIt("Imaging Flat: " + "Filter " + asti.Filter +
+                lg.LogIt("Imaging Flat: " + "Filter " + asti.FilterIndex +
                               " Exp: " + exposure.ToString("0.0") + "  " + i.ToString("0") + " of " + imagecount.ToString("0"));
                 int camResult = tcam.GetImage();
                 if (camResult != 0)

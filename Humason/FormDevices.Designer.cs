@@ -35,8 +35,10 @@
             this.FocusFilterNum = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.ClearFilterNum = new System.Windows.Forms.NumericUpDown();
+            this.CLSFilterNum = new System.Windows.Forms.NumericUpDown();
             this.FiltersGroupBox = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.LumFilterNum = new System.Windows.Forms.NumericUpDown();
             this.RefreshFiltersButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.CameraTemperatureSet = new System.Windows.Forms.NumericUpDown();
@@ -54,8 +56,9 @@
             this.RecalibrateAfterFlipCheckbox = new System.Windows.Forms.CheckBox();
             this.CameraGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.FocusFilterNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ClearFilterNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CLSFilterNum)).BeginInit();
             this.FiltersGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LumFilterNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CameraTemperatureSet)).BeginInit();
             this.FocuserGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefocustTemperatureChangeBox)).BeginInit();
@@ -115,7 +118,7 @@
             // 
             // FocusFilterNum
             // 
-            this.FocusFilterNum.Location = new System.Drawing.Point(198, 93);
+            this.FocusFilterNum.Location = new System.Drawing.Point(198, 97);
             this.FocusFilterNum.Name = "FocusFilterNum";
             this.FocusFilterNum.Size = new System.Drawing.Size(33, 20);
             this.FocusFilterNum.TabIndex = 85;
@@ -126,7 +129,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(136, 90);
+            this.label1.Location = new System.Drawing.Point(136, 94);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 86;
@@ -136,26 +139,28 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(141, 69);
+            this.label3.Location = new System.Drawing.Point(141, 73);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 13);
+            this.label3.Size = new System.Drawing.Size(52, 13);
             this.label3.TabIndex = 89;
-            this.label3.Text = "Clear Filter";
+            this.label3.Text = "CLS Filter";
             // 
-            // ClearFilterNum
+            // CLSFilterNum
             // 
-            this.ClearFilterNum.Location = new System.Drawing.Point(198, 67);
-            this.ClearFilterNum.Name = "ClearFilterNum";
-            this.ClearFilterNum.Size = new System.Drawing.Size(33, 20);
-            this.ClearFilterNum.TabIndex = 88;
-            this.ClearFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ClearFilterNum.ValueChanged += new System.EventHandler(this.ClearFilterNum_ValueChanged);
+            this.CLSFilterNum.Location = new System.Drawing.Point(198, 71);
+            this.CLSFilterNum.Name = "CLSFilterNum";
+            this.CLSFilterNum.Size = new System.Drawing.Size(33, 20);
+            this.CLSFilterNum.TabIndex = 88;
+            this.CLSFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CLSFilterNum.ValueChanged += new System.EventHandler(this.CLSFilterNum_ValueChanged);
             // 
             // FiltersGroupBox
             // 
+            this.FiltersGroupBox.Controls.Add(this.label6);
+            this.FiltersGroupBox.Controls.Add(this.LumFilterNum);
             this.FiltersGroupBox.Controls.Add(this.RefreshFiltersButton);
             this.FiltersGroupBox.Controls.Add(this.label3);
-            this.FiltersGroupBox.Controls.Add(this.ClearFilterNum);
+            this.FiltersGroupBox.Controls.Add(this.CLSFilterNum);
             this.FiltersGroupBox.Controls.Add(this.label1);
             this.FiltersGroupBox.Controls.Add(this.FocusFilterNum);
             this.FiltersGroupBox.Controls.Add(this.FilterListBox);
@@ -167,10 +172,29 @@
             this.FiltersGroupBox.TabStop = false;
             this.FiltersGroupBox.Text = "Filters";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.White;
+            this.label6.Location = new System.Drawing.Point(142, 47);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(52, 13);
+            this.label6.TabIndex = 92;
+            this.label6.Text = "Lum Filter";
+            // 
+            // LumFilterNum
+            // 
+            this.LumFilterNum.Location = new System.Drawing.Point(198, 45);
+            this.LumFilterNum.Name = "LumFilterNum";
+            this.LumFilterNum.Size = new System.Drawing.Size(33, 20);
+            this.LumFilterNum.TabIndex = 91;
+            this.LumFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LumFilterNum.ValueChanged += new System.EventHandler(this.LumFilterNum_ValueChanged);
+            // 
             // RefreshFiltersButton
             // 
             this.RefreshFiltersButton.ForeColor = System.Drawing.Color.Black;
-            this.RefreshFiltersButton.Location = new System.Drawing.Point(161, 19);
+            this.RefreshFiltersButton.Location = new System.Drawing.Point(175, 13);
             this.RefreshFiltersButton.Name = "RefreshFiltersButton";
             this.RefreshFiltersButton.Size = new System.Drawing.Size(70, 26);
             this.RefreshFiltersButton.TabIndex = 90;
@@ -409,9 +433,10 @@
             this.ShowIcon = false;
             this.Text = "SetUpForm";
             ((System.ComponentModel.ISupportInitialize)(this.FocusFilterNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ClearFilterNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CLSFilterNum)).EndInit();
             this.FiltersGroupBox.ResumeLayout(false);
             this.FiltersGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LumFilterNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CameraTemperatureSet)).EndInit();
             this.FocuserGroupBox.ResumeLayout(false);
             this.FocuserGroupBox.PerformLayout();
@@ -434,7 +459,7 @@
         private System.Windows.Forms.NumericUpDown FocusFilterNum;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown ClearFilterNum;
+        private System.Windows.Forms.NumericUpDown CLSFilterNum;
         private System.Windows.Forms.GroupBox FiltersGroupBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown CameraTemperatureSet;
@@ -452,5 +477,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
         internal System.Windows.Forms.CheckBox RecalibrateAfterFlipCheckbox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown LumFilterNum;
     }
 }

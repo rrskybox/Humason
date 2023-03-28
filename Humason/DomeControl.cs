@@ -100,7 +100,7 @@ namespace Planetarium
             //Goto home position using goto rather than home
             ReliableGoTo(domeHomeAz);
             //Open Slit
-            tsxd.OpenSlit();
+            OpenSlitStarter(tsxd);
             System.Threading.Thread.Sleep(10);  //Workaround for problme in TSX
             while (tsxd.IsOpenComplete == 0) { System.Threading.Thread.Sleep(1000); } //one second wait loop
             IsDomeCoupled = true;
@@ -126,23 +126,15 @@ namespace Planetarium
             catch { }
             //Goto home position using goto rather than home
             ReliableGoTo(domeHomeAz);
-            tsxd.CloseSlit();
+            CloseSlitStarter(tsxd);
             System.Threading.Thread.Sleep(5000); // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
             while (tsxd.IsCloseComplete == 0)
                 System.Threading.Thread.Sleep(1000);
             //Check to see if slit got closed, if not, then try one more time
-            //if (tsxd.SlitState() != SlitState.Closed)
-            //{
-            //    tsxd.CloseSlit();
-            //    System.Threading.Thread.Sleep(1); // Release task thread so TSX can start FindHome -- Command in Progress exception otherwise
-            //    while (tsxd.IsCloseComplete == 0) { System.Threading.Thread.Sleep(1000); }
-            //}
             //disconnect dome controller
             tsxd.Disconnect();
             return true;
         }
-
-
 
         /// <summary>
         /// Brings the dome to the home position after resetting to azimuth home-20
@@ -163,22 +155,10 @@ namespace Planetarium
             //Stop whatever the dome is doing, if any and wait a few seconds for it to clear
             if (!AbortDome()) return false;
             //Move dome to 20 degrees short of home position
-            try
-            {
-                tsxd.GotoAzEl(domeHomeAz - 20, 0);
-                System.Threading.Thread.Sleep(1); // Release task thread so TSX can start FindHome -- Command in Progress exception otherwise
-                while (tsxd.IsGotoComplete == 0) { System.Threading.Thread.Sleep(1000); }
-            }
-            catch { return false; };
-            //Find Home
-            try
-            {
-                tsxd.FindHome();
-                System.Threading.Thread.Sleep(1); // Release task thread so TSX can start FindHome -- Command in Progress exception otherwise
-                while (tsxd.IsFindHomeComplete == 0) { System.Threading.Thread.Sleep(1000); }
-            }
-            catch { return false; }
-            System.Threading.Thread.Sleep(1000);
+            FindHomeStarter(tsxd);
+            System.Threading.Thread.Sleep(1000); // Release task thread so TSX can start FindHome -- Command in Progress exception otherwise
+            while (tsxd.IsFindHomeComplete == 0)
+                System.Threading.Thread.Sleep(1000);
             return true;
         }
 
@@ -199,10 +179,7 @@ namespace Planetarium
             AbortDome();
             //Wait for command to clear
             System.Threading.Thread.Sleep(1000);
-            try
-            { tsxd.GotoAzEl(domeHomeAz - 20, 0); }
-            catch (Exception ex)
-            { return false; }
+            GoToLoopStarter(tsxd, domeHomeAz);
             System.Threading.Thread.Sleep(1000); // Wait for dome controller to catch up
             while (tsxd.IsGotoComplete == 0)
             {
@@ -211,6 +188,7 @@ namespace Planetarium
             System.Threading.Thread.Sleep(1000);
             return true;
         }
+
         private static void ReliableGoTo(double az)
         {
             //Slews dome to azimuth while avoiding lockup if already there
@@ -224,13 +202,102 @@ namespace Planetarium
             double currentAz = tsxd.dAz;
             if (currentAz - az > 1)
             {
-                tsxd.GotoAzEl(az, 0);
+                GoToLoopStarter(tsxd, (int)az);
                 System.Threading.Thread.Sleep(5000);
                 while (tsxd.IsGotoComplete == 0)
                     System.Threading.Thread.Sleep(1000);
             }
             return;
         }
+
+        private static void OpenSlitStarter(sky6Dome tsxd)
+        {
+            //Operation in progress == 0
+            int sleepOver = 1000;
+            bool failed = true;
+
+            while (failed)
+            {
+                try
+                {
+                    tsxd.OpenSlit();
+                    failed = false;
+                }
+                catch (Exception ex)
+                {
+                    //Assume goto in progress error, wait until Goto is complete
+                    System.Threading.Thread.Sleep(sleepOver);
+                }
+            }
+            return;
+        }
+
+        private static void CloseSlitStarter(sky6Dome tsxd)
+        {
+            //Operation in progress == 0
+            int sleepOver = 1000;
+            bool failed = true;
+
+            while (failed)
+            {
+                try
+                {
+                    tsxd.CloseSlit();
+                    failed = false;
+                }
+                catch (Exception ex)
+                {
+                    //Assume goto in progress error, wait until Goto is complete
+                    System.Threading.Thread.Sleep(sleepOver);
+                }
+            }
+            return;
+        }
+
+        private static void GoToLoopStarter(sky6Dome tsxd, int az)
+        {
+            //Operation in progress == 0
+            int sleepOver = 1000;
+            bool failed = true;
+
+            while (failed)
+            {
+                try
+                {
+                    tsxd.GotoAzEl(az, 0);
+                    failed = false;
+                }
+                catch (Exception ex)
+                {
+                    //Assume goto in progress error, wait until Goto is complete
+                    System.Threading.Thread.Sleep(sleepOver);
+                }
+            }
+            return;
+        }
+
+        private static void FindHomeStarter(sky6Dome tsxd)
+        {
+            //Operation in progress == 0
+            int sleepOver = 1000;
+            bool failed = true;
+
+            while (failed)
+            {
+                try
+                {
+                    tsxd.FindHome();
+                    failed = false;
+                }
+                catch (Exception ex)
+                {
+                    //Assume goto in progress error, wait until Goto is complete
+                    System.Threading.Thread.Sleep(sleepOver);
+                }
+            }
+            return;
+        }
+
 
 
     }

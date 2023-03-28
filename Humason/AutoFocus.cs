@@ -17,7 +17,7 @@ namespace Humason
             //  Save current object information
             //  Open and connect Autofocus
             //  Turn on temperature compensation
-            //  Move filter to clear filter
+            //  Move filter to Focus filter
             //  Run Focus@2 or AtFocus 3 for all five filters
 
             LogEvent lg = new LogEvent();
@@ -35,13 +35,13 @@ namespace Humason
                 Camera = AstroImage.CameraType.Imaging,
                 ImageReduction = (AstroImage.ReductionType)openSession.FocusReductionType,
                 Frame = AstroImage.ImageType.Light,
-                Filter = tPlan.FocusFilter,
+                FilterIndex = tPlan.FocusFilter,
                 Exposure = tPlan.FocusExposure,
                 Delay = 0
             };
 
             TSXLink.Focus.RunTempComp();
-            lg.LogIt("Focusing with filter " + asti.Filter.ToString());
+            lg.LogIt("Focusing with filter " + asti.FilterIndex.ToString());
             switch (aftype)
             {
                 case 2:

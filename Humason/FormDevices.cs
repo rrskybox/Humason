@@ -69,18 +69,33 @@ namespace Humason
         private void FocusFilterNum_ValueChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
+            if (FocusFilterNum.Value >= FilterListBox.Items.Count)
+                FocusFilterNum.Value = Math.Max(FilterListBox.Items.Count - 1, 0);
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
                 FocusFilter = (int)FocusFilterNum.Value
             };
         }
 
-        private void ClearFilterNum_ValueChanged(object sender, EventArgs e)
+        private void CLSFilterNum_ValueChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
+            if (CLSFilterNum.Value >= FilterListBox.Items.Count)
+                CLSFilterNum.Value = Math.Max(FilterListBox.Items.Count - 1, 0);
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
             {
-                ClearFilter = (int)ClearFilterNum.Value
+                CLSFilter = (int)CLSFilterNum.Value
+            };
+        }
+
+        private void LumFilterNum_ValueChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            if (LumFilterNum.Value >= FilterListBox.Items.Count)
+                LumFilterNum.Value = Math.Max(FilterListBox.Items.Count - 1, 0);
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
+            {
+                LumFilter = (int)LumFilterNum.Value
             };
         }
 
@@ -105,7 +120,8 @@ namespace Humason
                 ResyncCheck.Checked = tPlan.ResyncEnabled;
                 CameraTemperatureSet.Value = (decimal)tPlan.CameraTemperatureSet;
                 //Pre set clear and filter numbers from configuration file
-                ClearFilterNum.Value = tPlan.ClearFilter;
+                CLSFilterNum.Value = tPlan.CLSFilter;
+                LumFilterNum.Value = tPlan.LumFilter;
                 FocusFilterNum.Value = tPlan.FocusFilter;
                 //Clear the filter list
                 FilterListBox.Items.Clear();
@@ -301,6 +317,7 @@ namespace Humason
                 RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value
             };
         }
+
 
     }
 }

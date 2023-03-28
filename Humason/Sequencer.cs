@@ -592,12 +592,12 @@ namespace Humason
                     Exposure = ImageSeries[frmdef, si_Exposure],
                     BinX = 1,//set binning to 1x1
                     BinY = 1,
-                    Filter = ImageSeries[frmdef, si_Filter],
+                    FilterIndex = ImageSeries[frmdef, si_Filter],
                     Delay = ImageSeries[frmdef, si_Delay],
                     Frame = (AstroImage.ImageType)ImageSeries[frmdef, si_Frame],
                     AutoSave = openSession.UseTSXAutoSave
                 };
-                lg.LogIt("Imaging Filter " + asti.Filter.ToString() +
+                lg.LogIt("Imaging Filter " + asti.FilterIndex.ToString() +
                                     " @ " + asti.Exposure.ToString() + " sec " +
                                     "(# " + (frmdef + 1).ToString("0") + " of " + totalImageCount.ToString("0") + ")");
                 //Save the start time for the overhead calculation a bit later
@@ -631,8 +631,8 @@ namespace Humason
                     //Save the image before doing anything else
                     //Gather substrings for file naming: target name, filter name, filter index,image position angle and rotator position angle
                     string tname = tPlan.TargetName;
-                    string tfilterName = GetFilterName(asti.Filter);
-                    int tfilterIndex = GetFilterIndex(asti.Filter);
+                    string tfilterName = GetFilterName(asti.FilterIndex);
+                    int tfilterIndex = GetFilterIndex(asti.FilterIndex);
                     string tPA = tPlan.TargetPA.ToString();
                     string rPA = Rotator.RealRotatorPA.ToString(); // zero if no rotator connected
                                                                    //Figure out the current side of pier, save with filename and save for flatfile operation, if any
@@ -872,11 +872,12 @@ namespace Humason
                 ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType,
                 TargetName = sRADecName,
                 SubFrame = 0,
-                Filter = tPlan.ClearFilter,
+                FilterIndex = tPlan.CLSFilter,
                 Exposure = tPlan.PlateSolveExposureTime,
                 Delay = 0,
                 AutoSave = 1
             };
+
             //Launch CLS 
             clsstat = TSXLink.ImageSolution.PrecisionSlew(asti);
             //If it fails, take one more shot at it
@@ -1035,7 +1036,7 @@ namespace Humason
         private List<Filter> ImageFilterGroup()
         {
             //Creates an array of filter indexes one loop of imaging
-            //If the LRGB Ratio is set to greater than 1, then the "Clear" filter is replicated
+            //If the LRGB Ratio is set to greater than 1, then the "Lum" filter is replicated
             //for that number of times.
             //
             //For each filter in the filter list, add the filter index to the output array,
@@ -1043,7 +1044,7 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             List<Filter> filterGroup = tPlan.FilterWheelList;
-            int repeatFilter = tPlan.ClearFilter;
+            int repeatFilter = tPlan.LumFilter;
             int repeats = tPlan.LRGBRatio;
             if (filterGroup != null)
             {

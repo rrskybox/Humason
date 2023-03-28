@@ -728,7 +728,6 @@ namespace Planetarium
                     return ex.HResult;
                 }
                 lg.LogIt("Initial Slew Completed");
-
                 ccdsoftCamera tsxc = new ccdsoftCamera
                 {
                     ImageReduction = (ccdsoftImageReduction)openSession.ImageReductionType,
@@ -738,7 +737,8 @@ namespace Planetarium
                 };
                 AutomatedImageLinkSettings ails = new AutomatedImageLinkSettings
                 {
-                    exposureTimeAILS = asti.Exposure
+                    exposureTimeAILS = asti.Exposure,
+                    filterNameAILS = FilterWheel.GetFilterName(asti.FilterIndex)
                 };
                 ClosedLoopSlew tsxcls = new ClosedLoopSlew();
                 try { clsResult = tsxcls.exec(); }
@@ -929,7 +929,20 @@ namespace Planetarium
                 return tfwList;
             }
 
-            public static int Filter
+            public static string GetFilterName(int findex)
+            {
+                //Try to read the name associated with the filter index findex
+                //  If an error is thrown then assume that no filter wheel has been installed
+                //  and return "NFW" which is our goto for no filter wheel
+                //  otherwise return the name associated with the index
+                ccdsoftCamera tsxc = new ccdsoftCamera();
+                string filterName = "NFW";
+                try { tsxc.szFilterName(findex); }
+                catch { return filterName; }
+                return filterName;
+            }
+
+            public static int FilterIndex
             {
                 get
                 {
@@ -1158,9 +1171,13 @@ namespace Planetarium
                 try
                 {
                     if (tsxm.IsConnected == 0) { tsxm.Connect(); }
-                    tsxm.Unpark();
                 }
-                catch (Exception ex) { return; }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Slew Faiure: " + ex.Message);
+                    return;
+                }
+                tsxm.Unpark();
                 return;
             }
 
@@ -1168,16 +1185,34 @@ namespace Planetarium
             {
                 //Make sure this is synchronous wait.
                 sky6RASCOMTele tsxm = new sky6RASCOMTele { Asynchronous = 0 };
-                tsxm.SlewToAzAlt(azm, alt, targetName);
+                try
+                {
+                    tsxm.SlewToAzAlt(azm, alt, targetName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Slew Faiure: " + ex.Message);
+                    return;
+                }
                 TurnTrackingOn();
+                return;
             }
 
             public static void SlewRADec(double ra, double dec, string targetName)
             {
                 //Make sure this is synchronous wait.
                 sky6RASCOMTele tsxm = new sky6RASCOMTele { Asynchronous = 0 };
-                tsxm.SlewToRaDec(ra, dec, targetName);
+                try
+                {
+                    tsxm.SlewToRaDec(ra, dec, targetName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Slew Faiure: " + ex.Message);
+                    return;
+                }
                 TurnTrackingOn();
+                return;
             }
 
             public static void SetSpecialTracking(double dRA, double dDec)
@@ -1261,7 +1296,7 @@ namespace Planetarium
                     Autoguider = (int)asti.Camera,
                     BinX = asti.BinX,
                     BinY = asti.BinY,
-                    FilterIndexZeroBased = asti.Filter,
+                    FilterIndexZeroBased = asti.FilterIndex,
                     Delay = asti.Delay,
                     Frame = (ccdsoftImageFrame)asti.Frame,
                     ImageReduction = (ccdsoftImageReduction)asti.ImageReduction,
@@ -1676,7 +1711,7 @@ namespace Planetarium
                     AutoSaveFocusImages = 0,
                     ImageReduction = (ccdsoftImageReduction)asti.ImageReduction,
                     Frame = (ccdsoftImageFrame)asti.Frame,
-                    FilterIndexZeroBased = asti.Filter,
+                    FilterIndexZeroBased = asti.FilterIndex,
                     FocusExposureTime = asti.Exposure,
                     Delay = 0
                 };
