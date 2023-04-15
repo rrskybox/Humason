@@ -1729,7 +1729,7 @@ namespace Planetarium
                             //lg.LogIt("@Focus2 fails for " + ex.Message);
                             return (false);
                         }
-                        //@Focus2 will generate an observing list.  Clear it.
+                        //@Focus2 can generate an observing list.  Clear it.
                         break;
 
                     case 3:

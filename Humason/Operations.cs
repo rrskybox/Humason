@@ -275,11 +275,11 @@ namespace Humason
             LogEvent lg = new LogEvent();
             lg.LogIt("Connecting");
             openSession = new SessionControl();
-            if (openSession.IsHomeMountEnabled) { TSXLink.Connection.DeployMount(); }
-            //Make sure themount is Parked
+            if (openSession.IsHomeMountEnabled)
+                TSXLink.Connection.DeployMount();
+            //Make sure themount is Parked (could be redundant)
             TSXLink.Mount.Park();
             TSXLink.Connection.ConnectAllDevices();
-            //fCameraForm.RefreshFilterList();
             lg.LogIt("Devices Connected");
         }
 

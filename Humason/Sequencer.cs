@@ -375,7 +375,7 @@ namespace Humason
             }
             //If autoguiding is checked and calibration requested, then calibrate the guider
             if (tPlan.AutoGuideEnabled && tPlan.GuiderCalibrateEnabled)
-            { AutoGuiding.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime); }
+                AutoGuiding.CalibrateAutoguiding(tPlan.GuiderSubframeEnabled, tPlan.XAxisMoveTime, tPlan.YAxisMoveTime);
 
             //Set up for shoot loop:
             //For each filter column,

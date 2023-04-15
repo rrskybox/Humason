@@ -159,6 +159,30 @@ namespace WeatherWatch
             return wsList;
         }
 
+        private List<string> LastValidReading = new List<string>() //Initialized with bogus data
+        {   "2023-04-15",
+            "03:13:33.33",
+            "F",
+            "M",
+            "13.7",
+            "60.1",
+            "60.1",
+            "0.0",
+            "10",
+            "0.0",
+            "0",
+            "0",
+            "0", 
+            "00003",
+            "045031.13441",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0"
+        };
+
         private List<string> ReadWeatherDataIn()
         {
             //Read the weather data line from the weather data file and returns as a list of strings
@@ -167,13 +191,16 @@ namespace WeatherWatch
             { wfdata = File.ReadAllText(weatherDataFilePath); }
             catch
             {
-
+                //The only known reason for an error is if the file can't be read -- i.e. access collision
+                //So return the last valid reading
+                return LastValidReading;
             }
             List<string> wfd = wfdata.Split(new char[0], StringSplitOptions.RemoveEmptyEntries).ToList();
             for (int i = 0; i < wfd.Count; i++)
             {
                 if (wfd[i] == "") { wfd[i] = "0"; }
             }
+            LastValidReading = wfd;
             return (wfd);
         }
 
