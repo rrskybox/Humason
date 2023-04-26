@@ -73,7 +73,7 @@ namespace Humason
             string logdirpath = openSession.HumasonDirectoryPath + "\\Logs";
             if (!Directory.Exists(logdirpath))
             { Directory.CreateDirectory(logdirpath); }
-            string logdate = DateTime.Now.ToString("yyyy-MM-dd");
+            string logdate = DateTime.Now.ToString("yyyy_MM_dd");
             string logtime = DateTime.Now.ToString("HH:mm:ss");
             string logfilepath = logdirpath + "\\" + logdate + ".log";
             if (!File.Exists(logfilepath))

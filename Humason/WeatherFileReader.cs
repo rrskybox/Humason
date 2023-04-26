@@ -100,6 +100,37 @@ namespace WeatherWatch
 
         private string weatherDataFilePath;
         private List<string> weaList;
+        private List<string> LastValidReading = new List<string>() //Initialized with bogus data
+        {   "2023-04-15",
+            "03:13:33.33",
+            "F",
+            "M",
+            "13.7",
+            "60.1",
+            "60.1",
+            "0.0",
+            "10",
+            "0.0",
+            "0",
+            "0",
+            "0",
+            "00003",
+            "045031.13441",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0"
+        };
+
+
+        public WeatherReader()
+        {
+            weatherDataFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CloudWatcher\\AAG_CCDAP4.dat";
+            weaList = ReadWeatherDataIn();
+            return;
+        }
 
         public WeatherReader(string weatherFilePath)
         {
@@ -158,30 +189,6 @@ namespace WeatherWatch
             }
             return wsList;
         }
-
-        private List<string> LastValidReading = new List<string>() //Initialized with bogus data
-        {   "2023-04-15",
-            "03:13:33.33",
-            "F",
-            "M",
-            "13.7",
-            "60.1",
-            "60.1",
-            "0.0",
-            "10",
-            "0.0",
-            "0",
-            "0",
-            "0", 
-            "00003",
-            "045031.13441",
-            "1",
-            "1",
-            "1",
-            "1",
-            "0",
-            "0"
-        };
 
         private List<string> ReadWeatherDataIn()
         {
