@@ -460,6 +460,7 @@
             this.DawnTimeBox.Name = "DawnTimeBox";
             this.DawnTimeBox.Size = new System.Drawing.Size(54, 20);
             this.DawnTimeBox.TabIndex = 98;
+            this.DawnTimeBox.ValueChanged += new System.EventHandler(this.DawnTimeBox_ValueChanged);
             // 
             // label8
             // 

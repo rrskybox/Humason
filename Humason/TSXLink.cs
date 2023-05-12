@@ -937,7 +937,7 @@ namespace Planetarium
                 //  otherwise return the name associated with the index
                 ccdsoftCamera tsxc = new ccdsoftCamera();
                 string filterName = "NFW";
-                try { tsxc.szFilterName(findex); }
+                try { filterName = tsxc.szFilterName(findex); }
                 catch { return filterName; }
                 return filterName;
             }

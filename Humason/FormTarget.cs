@@ -184,7 +184,12 @@ namespace Humason
                 targetTitle = targetName;
             }
             TSXLink.Target tgto = TSXLink.StarChart.FindTarget(targetTitle);
-
+            if (tgto == null)
+            {
+                LogEvent lg = new LogEvent();
+                lg.LogIt("Target not recognized in TSX Find function -- i.e. not cataloged.");
+                return;
+            }
             //Update the target Name in box
             TargetBox.Text = targetName;
             TargetRABox.Value = (decimal)tgto.RA;
@@ -197,6 +202,7 @@ namespace Humason
             //Save the new configuration information
             UpdateFormFromPlan();
             RegenerateSequence();
+            return;
         }
 
         public void RegenerateSequence()
@@ -284,6 +290,7 @@ namespace Humason
             LoopsVal.Value = tPlan.Loops;
             LRGBRatioBox.Value = tPlan.LRGBRatio;
             DelayVal.Value = (decimal)tPlan.Delay;
+
             if (tPlan.TargetAdjustEnabled)
             {
                 AdjustedTargetLabel.Visible = true;
@@ -302,6 +309,14 @@ namespace Humason
             {
                 MakeFlatsEnabled = MakeFlatsCheckBox.Checked
             };
+        }
+
+        private void DawnTimeBox_ValueChanged(object sender, EventArgs e)
+        {
+            //Save dawn time as session stop time
+            SessionControl sessionControl = new SessionControl();
+            sessionControl.ShutDownTime = DawnTimeBox.Value;
+            return;
         }
 
         private void TargetRABox_ValueChanged(object sender, EventArgs e)
@@ -382,6 +397,7 @@ namespace Humason
         {
             UpdateStatusBar(e.ProgressPercent);
         }
+
 
         #endregion
 

@@ -54,7 +54,7 @@ namespace Humason
             //Get the staging, start and shut down times from this initial target, although may not be used
             openSession.StagingTime = DateTime.Now;
             openSession.StartUpTime = ftPlan.SequenceStartTime;
-            openSession.ShutDownTime = ftPlan.SequenceDawnTime;
+            //openSession.ShutDownTime = ftPlan.SequenceDawnTime;
 
             //Save configuration set up, reset the progess bar and make sure that the TSX clock is set to current time
             TSXLink.StarChart.SetClock(0, true);

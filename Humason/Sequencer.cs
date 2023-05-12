@@ -773,7 +773,7 @@ namespace Humason
             //  i.e. East of meridian is 0 to 180 degees
             //  West of meridian is 180 to 360 degrees
             //Assume that the scope is connected
-            //Get Altitude and Azimuth
+            //Check Azimuth
             if (TSXLink.Mount.Azm >= 180)
             { //target is west of meridian
                 return (true);
