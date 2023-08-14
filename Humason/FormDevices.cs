@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -69,6 +68,8 @@ namespace Humason
         private void FocusFilterNum_ValueChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
+            if (FilterListBox.Items.Count == 0)
+                return;
             if (FocusFilterNum.Value >= FilterListBox.Items.Count)
                 FocusFilterNum.Value = Math.Max(FilterListBox.Items.Count - 1, 0);
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
@@ -80,6 +81,8 @@ namespace Humason
         private void CLSFilterNum_ValueChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
+            if (FilterListBox.Items.Count == 0)
+                return;
             if (CLSFilterNum.Value >= FilterListBox.Items.Count)
                 CLSFilterNum.Value = Math.Max(FilterListBox.Items.Count - 1, 0);
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
@@ -91,6 +94,8 @@ namespace Humason
         private void LumFilterNum_ValueChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
+            if (FilterListBox.Items.Count == 0)
+                return;
             if (LumFilterNum.Value >= FilterListBox.Items.Count)
                 LumFilterNum.Value = Math.Max(FilterListBox.Items.Count - 1, 0);
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)

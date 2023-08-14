@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 using TheSky64Lib;
 
 namespace Humason

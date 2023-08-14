@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -76,12 +75,12 @@ namespace Humason
                     //No idea how we could be here, but lg.LogIt the error and quit
                     //Clear any operation that might be underway for whatever bogus reason
                     lg.LogIt("Aborting any active dome command... again");
-                    TSXLink.Dome.AbortDome();
+                    TSXLink.Dome.AbortDomeOperation();
                     //Wait for five seconds for everything to clear (Maxdome is a bit slow)
                     lg.LogIt("Waiting for dome operations to abort, if any");
                     System.Threading.Thread.Sleep(5000);
                     //Close Dome (if open) -- Close dome will home the dome before closing
-                    TSXLink.Dome.CloseDome();
+                    TSXLink.Dome.CloseSlit();
                     //Uncouple the dome from the mount
                     lg.LogIt("Disconnecting Dome");
                     TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Dome);

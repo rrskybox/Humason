@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace Humason

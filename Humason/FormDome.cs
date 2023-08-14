@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -29,7 +28,7 @@ namespace Humason
         private void HomeDomeButton_Click(object sender, EventArgs e)
         {
             HomeDomeButton.BackColor = Color.LightSalmon;
-            TSXLink.Dome.HomeDome();
+            DomeControl.HomeDome();
             HomeDomeButton.BackColor = Color.LightGreen;
             return;
         }
@@ -37,7 +36,7 @@ namespace Humason
         private void OpenSlitButton_Click(object sender, EventArgs e)
         {
             OpenSlitButton.BackColor = Color.LightSalmon;
-            TSXLink.Dome.OpenDome();
+            TSXLink.Dome.OpenSlit();
             OpenSlitButton.BackColor = Color.LightGreen;
             return;
         }
@@ -45,7 +44,7 @@ namespace Humason
         private void CloseSlitButton_Click(object sender, EventArgs e)
         {
             CloseSlitButton.BackColor = Color.LightSalmon;
-            TSXLink.Dome.CloseDome();
+            DomeControl.CloseDome();
             CloseSlitButton.BackColor = Color.LightGreen;
             return;
         }

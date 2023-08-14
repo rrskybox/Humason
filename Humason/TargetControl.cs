@@ -1,5 +1,4 @@
-﻿using Planetarium;
-/// Sequence Plan Class
+﻿/// Sequence Plan Class
 ///
 /// ------------------------------------------------------------------------
 /// Module Name: Configuration 
@@ -143,7 +142,10 @@ namespace Humason
                 TargetPlanPath = hDirectoryPath + "\\" + targetName.Replace('/', '_') + "." + HumasonTargetPlanFilename;
                 //if the plan file for this target already exists.  
                 //   Just set up XML access for it.     
-                if (File.Exists(TargetPlanPath)) { hTargetPlanX = new Axess(TargetPlanPath); }
+                if (File.Exists(TargetPlanPath))
+                { 
+                    hTargetPlanX = new Axess(TargetPlanPath);
+                }
                 else
                 //The plan file doesn't exist, look for a TSX match
                 //  If the target can be found, Create the file, Populate with the target position info, and expand with default plan

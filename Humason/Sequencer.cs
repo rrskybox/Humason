@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using WeatherWatch;
@@ -421,7 +420,7 @@ namespace Humason
                             //Close dome -- dome is homed before closing
                             // Note that the mount will be left in the Park position
                             lg.LogIt("Closing Dome");
-                            TSXLink.Dome.CloseDome();
+                            DomeControl.CloseDome();
                         }
                         do
                         //Wait for conditions to improve by running a five minute wait
@@ -449,7 +448,7 @@ namespace Humason
                             if (openSession.IsDomeAddOnEnabled)
                             {
                                 lg.LogIt("Opening Dome");
-                                TSXLink.Dome.OpenDome();
+                                TSXLink.Dome.OpenSlit();
                             }
                             lg.LogIt("Unparking telescope");
                             TSXLink.Mount.UnPark();

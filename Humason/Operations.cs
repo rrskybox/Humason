@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 
 namespace Humason
 {
@@ -102,13 +101,17 @@ namespace Humason
 
             //Make sure the mount is unparked
             TSXLink.Mount.UnPark();
+            lg.LogIt("UnPark Mount");
+
             //Make sure tracking is turned on
             TSXLink.Mount.TurnTrackingOn();
+            lg.LogIt("Sidereal Tracking On");
 
             //Bring camera to temperature (if not already), then clear the objects
             AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Imaging };
             TSXLink.Camera cCam = new TSXLink.Camera(asti);
             cCam.CCDTemperature = ftPlan.CameraTemperatureSet;
+            lg.LogIt("Camera Temperature set to " + ftPlan.CameraTemperatureSet.ToString("0.0"));
 
             //************************  Starting up the target plans  *************************
             //
@@ -141,6 +144,14 @@ namespace Humason
                     GracefulAbort();
                     return false;
                 }
+
+                lg.LogIt("CLS to center target");
+                if (!imgseq.CLSToTargetPlanCoordinates())
+                {
+                    lg.LogIt("Failed to center target");
+                    GracefulAbort();
+                    return false;
+                };
 
                 //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
                 if (tPlan.RotatorEnabled)
@@ -256,7 +267,7 @@ namespace Humason
                 if (openSession.IsDomeAddOnEnabled)
                 {
                     lg.LogIt("Homing Dome");
-                    TSXLink.Dome.HomeDome();
+                    TSXLink.Dome.HomeSlit();
                 }
                 lg.LogIt("Disconnecting all devices");
                 TSXLink.Connection.DisconnectAllDevices();

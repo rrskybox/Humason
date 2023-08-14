@@ -3,7 +3,6 @@
  * into a list of structured (Mosaic Target) target data
  */
 
-using Planetarium;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;

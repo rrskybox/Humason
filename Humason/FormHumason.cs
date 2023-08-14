@@ -1,5 +1,4 @@
-﻿using Planetarium;
-using System;
+﻿using System;
 using System.Deployment.Application;
 using System.Windows.Forms;
 

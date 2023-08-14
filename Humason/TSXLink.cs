@@ -1,11 +1,11 @@
-﻿using Humason;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TheSky64Lib;
 
 //Library of methods and data for interfacing to TSX through .NET (COM) library
-namespace Planetarium
+namespace Humason
+
 {
     public partial class TSXLink
     {
@@ -73,7 +73,7 @@ namespace Planetarium
                 return;
             }
 
-            public static void ConnectDevice(Devices device)
+            public static bool ConnectDevice(Devices device)
             {
                 //Connects TSX telescope, camera and guider devices individually
                 //  if  device is 0,) { connect telescope
@@ -97,7 +97,11 @@ namespace Planetarium
                         lg.LogIt("Connecting mount");
                         tsxm.Asynchronous = 0;
                         try { tsxm.Connect(); }
-                        catch (Exception ex) { lg.LogIt("Connecting Mount Failed: " + ex.Message); }
+                        catch (Exception ex)
+                        {
+                            lg.LogIt("Connecting Mount Failed: " + ex.Message);
+                            return false;
+                        }
                         break;
 
                     case Devices.Camera:
@@ -105,7 +109,11 @@ namespace Planetarium
                         lg.LogIt("Connecting camera");
                         tsxc.Asynchronous = 0;
                         try { status = tsxc.Connect(); }
-                        catch (Exception ex) { lg.LogIt("Connecting Camera Failed: " + ex.Message); }
+                        catch (Exception ex)
+                        {
+                            lg.LogIt("Connecting Camera Failed: " + ex.Message);
+                            return false;
+                        }
                         break;
 
                     case Devices.Guider:
@@ -114,7 +122,11 @@ namespace Planetarium
                         tsxg.Autoguider = 1;
                         tsxg.Asynchronous = 0;
                         try { status = tsxg.Connect(); }
-                        catch (Exception ex) { lg.LogIt("Connecting Guider Failed: " + ex.Message); }
+                        catch (Exception ex)
+                        {
+                            lg.LogIt("Connecting Guider Failed: " + ex.Message);
+                            return false;
+                        }
                         break;
 
                     case Devices.Focuser:
@@ -122,7 +134,11 @@ namespace Planetarium
                         lg.LogIt("Connecting focuser");
                         tsxf.Asynchronous = 0;
                         try { status = tsxf.focConnect(); }
-                        catch (Exception ex) { lg.LogIt("Connecting Focuser Failed: " + ex.Message); }
+                        catch (Exception ex)
+                        {
+                            lg.LogIt("Connecting Focuser Failed: " + ex.Message);
+                            return false;
+                        }
                         break;
 
                     case Devices.Rotator:
@@ -130,7 +146,11 @@ namespace Planetarium
                         lg.LogIt("Connecting rotator");
                         tsxr.Asynchronous = 0;
                         try { status = tsxr.rotatorConnect(); }
-                        catch (Exception ex) { lg.LogIt("Connecting Rotator Failed: " + ex.Message); }
+                        catch (Exception ex)
+                        {
+                            lg.LogIt("Connecting Rotator Failed: " + ex.Message);
+                            return false;
+                        }
                         break;
 
                     case Devices.Dome:
@@ -142,17 +162,18 @@ namespace Planetarium
                             catch (Exception ex)
                             {
                                 lg.LogIt("Connecting Dome Failed: " + ex.Message);
-                                return;
+                                return false;
                             }
-                            tsxd.IsCoupled = 1;
-                            lg.LogIt("Coupling Dome to Mount");
+                            //tsxd.IsCoupled = 1;
+                            //lg.LogIt("Coupling Dome to Mount");
+                            return true;
                         }
                         break;
 
                     default:
                         break;
                 }
-                return;
+                return true;
             }
 
             public static void DisconnectDevice(Devices device)
@@ -414,7 +435,7 @@ namespace Planetarium
             {
                 //Encapsulates TSX method to perform a find and return target information from
                 //  a found target in TSX and to center the star chart on the target
-                Target tgt = new Planetarium.TSXLink.Target();
+                Target tgt = new TSXLink.Target();
                 sky6ObjectInformation tsxo = new sky6ObjectInformation();
                 tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_NAME1);
                 tgt.Name = tsxo.ObjInfoPropOut;
@@ -999,121 +1020,199 @@ namespace Planetarium
         #region Dome
         public partial class Dome
         {
-            public static void AbortDome()
+            public static bool AbortDomeOperation()
             {
                 LogEvent lg = new LogEvent();
-                bool dState = DomeControl.AbortDome();
-                if (dState)
+                sky6Dome tsxd = new sky6Dome();
+                try
                 {
-                    lg.LogIt("Aborted dome commands");
+                    tsxd.Abort();
+                    System.Threading.Thread.Sleep(10);
                 }
-                else
+                catch
                 {
                     lg.LogIt("Dome command abort failed");
+                    return false;
                 }
-
-                return;
+                lg.LogIt("Aborted dome commands");
+                return true;
             }
 
-            public static void CloseDome()
+            public static bool CloseSlit()
             {
-                SessionControl openSession = new SessionControl();
-                if (openSession.IsDomeAddOnEnabled)
+                LogEvent lg = new LogEvent();
+                sky6Dome tsxd = new sky6Dome();
+                try
                 {
-                    LogEvent lg = new LogEvent();
-                    //New Code
-                    lg.LogIt("Closing Dome");
-                    int domeHome = openSession.DomeHomeAz;
-                    if (DomeControl.CloseDome(domeHome))
-                    {
-                        lg.LogIt("Dome successfully closed");
-                    }
-                    else
-                    {
-                        lg.LogIt("Dome close failed");
-                        //Try one more time;
-                        lg.LogIt("Trying to close dome again");
-                        if (DomeControl.CloseDome(domeHome))
-                        {
-                            lg.LogIt("Dome successfully closed");
-                        }
-                        else
-                        {
-                            lg.LogIt("Second try at closing dome failed");
-                        }
-                    }
+                    tsxd.CloseSlit();
+                    System.Threading.Thread.Sleep(10);
                 }
-                return;
+                catch
+                {
+                    lg.LogIt("Dome Close command failed");
+                    return false;
+                }
+                lg.LogIt("Closeing Dome");
+                return true;
+
             }
 
-            public static void OpenDome()
+            public static bool OpenSlit()
             {
-                SessionControl openSession = new SessionControl();
-                if (openSession.IsDomeAddOnEnabled)
+                LogEvent lg = new LogEvent();
+                sky6Dome tsxd = new sky6Dome();
+                try
                 {
-                    LogEvent lg = new LogEvent();
-                    //New Code
-                    lg.LogIt("Opening Dome");
-                    int domeHome = openSession.DomeHomeAz;
-                    if (DomeControl.OpenDome(domeHome))
-                    {
-                        lg.LogIt("Dome successfully opened");
-                    }
-                    else
-                    {
-                        lg.LogIt("Dome open failed");
-                    }
+                    tsxd.OpenSlit();
+                    System.Threading.Thread.Sleep(10);
                 }
-                return;
+                catch
+                {
+                    lg.LogIt("Dome open command failed");
+                    return false;
+                }
+                lg.LogIt("Open Dome Command Commenced");
+                return true;
+
             }
 
-            public static void HomeDome()
+            public static bool HomeSlit()
             {
-                SessionControl openSession = new SessionControl();
-                if (openSession.IsDomeAddOnEnabled)
+                LogEvent lg = new LogEvent();
+                sky6Dome tsxd = new sky6Dome();
+                try
                 {
-                    int domeHome = openSession.DomeHomeAz;
-                    LogEvent lg = new LogEvent();
-                    //New code
-                    lg.LogIt("Homing Dome");
-                    if (DomeControl.HomeDome(domeHome))
+                    tsxd.FindHome();
+                    System.Threading.Thread.Sleep(10);
+                }
+                catch
+                {
+                    lg.LogIt("Dome home command failed");
+                    return false;
+                }
+                lg.LogIt("Home Dome Command Commenced");
+                return true;
+            }
+
+            public static bool GotoDomeAzm(double az)
+            {
+                LogEvent lg = new LogEvent();
+                sky6Dome tsxd = new sky6Dome();
+                try
+                {
+                    tsxd.GotoAzEl(az, 0);
+                    System.Threading.Thread.Sleep(10);
+                }
+                catch
+                {
+                    lg.LogIt("Dome Goto Command failed");
+                    return false;
+                }
+                lg.LogIt("Goto Command Commenced");
+                return true;
+            }
+
+            public static bool IsOpenComplete
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (tsxd.IsOpenComplete == 1)
                     {
-                        lg.LogIt("Dome successfully homed");
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome Open Complete");
+                        return true;
                     }
                     else
-                    {
-                        lg.LogIt("Dome home failed");
-                    }
+                        return false;
                 }
-                return;
+            }
 
-                //Old code
-                //    sky6RASCOMTele tsxt = new sky6RASCOMTele();
-                //    lg.LogIt("Disonconnecting Mount");
-                //    tsxt.Disconnect();
-                //    sky6Dome tsxd = new sky6Dome();
-                //    lg.LogIt("Homing Dome Slit");
-                //    try
-                //    {
-                //        tsxd.Connect();
-                //        tsxd.GotoAzEl(domeHome - 20, 0);
-                //        //Wait for command to propigate -- could be slow
-                //        System.Threading.Thread.Sleep(5000);
-                //        while (tsxd.IsGotoComplete == 0) { System.Threading.Thread.Sleep(1000); }
-                //        tsxd.FindHome();
-                //        //Wait for command to propigate -- could be slow
-                //        System.Threading.Thread.Sleep(5000);
-                //        // operation is in progress (zero)
-                //        while (tsxd.IsFindHomeComplete == 0) { System.Threading.Thread.Sleep(1000); }
-                //    }
-                //    catch
-                //    {
-                //        //ignor error for now -- probably no dome or ...
-                //    }
-                //}
-                //return;
+            public static bool IsCloseComplete
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (tsxd.IsCloseComplete == 1)
+                    {
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome Close Complete");
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+
+            public static bool IsFindHomeComplete
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (tsxd.IsFindHomeComplete == 1)
+                    {
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome Find Home Complete");
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+
+            public static bool IsGotoAzmComplete
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (tsxd.IsGotoComplete == 1)
+                    {
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome Goto Azm Complete");
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+
+            public static double CurrentDomeAzm
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    tsxd.GetAzEl();
+                    return tsxd.dAz;
+                }
+            }
+
+            public static bool IsCoupled
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (tsxd.IsCoupled == 1)
+                    {
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome is Coupled to Mount");
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+                set
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (value)
+                        tsxd.IsCoupled = 0;
+                    else
+                        tsxd.IsCoupled = 1;
+                    return;
+                }
+
             }
         }
+
         #endregion
 
         #region Mount
@@ -1934,5 +2033,6 @@ namespace Planetarium
 
     }
 }
+
 
 

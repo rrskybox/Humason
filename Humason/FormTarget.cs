@@ -5,7 +5,6 @@
 //
 //
 
-using Planetarium;
 using System;
 using System.Windows.Forms;
 using TheSky64Lib;
