@@ -133,10 +133,11 @@ namespace Humason
             //  then launches it and waits for completion.
 
             SessionControl openSession = new SessionControl();
+            LogEvent lg = new LogEvent();
             Process pSystemExe = new Process();
+            lg.LogIt("Checking on Shut Down app");
             if (openSession.ShutDownEnabled && openSession.ShutDownFilePath != null)
             {
-                LogEvent lg = new LogEvent();
                 lg.LogIt("Running Shut Down Process");
                 pSystemExe.StartInfo.FileName = openSession.ShutDownFilePath;
                 try
@@ -147,7 +148,11 @@ namespace Humason
                         pSystemExe.WaitForExit();
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    lg.LogIt("Shutdown app failed: " + ex.Message);
+                }
+
                 lg.LogIt("Shut Down Process Complete");
             }
             return;

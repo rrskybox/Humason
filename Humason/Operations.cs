@@ -224,20 +224,19 @@ namespace Humason
             if (fmgr.HaveFlatsToDo() && !FormHumason.IsAborting())
             { fmgr.TakeFlats(); }
 
-            //If autorun set, then run it, or... just park the mount
+            //If autorun set, then run it, then... just park the mount and disconnect
             if (openSession.ShutDownEnabled && !openSession.IsAttended)
             {
                 LaunchPad.RunShutDownApp();
                 return false;
             }
-            else
-            {
-                try { TSXLink.Mount.Park(); }
-                catch (Exception ex)
-                { lg.LogIt("Could not Park: " + ex.Message); }
-                //Disconnect devices
-                TSXLink.Connection.DisconnectAllDevices();
-            }
+
+            try { TSXLink.Mount.Park(); }
+            catch (Exception ex)
+            { lg.LogIt("Could not Park: " + ex.Message); }
+            //Disconnect devices
+            TSXLink.Connection.DisconnectAllDevices();
+
             return true;
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using WeatherWatch;
+using TheSky64Lib;
 
 
 namespace Humason
@@ -338,7 +339,7 @@ namespace Humason
                         ImageSeries[imageidx, si_Filter] = filter.Index;
                         ImageSeries[imageidx, si_Binning] = sb_1x1;
                         ImageSeries[imageidx, si_Exposure] = (int)exposure;
-                        ImageSeries[imageidx, si_Frame] = (int)TheSky64Lib.ccdsoftImageFrame.cdLight;
+                        ImageSeries[imageidx, si_Frame] = (int)ccdsoftImageFrame.cdLight;
                         ImageSeries[imageidx, si_Delay] = (int)delay;
                         imageidx += 1;
                     }
@@ -428,7 +429,7 @@ namespace Humason
                         {
                             for (int i = 0; i < 300; i++) //Five minute wait loop
                             {
-                                Application.DoEvents();
+                                System.Windows.Forms.Application.DoEvents();
                                 System.Threading.Thread.Sleep(1000);  //one second wait loop
                                 //Check for shutdown time
                                 if (LaunchPad.IsTimeToShutDown())
@@ -676,7 +677,7 @@ namespace Humason
                 //  Next image:  loop back to start
             }
             //Clean up, starting with letting the forms update
-            Application.DoEvents();
+            System.Windows.Forms.Application.DoEvents();
             lg.LogIt("Imaging Session Done");
             if (tPlan.AutoGuideEnabled)
             {
@@ -708,6 +709,11 @@ namespace Humason
             lg.LogIt("Meridian Flip Underway");
             // stop guiding, if (on
             if (tPlan.AutoGuideEnabled) { AutoGuiding.AutoGuideStop(); }
+
+            //Make sure dome has caught up with mount
+            if (openSession.IsDomeAddOnEnabled)
+                while (!TSXLink.Dome.IsGotoAzmComplete)
+                    System.Threading.Thread.Sleep(1000);
 
             //if (WestOTAtoEastOTA is true,{ first slew the scope to point to the west hemisphere, or the inverse
             // in order to imitate an ASCOM "Flip" command

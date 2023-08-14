@@ -102,6 +102,11 @@ namespace Humason
                 TSXLink.Mount.UnPark();
                 //point telescope essentially up
                 lg.LogIt("Pointing telescope just west of zenith");
+                //wait for dome to catch up with mount
+                if (openSession.IsDomeAddOnEnabled)
+                    while (!TSXLink.Dome.IsGotoAzmComplete)
+                        System.Threading.Thread.Sleep(1000);
+                //slew to meridian
                 TSXLink.Mount.SlewAzAlt(200.0, (60), "Flat Spot");
                 //Turn tracking off
                 TSXLink.Mount.TurnTrackingOff();

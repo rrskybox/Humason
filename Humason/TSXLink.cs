@@ -444,19 +444,19 @@ namespace Humason
                 tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_DEC_2000);
                 tgt.Dec = tsxo.ObjInfoPropOut;
                 //Get target events
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
                 tgt.Rise = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
                 tgt.Set = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
                 tgt.Transit = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
                 tgt.HA = TimeSpan.FromHours((double)tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
                 try
                 { tgt.Dusk = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dusk = TimeSpan.FromHours(0); }
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
                 try
                 { tgt.Dawn = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dawn = TimeSpan.FromHours(0); }
@@ -505,9 +505,9 @@ namespace Humason
                 tgt.RA = tsxo.ObjInfoPropOut;
                 tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_DEC_2000);
                 tgt.Dec = tsxo.ObjInfoPropOut;
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT);
                 tgt.Altitude = tsxo.ObjInfoPropOut;
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_AZM);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_AZM);
                 tgt.Azimuth = tsxo.ObjInfoPropOut;
 
                 tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RA_RATE_ASPERSEC);
@@ -516,19 +516,19 @@ namespace Humason
                 tgt.DeltaDecRate = tsxo.ObjInfoPropOut;
 
                 //Get target events
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME);
                 tgt.Rise = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME);
                 tgt.Set = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME);
                 tgt.Transit = TimeSpan.FromHours(tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_HA_HOURS);
                 tgt.HA = TimeSpan.FromHours((double)tsxo.ObjInfoPropOut);
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_START);
                 try
                 { tgt.Dusk = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dusk = TimeSpan.FromHours(0); }
-                tsxo.Property(TheSky64Lib.Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
+                tsxo.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TWIL_ASTRON_END);
                 try
                 { tgt.Dawn = TimeSpan.FromHours(tsxo.ObjInfoPropOut); }
                 catch { tgt.Dawn = TimeSpan.FromHours(0); }
@@ -697,7 +697,7 @@ namespace Humason
             public static PlateSolution PlateSolve(string path)
             {
                 LogEvent lg = new LogEvent();
-                ImageLink tsxl = new TheSky64Lib.ImageLink();
+                ImageLink tsxl = new ImageLink();
                 //set Scale
                 tsxl.scale = TSXLink.FOVI.GetFOVScale();
                 {
@@ -733,15 +733,17 @@ namespace Humason
                 Target tgt = TSXLink.StarChart.FindTarget(asti.TargetName);
 
                 int clsResult = 0;
-                //If Dome, couple to tele
-                if (openSession.IsDomeAddOnEnabled)
-                {
-                    sky6Dome tsxd = new sky6Dome();
-                    tsxd.IsCoupled = 1;
-                }
                 //Make sure mount is UnParked
                 lg.LogIt("Unparking mount for CLS, if needed");
                 Mount.UnPark();
+                //If Dome, couple to tele then wait loop until the dome catches up with the mount
+                if (openSession.IsDomeAddOnEnabled)
+                {
+                    Dome.IsCoupled = true;
+                    while (!Dome.IsGotoAzmComplete)
+                        System.Threading.Thread.Sleep(1000);
+                }
+
                 try { TSXLink.Mount.SlewRADec(Convert.ToDouble(tgt.RA), Convert.ToDouble(tgt.Dec), tgt.Name); }
                 catch (Exception ex)
                 {
@@ -1020,6 +1022,7 @@ namespace Humason
         #region Dome
         public partial class Dome
         {
+
             public static bool AbortDomeOperation()
             {
                 LogEvent lg = new LogEvent();
@@ -1638,7 +1641,7 @@ namespace Humason
                     catch { return; }
                 }
                 //wait for completion;
-                while (tsxc.State == TheSky64Lib.ccdsoftCameraState.cdStateCalibrate)
+                while (tsxc.State == ccdsoftCameraState.cdStateCalibrate)
                 {
                     System.Windows.Forms.Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
@@ -1652,7 +1655,7 @@ namespace Humason
                     catch
                     { return; }
                     //wait for completion;
-                    while (tsxc.State == TheSky64Lib.ccdsoftCameraState.cdStateCalibrate)
+                    while (tsxc.State == ccdsoftCameraState.cdStateCalibrate)
                     {
                         System.Windows.Forms.Application.DoEvents();
                         System.Threading.Thread.Sleep(1000);
