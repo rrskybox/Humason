@@ -110,8 +110,8 @@ namespace Humason
             //Bring camera to temperature (if not already), then clear the objects
             AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Imaging };
             TSXLink.Camera cCam = new TSXLink.Camera(asti);
-            cCam.CCDTemperature = ftPlan.CameraTemperatureSet;
-            lg.LogIt("Camera Temperature set to " + ftPlan.CameraTemperatureSet.ToString("0.0"));
+            cCam.CCDTemperature = openSession.CameraTemperatureSet;
+            lg.LogIt("Camera Temperature set to " + openSession.CameraTemperatureSet.ToString("0.0"));
 
             //************************  Starting up the target plans  *************************
             //
@@ -263,7 +263,7 @@ namespace Humason
                 try { TSXLink.Mount.Park(); }
                 catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
                 //home dome (don't close as autorun is not enabled
-                if (openSession.IsDomeAddOnEnabled)
+                if (openSession.HasDome)
                 {
                     lg.LogIt("Homing Dome");
                     TSXLink.Dome.HomeSlit();

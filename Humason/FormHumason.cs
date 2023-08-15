@@ -6,7 +6,7 @@ namespace Humason
 {
     public partial class FormHumason : Form
     {
-        private Properties.Settings settings;
+        //private Properties.Settings settings;
 
         public static bool InitializingHumason;
 
@@ -19,6 +19,7 @@ namespace Humason
         public static FormPlan fPlanForm;
         public static FormSessionControl fSessionForm;
         public static FormDome fDomeForm;
+        public static FormImage fImageForm;
 
 
         //public static bool AbortFlag;
@@ -30,7 +31,7 @@ namespace Humason
 
         public FormHumason()
         {
-            settings = new Properties.Settings();
+            //settings = new Properties.Settings();
 
             InitializingHumason = true;
 
@@ -52,6 +53,10 @@ namespace Humason
             openSession.DefaultTargetPlanPath = dtPlan.DefaultPlanPath;
 
             //Initialize tab forms
+            fImageForm = new FormImage { TopLevel = false };
+            ImageTab.Controls.Add(fImageForm);
+            fImageForm.Show();
+
             fSessionForm = new FormSessionControl { TopLevel = false };
             SessionTab.Controls.Add(fSessionForm);
             fSessionForm.Show();
@@ -76,30 +81,22 @@ namespace Humason
             FocusTab.Controls.Add(fFocusForm);
             fFocusForm.Show();
 
-            if (settings.RotatorDeviceEnabled)
-            {
-                fRotateForm = new FormRotate { TopLevel = false };
-                RotatorTab.Controls.Add(fRotateForm);
-                fRotateForm.Show();
-            }
-            else { HumasonTabs.TabPages.Remove(RotatorTab); }
+            fRotateForm = new FormRotate { TopLevel = false };
+            RotatorTab.Controls.Add(fRotateForm);
+            fRotateForm.Show();
 
             fPlanForm = new FormPlan { TopLevel = false };
             PlanTab.Controls.Add(fPlanForm);
             fPlanForm.Show();
 
-            if (settings.HasDomeAddOn)
-            {
-                fDomeForm = new FormDome { TopLevel = false };
-                DomeTab.Controls.Add(fDomeForm);
-                fDomeForm.Show();
-            }
-            else { HumasonTabs.TabPages.Remove(DomeTab); }
+            fDomeForm = new FormDome { TopLevel = false };
+            DomeTab.Controls.Add(fDomeForm);
+            fDomeForm.Show();
 
             //Initialize Home and Park conditions for Connect and Disconnect
             HomeMountCheckBox.Checked = openSession.IsHomeMountEnabled;
             ParkMountCheckBox.Checked = openSession.IsParkMountEnabled;
-            
+
             //Open log and subscribe this form to the log event 
             StatusReportEvent.CreateLog();
 
@@ -180,7 +177,6 @@ namespace Humason
             NHUtil.ButtonGreen(StartButton);
             NHUtil.ButtonGreen(AbortButton);
             NHUtil.ButtonGreen(CloseButton);
-            NHUtil.ButtonGreen(OptionsButton);
             NHUtil.ButtonGreen(AboutButton);
             return;
         }
@@ -201,14 +197,6 @@ namespace Humason
             openSession.IsAttended = AttendedCheckBox.Checked;
             return;
         }
-        private void OptionsButton_Click(object sender, EventArgs e)
-        {
-            //Open the options form to change options
-            FormOptions fOptionsForm = new FormOptions();
-            fOptionsForm.Show();
-            return;
-        }
-
         private void HomeMountCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();

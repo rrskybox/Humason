@@ -1,5 +1,4 @@
 ﻿using System;
-using TheSky64Lib;
 
 namespace Humason
 
@@ -81,7 +80,7 @@ namespace Humason
             if (!TSXLink.Dome.AbortDomeOperation())
                 return false;
             //Goto home position using goto rather than home
-            ReliableGoTo(openSession.DomeHomeAz);
+            ReliableGoToDomeAz(openSession.DomeHomeAz);
             //Open Slit
             OpenSlitStarter();
             System.Threading.Thread.Sleep(10);  //Workaround for problme in TSX
@@ -108,7 +107,7 @@ namespace Humason
             IsDomeCoupled = false;
 
             //Goto home position using goto rather than home
-            ReliableGoTo(openSession.DomeHomeAz);
+            ReliableGoToDomeAz(openSession.DomeHomeAz);
             InitiateCloseSlit();
             System.Threading.Thread.Sleep(5000); // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
             while (!TSXLink.Dome.IsCloseComplete)
@@ -149,31 +148,7 @@ namespace Humason
             return true;
         }
 
-        /// <summary>
-        /// Rotates the dome to the target Azimuth
-        /// </summary>
-        /// <param name="domeHomeAz"></param>
-        /// <returns></returns>
-        public static bool GoToDomeAz(int domeHomeAz)
-        {
-            //Method for orienting the slit to az/alt
-            //Disconnect the mount
-            TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Mount);
-            //Abort any other dome operations
-            AbortDome();
-            //Wait for command to clear
-            System.Threading.Thread.Sleep(1000);
-            InitiateDomeGoTo(domeHomeAz);
-            System.Threading.Thread.Sleep(1000); // Wait for dome controller to catch up
-            while (!TSXLink.Dome.IsGotoAzmComplete)
-            {
-                System.Threading.Thread.Sleep(1000);
-            }
-            System.Threading.Thread.Sleep(1000);
-            return true;
-        }
-
-        private static void ReliableGoTo(double az)
+        public static bool ReliableGoToDomeAz(double az)
         {
             //Slews dome to azimuth while avoiding lockup if already there
             //Disconnect the mount
@@ -183,7 +158,7 @@ namespace Humason
             //Wait for command to clear
             System.Threading.Thread.Sleep(1000);
             //Decouple the dome
-           TSXLink.Dome.IsCoupled = false;
+            TSXLink.Dome.IsCoupled = false;
             double currentAz = TSXLink.Dome.CurrentDomeAzm;
             if (currentAz - az > 1)
             {
@@ -192,7 +167,7 @@ namespace Humason
                 while (!TSXLink.Dome.IsGotoAzmComplete)
                     System.Threading.Thread.Sleep(1000);
             }
-            return;
+            return true;
         }
 
         private static void OpenSlitStarter()

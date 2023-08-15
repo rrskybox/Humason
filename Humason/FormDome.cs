@@ -16,6 +16,8 @@ namespace Humason
             OpenSlitButton.BackColor = Color.LightGreen;
             CloseSlitButton.BackColor = Color.LightGreen;
             GoToAzButton.BackColor = Color.LightGreen;
+            SetCouplingCommandText();
+
         }
 
         private void DomeHomeAz_ValueChanged(object sender, EventArgs e)
@@ -58,9 +60,35 @@ namespace Humason
         private void GoToAzButton_Click(object sender, EventArgs e)
         {
             GoToAzButton.BackColor = Color.LightSalmon;
-            DomeControl.GoToDomeAz((int)TargetAz.Value);
+            DomeControl.ReliableGoToDomeAz((int)TargetAz.Value);
             GoToAzButton.BackColor = Color.LightGreen;
             return;
+        }
+
+        private void MountCoupleButton_Click(object sender, EventArgs e)
+        {
+            //Toggle couple and uncouple mount
+            if (DomeControl.IsDomeCoupled)
+                DomeControl.IsDomeCoupled = false;
+            else
+                DomeControl.IsDomeCoupled = true;
+            SetCouplingCommandText();
+        }
+
+        private void SetCouplingCommandText()
+        {
+            if (DomeControl.IsDomeCoupled)
+            {
+                MountCoupleButton.Text = "Uncouple";
+                MountCoupleButton.BackColor = Color.LightSalmon;
+            }
+            else
+            {
+                MountCoupleButton.Text = "Couple";
+                MountCoupleButton.BackColor = Color.Green;
+            }
+            return;
+
         }
     }
 }

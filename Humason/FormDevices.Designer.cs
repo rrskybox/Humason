@@ -40,8 +40,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.LumFilterNum = new System.Windows.Forms.NumericUpDown();
             this.RefreshFiltersButton = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.CameraTemperatureSet = new System.Windows.Forms.NumericUpDown();
             this.FocuserGroupBox = new System.Windows.Forms.GroupBox();
             this.RefocustTemperatureChangeBox = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -54,17 +52,19 @@
             this.GuiderCalibrateCheck = new System.Windows.Forms.CheckBox();
             this.RotatorGroupBox = new System.Windows.Forms.GroupBox();
             this.RecalibrateAfterFlipCheckbox = new System.Windows.Forms.CheckBox();
-            this.CameraGroupBox = new System.Windows.Forms.GroupBox();
+            this.NoFilterWheelCheckBox = new System.Windows.Forms.CheckBox();
+            this.HasDomeCheckBox = new System.Windows.Forms.CheckBox();
+            this.HasWeatherCheckBox = new System.Windows.Forms.CheckBox();
+            this.HasRotatorCheckBox = new System.Windows.Forms.CheckBox();
+            this.WeatherFileDialog = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.FocusFilterNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CLSFilterNum)).BeginInit();
             this.FiltersGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LumFilterNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CameraTemperatureSet)).BeginInit();
             this.FocuserGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefocustTemperatureChangeBox)).BeginInit();
             this.GuiderGroupBox.SuspendLayout();
             this.RotatorGroupBox.SuspendLayout();
-            this.CameraGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // AutoguideCheck
@@ -165,7 +165,7 @@
             this.FiltersGroupBox.Controls.Add(this.FocusFilterNum);
             this.FiltersGroupBox.Controls.Add(this.FilterListBox);
             this.FiltersGroupBox.ForeColor = System.Drawing.Color.White;
-            this.FiltersGroupBox.Location = new System.Drawing.Point(12, 49);
+            this.FiltersGroupBox.Location = new System.Drawing.Point(12, 35);
             this.FiltersGroupBox.Name = "FiltersGroupBox";
             this.FiltersGroupBox.Size = new System.Drawing.Size(254, 126);
             this.FiltersGroupBox.TabIndex = 90;
@@ -202,40 +202,6 @@
             this.RefreshFiltersButton.UseVisualStyleBackColor = true;
             this.RefreshFiltersButton.Click += new System.EventHandler(this.RefreshFiltersButton_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(121, 16);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(59, 13);
-            this.label4.TabIndex = 93;
-            this.label4.Text = "CCD Temp";
-            // 
-            // CameraTemperatureSet
-            // 
-            this.CameraTemperatureSet.Location = new System.Drawing.Point(186, 14);
-            this.CameraTemperatureSet.Maximum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.CameraTemperatureSet.Minimum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            -2147483648});
-            this.CameraTemperatureSet.Name = "CameraTemperatureSet";
-            this.CameraTemperatureSet.Size = new System.Drawing.Size(45, 20);
-            this.CameraTemperatureSet.TabIndex = 92;
-            this.CameraTemperatureSet.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.CameraTemperatureSet.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            -2147483648});
-            this.CameraTemperatureSet.ValueChanged += new System.EventHandler(this.CameraTemperatureSet_ValueChanged);
-            // 
             // FocuserGroupBox
             // 
             this.FocuserGroupBox.Controls.Add(this.RefocustTemperatureChangeBox);
@@ -245,7 +211,7 @@
             this.FocuserGroupBox.Controls.Add(this.AtFocus3RadioButton);
             this.FocuserGroupBox.Controls.Add(this.AtFocus2RadioButton);
             this.FocuserGroupBox.ForeColor = System.Drawing.Color.White;
-            this.FocuserGroupBox.Location = new System.Drawing.Point(12, 257);
+            this.FocuserGroupBox.Location = new System.Drawing.Point(12, 243);
             this.FocuserGroupBox.Name = "FocuserGroupBox";
             this.FocuserGroupBox.Size = new System.Drawing.Size(254, 85);
             this.FocuserGroupBox.TabIndex = 94;
@@ -343,7 +309,7 @@
             this.GuiderGroupBox.Controls.Add(this.DitherCheck);
             this.GuiderGroupBox.Controls.Add(this.AutoguideCheck);
             this.GuiderGroupBox.ForeColor = System.Drawing.Color.White;
-            this.GuiderGroupBox.Location = new System.Drawing.Point(12, 181);
+            this.GuiderGroupBox.Location = new System.Drawing.Point(12, 167);
             this.GuiderGroupBox.Name = "GuiderGroupBox";
             this.GuiderGroupBox.Size = new System.Drawing.Size(254, 70);
             this.GuiderGroupBox.TabIndex = 95;
@@ -381,7 +347,7 @@
             this.RotatorGroupBox.Controls.Add(this.RecalibrateAfterFlipCheckbox);
             this.RotatorGroupBox.Controls.Add(this.RotatorCheckBox);
             this.RotatorGroupBox.ForeColor = System.Drawing.Color.White;
-            this.RotatorGroupBox.Location = new System.Drawing.Point(12, 348);
+            this.RotatorGroupBox.Location = new System.Drawing.Point(12, 356);
             this.RotatorGroupBox.Name = "RotatorGroupBox";
             this.RotatorGroupBox.Size = new System.Drawing.Size(254, 42);
             this.RotatorGroupBox.TabIndex = 96;
@@ -401,26 +367,72 @@
             this.RecalibrateAfterFlipCheckbox.UseVisualStyleBackColor = true;
             this.RecalibrateAfterFlipCheckbox.CheckedChanged += new System.EventHandler(this.RecalibrateAfterFlipCheckbox_CheckedChanged);
             // 
-            // CameraGroupBox
+            // NoFilterWheelCheckBox
             // 
-            this.CameraGroupBox.Controls.Add(this.label4);
-            this.CameraGroupBox.Controls.Add(this.CameraTemperatureSet);
-            this.CameraGroupBox.ForeColor = System.Drawing.Color.White;
-            this.CameraGroupBox.Location = new System.Drawing.Point(12, 3);
-            this.CameraGroupBox.Name = "CameraGroupBox";
-            this.CameraGroupBox.Size = new System.Drawing.Size(254, 40);
-            this.CameraGroupBox.TabIndex = 97;
-            this.CameraGroupBox.TabStop = false;
-            this.CameraGroupBox.Text = "Camera";
+            this.NoFilterWheelCheckBox.AutoSize = true;
+            this.NoFilterWheelCheckBox.ForeColor = System.Drawing.SystemColors.Control;
+            this.NoFilterWheelCheckBox.Location = new System.Drawing.Point(12, 12);
+            this.NoFilterWheelCheckBox.Name = "NoFilterWheelCheckBox";
+            this.NoFilterWheelCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.NoFilterWheelCheckBox.Size = new System.Drawing.Size(99, 17);
+            this.NoFilterWheelCheckBox.TabIndex = 115;
+            this.NoFilterWheelCheckBox.Text = "No Filter Wheel";
+            this.NoFilterWheelCheckBox.UseVisualStyleBackColor = true;
+            this.NoFilterWheelCheckBox.CheckedChanged += new System.EventHandler(this.NoFilterWheelCheckBox_CheckedChanged_1);
+            // 
+            // HasDomeCheckBox
+            // 
+            this.HasDomeCheckBox.AutoSize = true;
+            this.HasDomeCheckBox.ForeColor = System.Drawing.SystemColors.Control;
+            this.HasDomeCheckBox.Location = new System.Drawing.Point(151, 416);
+            this.HasDomeCheckBox.Name = "HasDomeCheckBox";
+            this.HasDomeCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.HasDomeCheckBox.Size = new System.Drawing.Size(115, 17);
+            this.HasDomeCheckBox.TabIndex = 114;
+            this.HasDomeCheckBox.Text = "Has Dome Add-On";
+            this.HasDomeCheckBox.UseVisualStyleBackColor = true;
+            this.HasDomeCheckBox.CheckedChanged += new System.EventHandler(this.HasDomeCheckBox_CheckedChanged);
+            // 
+            // HasWeatherCheckBox
+            // 
+            this.HasWeatherCheckBox.AutoSize = true;
+            this.HasWeatherCheckBox.ForeColor = System.Drawing.SystemColors.Control;
+            this.HasWeatherCheckBox.Location = new System.Drawing.Point(12, 416);
+            this.HasWeatherCheckBox.Name = "HasWeatherCheckBox";
+            this.HasWeatherCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.HasWeatherCheckBox.Size = new System.Drawing.Size(127, 17);
+            this.HasWeatherCheckBox.TabIndex = 113;
+            this.HasWeatherCheckBox.Text = "Has Weather Monitor";
+            this.HasWeatherCheckBox.UseVisualStyleBackColor = true;
+            this.HasWeatherCheckBox.CheckedChanged += new System.EventHandler(this.HasWeatherCheckBox_CheckedChanged);
+            // 
+            // HasRotatorCheckBox
+            // 
+            this.HasRotatorCheckBox.AutoSize = true;
+            this.HasRotatorCheckBox.ForeColor = System.Drawing.Color.White;
+            this.HasRotatorCheckBox.Location = new System.Drawing.Point(12, 334);
+            this.HasRotatorCheckBox.Name = "HasRotatorCheckBox";
+            this.HasRotatorCheckBox.Size = new System.Drawing.Size(83, 17);
+            this.HasRotatorCheckBox.TabIndex = 112;
+            this.HasRotatorCheckBox.Text = "Has Rotator";
+            this.HasRotatorCheckBox.UseVisualStyleBackColor = true;
+            this.HasRotatorCheckBox.CheckedChanged += new System.EventHandler(this.HasRotatorCheckBox_CheckedChanged);
+            // 
+            // WeatherFileDialog
+            // 
+            this.WeatherFileDialog.FileName = "CCDAP";
             // 
             // FormDevices
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.ClientSize = new System.Drawing.Size(278, 402);
+            this.ClientSize = new System.Drawing.Size(278, 445);
             this.ControlBox = false;
-            this.Controls.Add(this.CameraGroupBox);
+            this.Controls.Add(this.NoFilterWheelCheckBox);
+            this.Controls.Add(this.HasDomeCheckBox);
+            this.Controls.Add(this.HasWeatherCheckBox);
+            this.Controls.Add(this.HasRotatorCheckBox);
             this.Controls.Add(this.RotatorGroupBox);
             this.Controls.Add(this.GuiderGroupBox);
             this.Controls.Add(this.FocuserGroupBox);
@@ -437,7 +449,6 @@
             this.FiltersGroupBox.ResumeLayout(false);
             this.FiltersGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LumFilterNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CameraTemperatureSet)).EndInit();
             this.FocuserGroupBox.ResumeLayout(false);
             this.FocuserGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefocustTemperatureChangeBox)).EndInit();
@@ -445,9 +456,8 @@
             this.GuiderGroupBox.PerformLayout();
             this.RotatorGroupBox.ResumeLayout(false);
             this.RotatorGroupBox.PerformLayout();
-            this.CameraGroupBox.ResumeLayout(false);
-            this.CameraGroupBox.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -461,15 +471,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown CLSFilterNum;
         private System.Windows.Forms.GroupBox FiltersGroupBox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown CameraTemperatureSet;
         private System.Windows.Forms.GroupBox FocuserGroupBox;
         private System.Windows.Forms.RadioButton AtFocus3RadioButton;
         private System.Windows.Forms.RadioButton AtFocus2RadioButton;
         internal System.Windows.Forms.CheckBox DitherCheck;
         private System.Windows.Forms.GroupBox GuiderGroupBox;
         private System.Windows.Forms.GroupBox RotatorGroupBox;
-        private System.Windows.Forms.GroupBox CameraGroupBox;
         private System.Windows.Forms.Button RefreshFiltersButton;
         internal System.Windows.Forms.CheckBox ResyncCheck;
         internal System.Windows.Forms.CheckBox GuiderCalibrateCheck;
@@ -479,5 +486,10 @@
         internal System.Windows.Forms.CheckBox RecalibrateAfterFlipCheckbox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown LumFilterNum;
+        internal System.Windows.Forms.CheckBox NoFilterWheelCheckBox;
+        internal System.Windows.Forms.CheckBox HasDomeCheckBox;
+        internal System.Windows.Forms.CheckBox HasWeatherCheckBox;
+        private System.Windows.Forms.CheckBox HasRotatorCheckBox;
+        private System.Windows.Forms.OpenFileDialog WeatherFileDialog;
     }
 }

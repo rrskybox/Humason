@@ -62,12 +62,12 @@ namespace Humason
 
             lg.LogIt("Establishing TSX interfaces: star chart, mount, dome.");
             //If the dome is enabled,  Home it and disconnect
-            if (openSession.IsDomeAddOnEnabled)
+            if (openSession.HasDome)
             {
                 //Complete any dome commands, including homing and closing the dome, if needed
                 //The mount will be parked and disconnected during this operation
                 //Dome will be decoupled from mount
-                if (openSession.IsDomeAddOnEnabled)
+                if (openSession.HasDome)
                 {
                     lg.LogIt("Homing and Closing Dome");
                     lg.LogIt("Connecting Dome");
@@ -112,7 +112,7 @@ namespace Humason
             lg.LogIt("Slewing to flat panel position");
             try
             {
-            TSXLink.Mount.SlewRADec(ffTarget.RA, ffTarget.Dec, ffTarget.Name);
+                TSXLink.Mount.SlewRADec(ffTarget.RA, ffTarget.Dec, ffTarget.Name);
             }
             catch (Exception ex)
             {

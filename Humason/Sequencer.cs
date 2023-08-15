@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using WeatherWatch;
 using TheSky64Lib;
+using WeatherWatch;
 
 
 namespace Humason
@@ -416,7 +416,7 @@ namespace Humason
                         lg.LogIt("Waiting on unsafe weather conditions...");
                         lg.LogIt("Parking telescope, if park is enabled");
                         TSXLink.Mount.Park();
-                        if (openSession.IsDomeAddOnEnabled)
+                        if (openSession.HasDome)
                         {
                             //Close dome -- dome is homed before closing
                             // Note that the mount will be left in the Park position
@@ -446,7 +446,7 @@ namespace Humason
                         if (wrf.IsWeatherSafe())
                         {
                             lg.LogIt("Weather conditions safe");
-                            if (openSession.IsDomeAddOnEnabled)
+                            if (openSession.HasDome)
                             {
                                 lg.LogIt("Opening Dome");
                                 TSXLink.Dome.OpenSlit();
@@ -711,7 +711,7 @@ namespace Humason
             if (tPlan.AutoGuideEnabled) { AutoGuiding.AutoGuideStop(); }
 
             //Make sure dome has caught up with mount
-            if (openSession.IsDomeAddOnEnabled)
+            if (openSession.HasDome)
                 while (!TSXLink.Dome.IsGotoAzmComplete)
                     System.Threading.Thread.Sleep(1000);
 

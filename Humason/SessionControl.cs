@@ -75,17 +75,20 @@ namespace Humason
         const string FlatManManualSetupCheckedXName = "FlatManManualSetupChecked";
 
         //Rotator Definitions
+        const string HasRotatorXName = "HasRotator";
         const string RotationEnabledXName = "RotationEnabled";
         const string RotatorDirectionXName = "RotatorDirection";
         const string RecalibrateAfterFlipXName = "RecalibrateAfterFlipEnabled";
 
+        //Other
+        const string NoFilterWheelXName = "NoFilterWheel";
+        const string HasDomeXName = "DomeAddOnEnabled";
+        const string CameraTemperatureSetXName = "CameraTemperatureSet";
+
         //Options Definition (for FormOptions)
-        const string WeatherCheckedXName = "WeatherMonitorEnabled";
+        const string HasWeatherXName = "HasWeather";
         const string WeatherDataFilePathXName = "WeatherDataFilePath";
-        const string DomeAddOnCheckedXName = "DomeAddOnEnabled";
-        const string NoFilterWheelCheckedXName = "NoFilterWheel";
         const string PowerManagerCheckedXName = "PowerManagerEnabled";
-        const string RotatorDeviceEnabled = "RotatorDeviceEnabled";
         const string DomeHomeAzXName = "DomeHomeAz";
         const string CLSReductionXName = "CLSReduction";
         const string ImagerReductionXName = "ImagerReduction";
@@ -248,11 +251,11 @@ namespace Humason
         {
             get
             {
-                if (Convert.ToBoolean(DirectXcess.GetItem(WeatherCheckedXName)))
-                { return Convert.ToBoolean(DirectXcess.GetItem(WeatherCheckedXName)); }
+                if (Convert.ToBoolean(DirectXcess.GetItem(HasWeatherXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(HasWeatherXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(WeatherCheckedXName, value);
+            set => DirectXcess.ReplaceItem(HasWeatherXName, value);
         }
 
         public string WeatherDataFilePath
@@ -590,26 +593,48 @@ namespace Humason
             set => DirectXcess.ReplaceItem(OverheadXName, value);
         }
 
-        public bool IsDomeAddOnEnabled
+        public bool HasRotator
         {
             get
             {
-                if (DirectXcess.GetItem(DomeAddOnCheckedXName) != null)
-                { return Convert.ToBoolean(DirectXcess.GetItem(DomeAddOnCheckedXName)); }
+                if (DirectXcess.GetItem(HasRotatorXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(HasRotatorXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(DomeAddOnCheckedXName, value);
+            set => DirectXcess.ReplaceItem(HasRotatorXName, value);
+        }
+
+        public bool HasWeather
+        {
+            get
+            {
+                if (DirectXcess.GetItem(HasWeatherXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(HasWeatherXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(HasWeatherXName, value);
+        }
+
+        public bool HasDome
+        {
+            get
+            {
+                if (DirectXcess.GetItem(HasDomeXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(HasDomeXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(HasDomeXName, value);
         }
 
         public bool NoFilterWheel
         {
             get
             {
-                if (DirectXcess.GetItem(NoFilterWheelCheckedXName) != null)
-                { return Convert.ToBoolean(DirectXcess.GetItem(NoFilterWheelCheckedXName)); }
+                if (DirectXcess.GetItem(NoFilterWheelXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(NoFilterWheelXName)); }
                 else { return false; }
             }
-            set => DirectXcess.ReplaceItem(NoFilterWheelCheckedXName, value);
+            set => DirectXcess.ReplaceItem(NoFilterWheelXName, value);
         }
 
         public int DomeHomeAz
@@ -676,6 +701,17 @@ namespace Humason
                 else { return 0; }
             }
             set => DirectXcess.ReplaceItem(UseTSXAutoSaveXName, value);
+        }
+
+        public int CameraTemperatureSet
+        {
+            get
+            {
+                if (DirectXcess.GetItem(CameraTemperatureSetXName) != null)
+                { return Convert.ToInt32(DirectXcess.GetItem(CameraTemperatureSetXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(CameraTemperatureSetXName, value);
         }
 
         #endregion

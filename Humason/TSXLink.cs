@@ -154,7 +154,7 @@ namespace Humason
                         break;
 
                     case Devices.Dome:
-                        if (openSession.IsDomeAddOnEnabled)
+                        if (openSession.HasDome)
                         {
                             sky6Dome tsxd = new sky6Dome();
                             lg.LogIt("Connecting Dome");
@@ -164,8 +164,8 @@ namespace Humason
                                 lg.LogIt("Connecting Dome Failed: " + ex.Message);
                                 return false;
                             }
-                            //tsxd.IsCoupled = 1;
-                            //lg.LogIt("Coupling Dome to Mount");
+                            tsxd.IsCoupled = 1;
+                            lg.LogIt("Coupling Dome to Mount");
                             return true;
                         }
                         break;
@@ -242,7 +242,7 @@ namespace Humason
                         break;
 
                     case Devices.Dome:
-                        if (openSession.IsDomeAddOnEnabled)
+                        if (openSession.HasDome)
                         {
                             lg.LogIt("Disconnecting Dome");
                             sky6Dome tsxd = new sky6Dome();
@@ -364,7 +364,7 @@ namespace Humason
                     catch (Exception ex) { lg.LogIt("Rotator connection error: " + ex.Message); }
                 }
 
-                if (openSession.IsDomeAddOnEnabled)
+                if (openSession.HasDome)
                 {
                     sky6Dome tsxd = new sky6Dome();
                     lg.LogIt("Connecting dome");
@@ -737,7 +737,7 @@ namespace Humason
                 lg.LogIt("Unparking mount for CLS, if needed");
                 Mount.UnPark();
                 //If Dome, couple to tele then wait loop until the dome catches up with the mount
-                if (openSession.IsDomeAddOnEnabled)
+                if (openSession.HasDome)
                 {
                     Dome.IsCoupled = true;
                     while (!Dome.IsGotoAzmComplete)
@@ -798,9 +798,9 @@ namespace Humason
             {
                 //Uncouple dome tracking, then recouple dome tracking (synchronously)
                 sky6Dome tsxd = new sky6Dome();
-                tsxd.IsCoupled = 0;
+                Dome.IsCoupled = false;
                 System.Threading.Thread.Sleep(1000);
-                tsxd.IsCoupled = 1;
+                Dome.IsCoupled = true;
                 //Wait for all dome activity to stop
                 while (IsDomeTrackingUnderway()) { System.Threading.Thread.Sleep(1000); }
                 return;
@@ -1201,15 +1201,19 @@ namespace Humason
                         return true;
                     }
                     else
+                    {
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome is Uncoupled from Mount");
                         return false;
+                    }
                 }
                 set
                 {
                     sky6Dome tsxd = new sky6Dome();
                     if (value)
-                        tsxd.IsCoupled = 0;
-                    else
                         tsxd.IsCoupled = 1;
+                    else
+                        tsxd.IsCoupled = 0;
                     return;
                 }
 

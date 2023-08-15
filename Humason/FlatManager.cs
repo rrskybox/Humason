@@ -103,7 +103,7 @@ namespace Humason
                 //point telescope essentially up
                 lg.LogIt("Pointing telescope just west of zenith");
                 //wait for dome to catch up with mount
-                if (openSession.IsDomeAddOnEnabled)
+                if (openSession.HasDome)
                     while (!TSXLink.Dome.IsGotoAzmComplete)
                         System.Threading.Thread.Sleep(1000);
                 //slew to meridian

@@ -1,5 +1,4 @@
-﻿using AstroMath;
-using System;
+﻿using System;
 using System.Xml.Linq;
 
 namespace Humason

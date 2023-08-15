@@ -85,7 +85,7 @@
             // GuideStarXBox
             // 
             this.GuideStarXBox.AutoSize = true;
-            this.GuideStarXBox.ForeColor =  System.Drawing.Color.White;
+            this.GuideStarXBox.ForeColor = System.Drawing.Color.White;
             this.GuideStarXBox.Location = new System.Drawing.Point(15, 17);
             this.GuideStarXBox.Name = "GuideStarXBox";
             this.GuideStarXBox.Size = new System.Drawing.Size(13, 13);
@@ -95,7 +95,7 @@
             // GuideStarYBox
             // 
             this.GuideStarYBox.AutoSize = true;
-            this.GuideStarYBox.ForeColor =  System.Drawing.Color.White;
+            this.GuideStarYBox.ForeColor = System.Drawing.Color.White;
             this.GuideStarYBox.Location = new System.Drawing.Point(63, 17);
             this.GuideStarYBox.Name = "GuideStarYBox";
             this.GuideStarYBox.Size = new System.Drawing.Size(13, 13);
@@ -390,7 +390,7 @@
             // 
             this.groupBox1.Controls.Add(this.Binning2x2RadioButton);
             this.groupBox1.Controls.Add(this.Binning1x1RadioButton);
-            this.groupBox1.ForeColor =  System.Drawing.Color.White;
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(136, 248);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(120, 45);
@@ -401,7 +401,7 @@
             // Binning2x2RadioButton
             // 
             this.Binning2x2RadioButton.AutoSize = true;
-            this.Binning2x2RadioButton.ForeColor =  System.Drawing.Color.White;
+            this.Binning2x2RadioButton.ForeColor = System.Drawing.Color.White;
             this.Binning2x2RadioButton.Location = new System.Drawing.Point(66, 20);
             this.Binning2x2RadioButton.Name = "Binning2x2RadioButton";
             this.Binning2x2RadioButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -416,7 +416,7 @@
             // 
             this.Binning1x1RadioButton.AutoSize = true;
             this.Binning1x1RadioButton.Checked = true;
-            this.Binning1x1RadioButton.ForeColor =  System.Drawing.Color.White;
+            this.Binning1x1RadioButton.ForeColor = System.Drawing.Color.White;
             this.Binning1x1RadioButton.Location = new System.Drawing.Point(6, 19);
             this.Binning1x1RadioButton.Name = "Binning1x1RadioButton";
             this.Binning1x1RadioButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -523,7 +523,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.ClientSize = new System.Drawing.Size(278, 402);
+            this.ClientSize = new System.Drawing.Size(278, 445);
             this.Controls.Add(this.SubframeCheckBox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.GuideStarEdgeMarginNum);

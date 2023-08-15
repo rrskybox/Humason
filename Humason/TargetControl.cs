@@ -84,7 +84,6 @@ namespace Humason
         public const string CLSFilterXName = "CLSFilter";
         public const string LumFilterXName = "LumFilter";
         public const string OverheadXName = "ImageOverheadTime";
-        public const string CameraTemperatureSetXName = "CameraTemperatureSet";
         public const string AtFocusPickedXName = "AtFocusPicked";
         public const string SmallSolarSystemBodyXName = "SSSBody";
         public const string DeltaRARateXName = "DeltaRARate";
@@ -143,7 +142,7 @@ namespace Humason
                 //if the plan file for this target already exists.  
                 //   Just set up XML access for it.     
                 if (File.Exists(TargetPlanPath))
-                { 
+                {
                     hTargetPlanX = new Axess(TargetPlanPath);
                 }
                 else
@@ -319,13 +318,11 @@ namespace Humason
             defaultTP.SetItem(CLSFilterXName, 3);
             defaultTP.SetItem(LumFilterXName, 3);
             defaultTP.SetItem(OverheadXName, 0);
-            defaultTP.SetItem(CameraTemperatureSetXName, 0);
             defaultTP.SetItem(AtFocusPickedXName, 1);
 
             defaultTP.SetItem(PlateSolveExposureTimeXName, 10);
             defaultTP.SetItem(RotatorDirectionXName, -1);
 
-            //defaultTP.SetItem( FilterSetXName,0);
             return defaultTP;
         }
 
@@ -653,12 +650,6 @@ namespace Humason
         {
             get => Convert.ToDouble(hTargetPlanX.GetItem(OverheadXName));
             set => hTargetPlanX.ReplaceItem(OverheadXName, value.ToString());
-        }
-
-        public double CameraTemperatureSet
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CameraTemperatureSetXName));
-            set => hTargetPlanX.ReplaceItem(CameraTemperatureSetXName, value.ToString());
         }
 
         public bool AtFocusEnabled

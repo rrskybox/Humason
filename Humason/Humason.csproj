@@ -26,7 +26,7 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>248</ApplicationRevision>
+    <ApplicationRevision>250</ApplicationRevision>
     <ApplicationVersion>4.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -101,28 +101,40 @@
     <Compile Include="FilterManager.cs" />
     <Compile Include="FlatMan.cs" />
     <Compile Include="FlatManager.cs" />
-    <Compile Include="FormAutoFocus.cs" />
+    <Compile Include="FormAutoFocus.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormAutoFocus.Designer.cs">
       <DependentUpon>FormAutoFocus.cs</DependentUpon>
     </Compile>
     <Compile Include="AutoGuiding.cs" />
-    <Compile Include="FormAutoGuide.cs" />
+    <Compile Include="FormAutoGuide.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormAutoGuide.Designer.cs">
       <DependentUpon>FormAutoGuide.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDome.cs" />
+    <Compile Include="FormDome.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormDome.Designer.cs">
       <DependentUpon>FormDome.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSessionControl.cs" />
+    <Compile Include="FormSessionControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormSessionControl.Designer.cs">
       <DependentUpon>FormSessionControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormOptions.cs" />
-    <Compile Include="FormOptions.Designer.cs">
-      <DependentUpon>FormOptions.cs</DependentUpon>
+    <Compile Include="FormImage.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormTarget.cs" />
+    <Compile Include="FormImage.Designer.cs">
+      <DependentUpon>FormImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTarget.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormTarget.Designer.cs">
       <DependentUpon>FormTarget.cs</DependentUpon>
     </Compile>
@@ -138,7 +150,9 @@
     <Compile Include="SessionControl.cs" />
     <Compile Include="TargetEvent.cs" />
     <Compile Include="TargetControl.cs" />
-    <Compile Include="FormPlan.cs" />
+    <Compile Include="FormPlan.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormPlan.Designer.cs">
       <DependentUpon>FormPlan.cs</DependentUpon>
     </Compile>
@@ -148,7 +162,9 @@
     <Compile Include="Imaging.cs" />
     <Compile Include="LaunchPad.cs" />
     <Compile Include="LogEvent.cs" />
-    <Compile Include="FormHumason.cs" />
+    <Compile Include="FormHumason.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormHumason.Designer.cs">
       <DependentUpon>FormHumason.cs</DependentUpon>
     </Compile>
@@ -156,17 +172,23 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProgressEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FormRotate.cs" />
+    <Compile Include="FormRotate.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormRotate.Designer.cs">
       <DependentUpon>FormRotate.cs</DependentUpon>
     </Compile>
     <Compile Include="Rotator.cs" />
     <Compile Include="Sequencer.cs" />
-    <Compile Include="FormFlats.cs" />
+    <Compile Include="FormFlats.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormFlats.Designer.cs">
       <DependentUpon>FormFlats.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDevices.cs" />
+    <Compile Include="FormDevices.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormDevices.Designer.cs">
       <DependentUpon>FormDevices.cs</DependentUpon>
     </Compile>
@@ -194,8 +216,8 @@
     <EmbeddedResource Include="FormSessionControl.resx">
       <DependentUpon>FormSessionControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormOptions.resx">
-      <DependentUpon>FormOptions.cs</DependentUpon>
+    <EmbeddedResource Include="FormImage.resx">
+      <DependentUpon>FormImage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormTarget.resx">
       <DependentUpon>FormTarget.cs</DependentUpon>

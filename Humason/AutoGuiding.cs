@@ -257,7 +257,7 @@ namespace Humason
             int tstat = gCam.GetImage();
             //Run Calibration, note that the mount calibration will always be done.  The AO calibration is optional.
             lg.LogIt("Calibrating Direct Guide");
-            
+
             gCam.Calibrate(false, (int)tPlan.XAxisMoveTime, (int)tPlan.YAxisMoveTime);
             if (tPlan.AOEnabled)
             {
@@ -326,7 +326,7 @@ namespace Humason
                 AutoSave = 1
             };
             //Autosave is on
-            TSXLink.Camera guider = new TSXLink.Camera(asti); 
+            TSXLink.Camera guider = new TSXLink.Camera(asti);
             //Center AO, if configured
             if (tPlan.AOEnabled)
             {

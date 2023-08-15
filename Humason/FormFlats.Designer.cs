@@ -46,26 +46,26 @@
             this.FlatsRepetitionsBox = new System.Windows.Forms.NumericUpDown();
             this.FlatManOnButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.FlatManStageButton = new System.Windows.Forms.Button();
             this.FlatManManualSetupCheckbox = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.FlatManPortNum = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.FlatManExposureNum = new System.Windows.Forms.NumericUpDown();
-            this.FlatManStageButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.FlatManEastCheckBox = new System.Windows.Forms.CheckBox();
             this.FlatManBrightnessNum = new System.Windows.Forms.NumericUpDown();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FlatsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RotatorPANum)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FlatsTargetADU)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FlatsRepetitionsBox)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FlatManPortNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FlatManExposureNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FlatManBrightnessNum)).BeginInit();
-            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // FlatsGroup
@@ -315,6 +315,29 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FlatMan Configuration";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.FlatManStageButton);
+            this.groupBox3.Controls.Add(this.FlatManOnButton);
+            this.groupBox3.ForeColor = System.Drawing.Color.White;
+            this.groupBox3.Location = new System.Drawing.Point(15, 126);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(237, 55);
+            this.groupBox3.TabIndex = 94;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Diagnostic Controls";
+            // 
+            // FlatManStageButton
+            // 
+            this.FlatManStageButton.ForeColor = System.Drawing.Color.Black;
+            this.FlatManStageButton.Location = new System.Drawing.Point(17, 19);
+            this.FlatManStageButton.Name = "FlatManStageButton";
+            this.FlatManStageButton.Size = new System.Drawing.Size(75, 27);
+            this.FlatManStageButton.TabIndex = 39;
+            this.FlatManStageButton.Text = "Stage";
+            this.FlatManStageButton.UseVisualStyleBackColor = true;
+            this.FlatManStageButton.Click += new System.EventHandler(this.FlatManStageButton_Click);
+            // 
             // FlatManManualSetupCheckbox
             // 
             this.FlatManManualSetupCheckbox.AutoSize = true;
@@ -386,17 +409,6 @@
             0});
             this.FlatManExposureNum.ValueChanged += new System.EventHandler(this.FlatManExposureNum_ValueChanged);
             // 
-            // FlatManStageButton
-            // 
-            this.FlatManStageButton.ForeColor = System.Drawing.Color.Black;
-            this.FlatManStageButton.Location = new System.Drawing.Point(17, 19);
-            this.FlatManStageButton.Name = "FlatManStageButton";
-            this.FlatManStageButton.Size = new System.Drawing.Size(75, 27);
-            this.FlatManStageButton.TabIndex = 39;
-            this.FlatManStageButton.Text = "Stage";
-            this.FlatManStageButton.UseVisualStyleBackColor = true;
-            this.FlatManStageButton.Click += new System.EventHandler(this.FlatManStageButton_Click);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -440,24 +452,12 @@
             0});
             this.FlatManBrightnessNum.ValueChanged += new System.EventHandler(this.FlatManBrightnessNum_ValueChanged);
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.FlatManStageButton);
-            this.groupBox3.Controls.Add(this.FlatManOnButton);
-            this.groupBox3.ForeColor = System.Drawing.Color.White;
-            this.groupBox3.Location = new System.Drawing.Point(15, 126);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(237, 55);
-            this.groupBox3.TabIndex = 94;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Diagnostic Controls";
-            // 
             // FormFlats
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.ClientSize = new System.Drawing.Size(278, 402);
+            this.ClientSize = new System.Drawing.Size(278, 445);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.FlatsGroup);
             this.ForeColor = System.Drawing.Color.White;
@@ -473,10 +473,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.FlatsRepetitionsBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FlatManPortNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FlatManExposureNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FlatManBrightnessNum)).EndInit();
-            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

@@ -42,10 +42,9 @@
             // AtFocus2Button
             // 
             this.AtFocus2Button.ForeColor = System.Drawing.Color.Black;
-            this.AtFocus2Button.Location = new System.Drawing.Point(52, 160);
-            this.AtFocus2Button.Margin = new System.Windows.Forms.Padding(6);
+            this.AtFocus2Button.Location = new System.Drawing.Point(26, 83);
             this.AtFocus2Button.Name = "AtFocus2Button";
-            this.AtFocus2Button.Size = new System.Drawing.Size(130, 79);
+            this.AtFocus2Button.Size = new System.Drawing.Size(65, 41);
             this.AtFocus2Button.TabIndex = 12;
             this.AtFocus2Button.Text = "Run @Focus2";
             this.AtFocus2Button.UseVisualStyleBackColor = true;
@@ -54,10 +53,9 @@
             // Presetbutton
             // 
             this.Presetbutton.ForeColor = System.Drawing.Color.Black;
-            this.Presetbutton.Location = new System.Drawing.Point(54, 56);
-            this.Presetbutton.Margin = new System.Windows.Forms.Padding(6);
+            this.Presetbutton.Location = new System.Drawing.Point(27, 29);
             this.Presetbutton.Name = "Presetbutton";
-            this.Presetbutton.Size = new System.Drawing.Size(130, 71);
+            this.Presetbutton.Size = new System.Drawing.Size(65, 37);
             this.Presetbutton.TabIndex = 11;
             this.Presetbutton.Text = "Preset Focuser";
             this.Presetbutton.UseVisualStyleBackColor = true;
@@ -67,10 +65,9 @@
             // 
             this.ExposureLabel.AutoSize = true;
             this.ExposureLabel.ForeColor = System.Drawing.Color.White;
-            this.ExposureLabel.Location = new System.Drawing.Point(252, 125);
-            this.ExposureLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.ExposureLabel.Location = new System.Drawing.Point(126, 65);
             this.ExposureLabel.Name = "ExposureLabel";
-            this.ExposureLabel.Size = new System.Drawing.Size(103, 25);
+            this.ExposureLabel.Size = new System.Drawing.Size(51, 13);
             this.ExposureLabel.TabIndex = 10;
             this.ExposureLabel.Text = "Exposure";
             // 
@@ -81,10 +78,9 @@
             // AtFocus3Button
             // 
             this.AtFocus3Button.ForeColor = System.Drawing.Color.Black;
-            this.AtFocus3Button.Location = new System.Drawing.Point(52, 275);
-            this.AtFocus3Button.Margin = new System.Windows.Forms.Padding(6);
+            this.AtFocus3Button.Location = new System.Drawing.Point(26, 143);
             this.AtFocus3Button.Name = "AtFocus3Button";
-            this.AtFocus3Button.Size = new System.Drawing.Size(130, 79);
+            this.AtFocus3Button.Size = new System.Drawing.Size(65, 41);
             this.AtFocus3Button.TabIndex = 92;
             this.AtFocus3Button.Text = "Run @Focus3";
             this.AtFocus3Button.UseVisualStyleBackColor = true;
@@ -94,12 +90,11 @@
             // 
             this.FocusFilterBox.BackColor = System.Drawing.Color.White;
             this.FocusFilterBox.ForeColor = System.Drawing.Color.Black;
-            this.FocusFilterBox.Location = new System.Drawing.Point(386, 56);
-            this.FocusFilterBox.Margin = new System.Windows.Forms.Padding(6);
+            this.FocusFilterBox.Location = new System.Drawing.Point(193, 29);
             this.FocusFilterBox.MaxLength = 16;
             this.FocusFilterBox.Name = "FocusFilterBox";
             this.FocusFilterBox.ReadOnly = true;
-            this.FocusFilterBox.Size = new System.Drawing.Size(66, 31);
+            this.FocusFilterBox.Size = new System.Drawing.Size(35, 20);
             this.FocusFilterBox.TabIndex = 93;
             this.FocusFilterBox.Text = "3";
             this.FocusFilterBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -108,10 +103,9 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(252, 62);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label1.Location = new System.Drawing.Point(126, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 25);
+            this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 94;
             this.label1.Text = "Focus Filter";
             // 
@@ -120,15 +114,14 @@
             this.FocusExposureBox.BackColor = System.Drawing.Color.White;
             this.FocusExposureBox.DecimalPlaces = 1;
             this.FocusExposureBox.ForeColor = System.Drawing.Color.Black;
-            this.FocusExposureBox.Location = new System.Drawing.Point(366, 121);
-            this.FocusExposureBox.Margin = new System.Windows.Forms.Padding(6);
+            this.FocusExposureBox.Location = new System.Drawing.Point(183, 63);
             this.FocusExposureBox.Maximum = new decimal(new int[] {
             30,
             0,
             0,
             0});
             this.FocusExposureBox.Name = "FocusExposureBox";
-            this.FocusExposureBox.Size = new System.Drawing.Size(90, 31);
+            this.FocusExposureBox.Size = new System.Drawing.Size(45, 20);
             this.FocusExposureBox.TabIndex = 97;
             this.FocusExposureBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.FocusExposureBox.Value = new decimal(new int[] {
@@ -140,10 +133,10 @@
             // 
             // FormAutoFocus
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.ClientSize = new System.Drawing.Size(556, 752);
+            this.ClientSize = new System.Drawing.Size(278, 445);
             this.Controls.Add(this.FocusExposureBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.FocusFilterBox);
@@ -153,7 +146,6 @@
             this.Controls.Add(this.ExposureLabel);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "FormAutoFocus";
             this.Text = "AutoFocus";
             ((System.ComponentModel.ISupportInitialize)(this.FocusExposureBox)).EndInit();

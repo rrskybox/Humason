@@ -35,6 +35,7 @@
             this.CloseSlitButton = new System.Windows.Forms.Button();
             this.GoToAzButton = new System.Windows.Forms.Button();
             this.TargetAz = new System.Windows.Forms.NumericUpDown();
+            this.MountCoupleButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DomeHomeAz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TargetAz)).BeginInit();
             this.SuspendLayout();
@@ -43,7 +44,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(12, 41);
+            this.label1.Location = new System.Drawing.Point(16, 25);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 79;
@@ -51,7 +52,7 @@
             // 
             // DomeHomeAz
             // 
-            this.DomeHomeAz.Location = new System.Drawing.Point(93, 39);
+            this.DomeHomeAz.Location = new System.Drawing.Point(97, 23);
             this.DomeHomeAz.Maximum = new decimal(new int[] {
             359,
             0,
@@ -71,7 +72,7 @@
             // HomeDomeButton
             // 
             this.HomeDomeButton.ForeColor = System.Drawing.Color.Black;
-            this.HomeDomeButton.Location = new System.Drawing.Point(15, 106);
+            this.HomeDomeButton.Location = new System.Drawing.Point(19, 59);
             this.HomeDomeButton.Name = "HomeDomeButton";
             this.HomeDomeButton.Size = new System.Drawing.Size(83, 25);
             this.HomeDomeButton.TabIndex = 81;
@@ -82,7 +83,7 @@
             // OpenSlitButton
             // 
             this.OpenSlitButton.ForeColor = System.Drawing.Color.Black;
-            this.OpenSlitButton.Location = new System.Drawing.Point(15, 137);
+            this.OpenSlitButton.Location = new System.Drawing.Point(19, 90);
             this.OpenSlitButton.Name = "OpenSlitButton";
             this.OpenSlitButton.Size = new System.Drawing.Size(83, 25);
             this.OpenSlitButton.TabIndex = 82;
@@ -93,7 +94,7 @@
             // CloseSlitButton
             // 
             this.CloseSlitButton.ForeColor = System.Drawing.Color.Black;
-            this.CloseSlitButton.Location = new System.Drawing.Point(15, 168);
+            this.CloseSlitButton.Location = new System.Drawing.Point(19, 121);
             this.CloseSlitButton.Name = "CloseSlitButton";
             this.CloseSlitButton.Size = new System.Drawing.Size(83, 25);
             this.CloseSlitButton.TabIndex = 83;
@@ -104,9 +105,9 @@
             // GoToAzButton
             // 
             this.GoToAzButton.ForeColor = System.Drawing.Color.Black;
-            this.GoToAzButton.Location = new System.Drawing.Point(15, 222);
+            this.GoToAzButton.Location = new System.Drawing.Point(19, 152);
             this.GoToAzButton.Name = "GoToAzButton";
-            this.GoToAzButton.Size = new System.Drawing.Size(75, 23);
+            this.GoToAzButton.Size = new System.Drawing.Size(83, 23);
             this.GoToAzButton.TabIndex = 84;
             this.GoToAzButton.Text = "Go To Az";
             this.GoToAzButton.UseVisualStyleBackColor = true;
@@ -114,7 +115,7 @@
             // 
             // TargetAz
             // 
-            this.TargetAz.Location = new System.Drawing.Point(112, 223);
+            this.TargetAz.Location = new System.Drawing.Point(116, 153);
             this.TargetAz.Maximum = new decimal(new int[] {
             359,
             0,
@@ -125,12 +126,24 @@
             this.TargetAz.TabIndex = 85;
             this.TargetAz.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // MountCoupleButton
+            // 
+            this.MountCoupleButton.ForeColor = System.Drawing.Color.Black;
+            this.MountCoupleButton.Location = new System.Drawing.Point(19, 212);
+            this.MountCoupleButton.Name = "MountCoupleButton";
+            this.MountCoupleButton.Size = new System.Drawing.Size(83, 23);
+            this.MountCoupleButton.TabIndex = 86;
+            this.MountCoupleButton.Text = "Couple";
+            this.MountCoupleButton.UseVisualStyleBackColor = true;
+            this.MountCoupleButton.Click += new System.EventHandler(this.MountCoupleButton_Click);
+            // 
             // FormDome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.ClientSize = new System.Drawing.Size(262, 363);
+            this.ClientSize = new System.Drawing.Size(278, 445);
+            this.Controls.Add(this.MountCoupleButton);
             this.Controls.Add(this.TargetAz);
             this.Controls.Add(this.GoToAzButton);
             this.Controls.Add(this.CloseSlitButton);
@@ -158,5 +171,6 @@
         internal System.Windows.Forms.Button CloseSlitButton;
         private System.Windows.Forms.Button GoToAzButton;
         private System.Windows.Forms.NumericUpDown TargetAz;
+        private System.Windows.Forms.Button MountCoupleButton;
     }
 }

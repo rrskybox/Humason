@@ -54,10 +54,9 @@
             // AcquireButton
             // 
             this.AcquireButton.ForeColor = System.Drawing.Color.Black;
-            this.AcquireButton.Location = new System.Drawing.Point(340, 69);
-            this.AcquireButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.AcquireButton.Location = new System.Drawing.Point(170, 36);
             this.AcquireButton.Name = "AcquireButton";
-            this.AcquireButton.Size = new System.Drawing.Size(158, 44);
+            this.AcquireButton.Size = new System.Drawing.Size(79, 23);
             this.AcquireButton.TabIndex = 0;
             this.AcquireButton.Text = "Read In";
             this.AcquireButton.UseVisualStyleBackColor = true;
@@ -66,10 +65,9 @@
             // SelectButton
             // 
             this.SelectButton.ForeColor = System.Drawing.Color.Black;
-            this.SelectButton.Location = new System.Drawing.Point(340, 17);
-            this.SelectButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.SelectButton.Location = new System.Drawing.Point(170, 9);
             this.SelectButton.Name = "SelectButton";
-            this.SelectButton.Size = new System.Drawing.Size(158, 44);
+            this.SelectButton.Size = new System.Drawing.Size(79, 23);
             this.SelectButton.TabIndex = 1;
             this.SelectButton.Text = "Look Up";
             this.SelectButton.UseVisualStyleBackColor = true;
@@ -79,10 +77,9 @@
             // 
             this.PlanTargetBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.PlanTargetBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlanTargetBox.Location = new System.Drawing.Point(24, 69);
-            this.PlanTargetBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.PlanTargetBox.Location = new System.Drawing.Point(12, 36);
             this.PlanTargetBox.Name = "PlanTargetBox";
-            this.PlanTargetBox.Size = new System.Drawing.Size(270, 37);
+            this.PlanTargetBox.Size = new System.Drawing.Size(137, 22);
             this.PlanTargetBox.TabIndex = 2;
             this.PlanTargetBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PlanTargetBox.TextChanged += new System.EventHandler(this.PlanTargetBox_TextChanged);
@@ -90,10 +87,9 @@
             // AdjustButton
             // 
             this.AdjustButton.ForeColor = System.Drawing.Color.Black;
-            this.AdjustButton.Location = new System.Drawing.Point(54, 200);
-            this.AdjustButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.AdjustButton.Location = new System.Drawing.Point(27, 104);
             this.AdjustButton.Name = "AdjustButton";
-            this.AdjustButton.Size = new System.Drawing.Size(158, 73);
+            this.AdjustButton.Size = new System.Drawing.Size(79, 38);
             this.AdjustButton.TabIndex = 3;
             this.AdjustButton.Text = "Adjust Target";
             this.AdjustButton.UseVisualStyleBackColor = true;
@@ -103,20 +99,18 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(100, 27);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label1.Location = new System.Drawing.Point(50, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(134, 26);
+            this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Plan Target";
             // 
             // MosaicButton
             // 
             this.MosaicButton.ForeColor = System.Drawing.Color.Black;
-            this.MosaicButton.Location = new System.Drawing.Point(340, 125);
-            this.MosaicButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.MosaicButton.Location = new System.Drawing.Point(170, 65);
             this.MosaicButton.Name = "MosaicButton";
-            this.MosaicButton.Size = new System.Drawing.Size(158, 42);
+            this.MosaicButton.Size = new System.Drawing.Size(79, 22);
             this.MosaicButton.TabIndex = 6;
             this.MosaicButton.Text = "Build Mosaic";
             this.MosaicButton.UseVisualStyleBackColor = true;
@@ -125,10 +119,9 @@
             // LoadPlanButton
             // 
             this.LoadPlanButton.ForeColor = System.Drawing.Color.Black;
-            this.LoadPlanButton.Location = new System.Drawing.Point(54, 285);
-            this.LoadPlanButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.LoadPlanButton.Location = new System.Drawing.Point(27, 148);
             this.LoadPlanButton.Name = "LoadPlanButton";
-            this.LoadPlanButton.Size = new System.Drawing.Size(158, 69);
+            this.LoadPlanButton.Size = new System.Drawing.Size(79, 36);
             this.LoadPlanButton.TabIndex = 7;
             this.LoadPlanButton.Text = "Load Target";
             this.LoadPlanButton.UseVisualStyleBackColor = true;
@@ -137,21 +130,18 @@
             // PlanListBox
             // 
             this.PlanListBox.FormattingEnabled = true;
-            this.PlanListBox.ItemHeight = 25;
-            this.PlanListBox.Location = new System.Drawing.Point(12, 87);
-            this.PlanListBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.PlanListBox.Location = new System.Drawing.Point(6, 45);
             this.PlanListBox.Name = "PlanListBox";
-            this.PlanListBox.Size = new System.Drawing.Size(196, 254);
+            this.PlanListBox.Size = new System.Drawing.Size(100, 134);
             this.PlanListBox.TabIndex = 9;
             this.PlanListBox.DoubleClick += new System.EventHandler(this.PlanListBox_DoubleClick);
             // 
             // DeletePlanButton
             // 
             this.DeletePlanButton.ForeColor = System.Drawing.Color.Black;
-            this.DeletePlanButton.Location = new System.Drawing.Point(84, 31);
-            this.DeletePlanButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.DeletePlanButton.Location = new System.Drawing.Point(42, 16);
             this.DeletePlanButton.Name = "DeletePlanButton";
-            this.DeletePlanButton.Size = new System.Drawing.Size(60, 44);
+            this.DeletePlanButton.Size = new System.Drawing.Size(30, 23);
             this.DeletePlanButton.TabIndex = 10;
             this.DeletePlanButton.Text = "X";
             this.DeletePlanButton.UseVisualStyleBackColor = true;
@@ -160,20 +150,17 @@
             // ScheduleListBox
             // 
             this.ScheduleListBox.FormattingEnabled = true;
-            this.ScheduleListBox.ItemHeight = 25;
-            this.ScheduleListBox.Location = new System.Drawing.Point(12, 87);
-            this.ScheduleListBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ScheduleListBox.Location = new System.Drawing.Point(6, 45);
             this.ScheduleListBox.Name = "ScheduleListBox";
-            this.ScheduleListBox.Size = new System.Drawing.Size(196, 254);
+            this.ScheduleListBox.Size = new System.Drawing.Size(100, 134);
             this.ScheduleListBox.TabIndex = 11;
             // 
             // SchedulePlanButton
             // 
             this.SchedulePlanButton.ForeColor = System.Drawing.Color.Black;
-            this.SchedulePlanButton.Location = new System.Drawing.Point(156, 31);
-            this.SchedulePlanButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.SchedulePlanButton.Location = new System.Drawing.Point(78, 16);
             this.SchedulePlanButton.Name = "SchedulePlanButton";
-            this.SchedulePlanButton.Size = new System.Drawing.Size(56, 44);
+            this.SchedulePlanButton.Size = new System.Drawing.Size(28, 23);
             this.SchedulePlanButton.TabIndex = 12;
             this.SchedulePlanButton.Text = ">>";
             this.SchedulePlanButton.UseVisualStyleBackColor = true;
@@ -182,10 +169,9 @@
             // UnschedulePlanButton
             // 
             this.UnschedulePlanButton.ForeColor = System.Drawing.Color.Black;
-            this.UnschedulePlanButton.Location = new System.Drawing.Point(12, 31);
-            this.UnschedulePlanButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.UnschedulePlanButton.Location = new System.Drawing.Point(6, 16);
             this.UnschedulePlanButton.Name = "UnschedulePlanButton";
-            this.UnschedulePlanButton.Size = new System.Drawing.Size(56, 44);
+            this.UnschedulePlanButton.Size = new System.Drawing.Size(28, 23);
             this.UnschedulePlanButton.TabIndex = 13;
             this.UnschedulePlanButton.Text = "<<";
             this.UnschedulePlanButton.UseVisualStyleBackColor = true;
@@ -194,10 +180,9 @@
             // DownScheduleButton
             // 
             this.DownScheduleButton.ForeColor = System.Drawing.Color.Black;
-            this.DownScheduleButton.Location = new System.Drawing.Point(88, 31);
-            this.DownScheduleButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.DownScheduleButton.Location = new System.Drawing.Point(44, 16);
             this.DownScheduleButton.Name = "DownScheduleButton";
-            this.DownScheduleButton.Size = new System.Drawing.Size(56, 44);
+            this.DownScheduleButton.Size = new System.Drawing.Size(28, 23);
             this.DownScheduleButton.TabIndex = 14;
             this.DownScheduleButton.Text = "\\/";
             this.DownScheduleButton.UseVisualStyleBackColor = true;
@@ -206,10 +191,9 @@
             // UpScheduleButton
             // 
             this.UpScheduleButton.ForeColor = System.Drawing.Color.Black;
-            this.UpScheduleButton.Location = new System.Drawing.Point(156, 31);
-            this.UpScheduleButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.UpScheduleButton.Location = new System.Drawing.Point(78, 16);
             this.UpScheduleButton.Name = "UpScheduleButton";
-            this.UpScheduleButton.Size = new System.Drawing.Size(56, 44);
+            this.UpScheduleButton.Size = new System.Drawing.Size(28, 23);
             this.UpScheduleButton.TabIndex = 15;
             this.UpScheduleButton.Text = "/\\";
             this.UpScheduleButton.UseVisualStyleBackColor = true;
@@ -222,11 +206,9 @@
             this.groupBox1.Controls.Add(this.SchedulePlanButton);
             this.groupBox1.Controls.Add(this.PlanListBox);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(22, 394);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Location = new System.Drawing.Point(11, 205);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.groupBox1.Size = new System.Drawing.Size(232, 356);
+            this.groupBox1.Size = new System.Drawing.Size(116, 185);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Plans";
@@ -234,10 +216,9 @@
             // RefreshButton
             // 
             this.RefreshButton.ForeColor = System.Drawing.Color.Black;
-            this.RefreshButton.Location = new System.Drawing.Point(12, 31);
-            this.RefreshButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.RefreshButton.Location = new System.Drawing.Point(6, 16);
             this.RefreshButton.Name = "RefreshButton";
-            this.RefreshButton.Size = new System.Drawing.Size(60, 44);
+            this.RefreshButton.Size = new System.Drawing.Size(30, 23);
             this.RefreshButton.TabIndex = 13;
             this.RefreshButton.Text = "?";
             this.RefreshButton.UseVisualStyleBackColor = true;
@@ -250,11 +231,9 @@
             this.groupBox2.Controls.Add(this.DownScheduleButton);
             this.groupBox2.Controls.Add(this.UnschedulePlanButton);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(300, 394);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox2.Location = new System.Drawing.Point(150, 205);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.groupBox2.Size = new System.Drawing.Size(232, 356);
+            this.groupBox2.Size = new System.Drawing.Size(116, 185);
             this.groupBox2.TabIndex = 17;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Schedule";
@@ -262,10 +241,9 @@
             // ImageForecastButton
             // 
             this.ImageForecastButton.ForeColor = System.Drawing.Color.Black;
-            this.ImageForecastButton.Location = new System.Drawing.Point(340, 238);
-            this.ImageForecastButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ImageForecastButton.Location = new System.Drawing.Point(170, 124);
             this.ImageForecastButton.Name = "ImageForecastButton";
-            this.ImageForecastButton.Size = new System.Drawing.Size(158, 73);
+            this.ImageForecastButton.Size = new System.Drawing.Size(79, 38);
             this.ImageForecastButton.TabIndex = 18;
             this.ImageForecastButton.Text = "Image Forecast";
             this.ImageForecastButton.UseVisualStyleBackColor = true;
@@ -276,11 +254,10 @@
             this.SolarSystemBodyCheckBox.AutoSize = true;
             this.SolarSystemBodyCheckBox.ForeColor = System.Drawing.Color.White;
             this.SolarSystemBodyCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SolarSystemBodyCheckBox.Location = new System.Drawing.Point(14, 125);
-            this.SolarSystemBodyCheckBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.SolarSystemBodyCheckBox.Location = new System.Drawing.Point(7, 65);
             this.SolarSystemBodyCheckBox.Name = "SolarSystemBodyCheckBox";
             this.SolarSystemBodyCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.SolarSystemBodyCheckBox.Size = new System.Drawing.Size(285, 29);
+            this.SolarSystemBodyCheckBox.Size = new System.Drawing.Size(142, 17);
             this.SolarSystemBodyCheckBox.TabIndex = 102;
             this.SolarSystemBodyCheckBox.Text = "Small Solar System Body";
             this.SolarSystemBodyCheckBox.UseVisualStyleBackColor = true;
@@ -288,10 +265,10 @@
             // 
             // FormPlan
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.ClientSize = new System.Drawing.Size(556, 773);
+            this.ClientSize = new System.Drawing.Size(278, 445);
             this.Controls.Add(this.SolarSystemBodyCheckBox);
             this.Controls.Add(this.ImageForecastButton);
             this.Controls.Add(this.LoadPlanButton);
@@ -305,7 +282,6 @@
             this.Controls.Add(this.groupBox2);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "FormPlan";
             this.Text = "Form Plan";
             this.groupBox1.ResumeLayout(false);

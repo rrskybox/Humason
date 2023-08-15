@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using WeatherWatch;
 
 namespace Humason
 {
@@ -39,8 +40,9 @@ namespace Humason
             FilterListBox.Items.Clear();
             //Clear the filter set from the current target plan
             List<Filter> oldFilters = tPlan.FilterWheelList;
-            foreach (Filter fltr in oldFilters)
-                tPlan.SetFilter(fltr, false);
+            if (oldFilters != null)
+                foreach (Filter fltr in oldFilters)
+                    tPlan.SetFilter(fltr, false);
             //Generate a list of filters from tsx, in index order
             List<string> fwlist = TSXLink.FilterWheel.FilterWheelList();
             if (fwlist == null)
@@ -104,6 +106,54 @@ namespace Humason
             };
         }
 
+        private void Rotator_CheckedChanged(object sender, System.EventArgs e)
+        {
+            //Record the rotator device control selection in the session control file
+            //  and to the settings
+            SessionControl openSession = new SessionControl();
+            openSession.IsRotationEnabled = RotatorCheckBox.Checked;
+            return;
+        }
+
+        private void DomeAddOnCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.HasDome = HasDomeCheckBox.Checked;
+            return;
+        }
+
+        private void NoFilterWheelCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.NoFilterWheel = NoFilterWheelCheckBox.Checked;
+            return;
+        }
+
+        private void WeatherCheck_CheckedChanged(object sender, System.EventArgs e)
+        {
+            //If WeatherCheck is checked, now, then open the file dialog to pick up
+            //  the location of the weather data file, then store it
+            SessionControl openSession = new SessionControl();
+            if (HasWeatherCheckBox.Checked)
+            {
+                DialogResult weatherFilePath = WeatherFileDialog.ShowDialog();
+                openSession.WeatherDataFilePath = WeatherFileDialog.FileName;
+            }
+            //Check to see if the Weather file is valid
+            WeatherReader wrf = new WeatherReader(openSession.WeatherDataFilePath);
+            if (wrf.IsWeatherValid())
+            {
+                openSession.IsWeatherEnabled = HasWeatherCheckBox.Checked;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Weather Data File");
+                openSession.IsWeatherEnabled = false;
+                HasWeatherCheckBox.Checked = false;
+            }
+            return;
+        }
+
         public void ResetConfiguration()
         {
             SessionControl openSession = new SessionControl();
@@ -123,7 +173,6 @@ namespace Humason
                 DitherCheck.Checked = tPlan.DitherEnabled;
                 GuiderCalibrateCheck.Checked = tPlan.GuiderCalibrateEnabled;
                 ResyncCheck.Checked = tPlan.ResyncEnabled;
-                CameraTemperatureSet.Value = (decimal)tPlan.CameraTemperatureSet;
                 //Pre set clear and filter numbers from configuration file
                 CLSFilterNum.Value = tPlan.CLSFilter;
                 LumFilterNum.Value = tPlan.LumFilter;
@@ -140,6 +189,12 @@ namespace Humason
                         FilterListBox.Items.Add(filter.Name + "-" + filter.Index, true);
                     }
                 }
+                //Fill in checkboxes with existing settings
+                HasRotatorCheckBox.Checked = Convert.ToBoolean(openSession.HasRotator);
+                HasWeatherCheckBox.Checked = Convert.ToBoolean(openSession.HasWeather);
+                HasDomeCheckBox.Checked = Convert.ToBoolean(openSession.HasDome);
+                NoFilterWheelCheckBox.Checked = Convert.ToBoolean(openSession.NoFilterWheel);
+                return;
             }
         }
 
@@ -154,7 +209,7 @@ namespace Humason
                 AutoFocusEnabled = AutofocusCheck.Checked,
                 GuiderCalibrateEnabled = GuiderCalibrateCheck.Checked,
                 ResyncEnabled = ResyncCheck.Checked,
-                CameraTemperatureSet = (double)CameraTemperatureSet.Value
+                //CameraTemperatureSet = (double)CameraTemperatureSet.Value
             };
             openSession.RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value;
             if (!IsInitializing)
@@ -240,16 +295,6 @@ namespace Humason
             }
         }
 
-        private void CameraTemperatureSet_ValueChanged(object sender, EventArgs e)
-        {
-            //Store it in the configuration and move on
-            SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
-            {
-                CameraTemperatureSet = (double)CameraTemperatureSet.Value
-            };
-        }
-
         private void AtFocus2RadioButton_CheckedChanged(object sender, EventArgs e)
         {
             //Update the configuration file when this button changes
@@ -323,7 +368,36 @@ namespace Humason
             };
         }
 
+        private void NoFilterWheelCheckBox_CheckedChanged_1(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.NoFilterWheel = NoFilterWheelCheckBox.Checked;
+            return;
+        }
 
+        private void HasRotatorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.HasRotator = HasRotatorCheckBox.Checked;
+            return;
+
+        }
+
+        private void HasWeatherCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.HasWeather = HasWeatherCheckBox.Checked;
+            return;
+
+        }
+
+        private void HasDomeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.HasDome = HasDomeCheckBox.Checked;
+            return;
+
+        }
     }
 }
 
