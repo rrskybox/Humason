@@ -164,8 +164,6 @@ namespace Humason
                                 lg.LogIt("Connecting Dome Failed: " + ex.Message);
                                 return false;
                             }
-                            tsxd.IsCoupled = 1;
-                            lg.LogIt("Coupling Dome to Mount");
                             return true;
                         }
                         break;
@@ -1055,7 +1053,7 @@ namespace Humason
                     lg.LogIt("Dome Close command failed");
                     return false;
                 }
-                lg.LogIt("Closeing Dome");
+                lg.LogIt("Closing Dome");
                 return true;
 
             }

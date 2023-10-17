@@ -66,55 +66,79 @@ namespace Humason
         public static bool OpenDome()
         {
             //Method to open dome
-            //Assume the dome is properly positioned for power
-            //Position the dome with at home (wipers on pads)
             SessionControl openSession = new SessionControl();
-            // open the dome shutter
-            //Make sure dome is connected and decoupled
-            IsDomeCoupled = false;
-            //Disconnect the mount
+            //Save mount and dome connect states
+            bool coupledState = TSXLink.Dome.IsCoupled;
+            bool mountedState = TSXLink.Connection.IsConnected(TSXLink.Connection.Devices.Mount);
+            bool domeState = TSXLink.Connection.IsConnected(TSXLink.Connection.Devices.Dome);
+            //Disconnect the mount so the dome won't chase it
             TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Mount);
+            //Connect the dome, assuming it might be disconnected for some reason, if it fails, reset the connection states
             if (!TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome))
+            {
+                if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
                 return false;
-            //Stop whatever the dome might have been doing, if any and wait a few seconds for it to clear
+            }
+            //Stop whatever the dome might have been doing, if it fails, reset the connection states
             if (!TSXLink.Dome.AbortDomeOperation())
+            {
+                if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
                 return false;
-            //Goto home position using goto rather than home
+            }
+            //Make sure dome decoupled
+            IsDomeCoupled = false;
+            //Slew dome to home position
             ReliableGoToDomeAz(openSession.DomeHomeAz);
             //Open Slit
             OpenSlitStarter();
-            System.Threading.Thread.Sleep(10);  //Workaround for problme in TSX
+            System.Threading.Thread.Sleep(10);  //Workaround for race condition in TSX
             while (!TSXLink.Dome.IsOpenComplete)
             { System.Threading.Thread.Sleep(1000); } //one second wait loop
             IsDomeCoupled = true;
+            //Reset device states
+            if (domeState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
+            if (coupledState) IsDomeCoupled = true;
+            if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
             return true;
         }
 
         public static bool CloseDome()
         {
             //Method for closing the TSX dome
-            // use exception handlers to check for dome commands, opt out if none
-            //Park Mount, if not parked already
+            //Save mount and dome connect states
+            bool coupledState = TSXLink.Dome.IsCoupled;
+            bool mountedState = TSXLink.Connection.IsConnected(TSXLink.Connection.Devices.Mount);
+            bool domeState = TSXLink.Connection.IsConnected(TSXLink.Connection.Devices.Dome);
             SessionControl openSession = new SessionControl();
             //Disconnect the mount
             TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Mount);
-            //Connect dome and decouple the dome from the mount position
+            //Connect dome and decouple the dome from the mount position, if it fails, reset the connection states
             if (!TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome))
+            {
+                if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
                 return false;
-            //Stop whatever the dome might have been doing, if any and wait a few seconds for it to clear
+            }
+            //Stop whatever the dome might have been doing, if it fails, reset the connection states
             if (!TSXLink.Dome.AbortDomeOperation())
+            {
+                if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
                 return false;
+            }
+            //Make sure dome decoupled
             IsDomeCoupled = false;
-
             //Goto home position using goto rather than home
             ReliableGoToDomeAz(openSession.DomeHomeAz);
+            //Close slit
             InitiateCloseSlit();
-            System.Threading.Thread.Sleep(5000); // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
+            // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
+            System.Threading.Thread.Sleep(5000); 
+            // Wait for close slit competion
             while (!TSXLink.Dome.IsCloseComplete)
                 System.Threading.Thread.Sleep(1000);
-            //Check to see if slit got closed, if not, then try one more time
-            //disconnect dome controller
-            TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Dome);
+            //Reset device states
+            if (domeState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
+            if (coupledState) IsDomeCoupled = true;
+            if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
             return true;
         }
 
@@ -128,12 +152,6 @@ namespace Humason
         {
             // use exception handlers to check for dome commands, opt out if none
             SessionControl openSession = new SessionControl();
-            //Disconnect the mount
-            //Decouple the dome from the mount position and park the mount
-            //ParkAndDecouple();
-
-            //Disconnect the mount
-            TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Mount);
             //Connect dome and decouple the dome from the mount position
             if (!TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome))
                 return false;
@@ -253,8 +271,5 @@ namespace Humason
             }
             return;
         }
-
-
-
     }
 }

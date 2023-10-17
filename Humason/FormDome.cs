@@ -85,7 +85,7 @@ namespace Humason
             else
             {
                 MountCoupleButton.Text = "Couple";
-                MountCoupleButton.BackColor = Color.Green;
+                MountCoupleButton.BackColor = Color.LightGreen;
             }
             return;
 

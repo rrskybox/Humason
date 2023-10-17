@@ -26,7 +26,7 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>250</ApplicationRevision>
+    <ApplicationRevision>252</ApplicationRevision>
     <ApplicationVersion>4.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -196,6 +196,7 @@
     <Compile Include="TSXLink.cs" />
     <Compile Include="WeatherFileReader.cs" />
     <Compile Include="Axess.cs" />
+    <Compile Include="WeatherHold.cs" />
     <EmbeddedResource Include="ClearTheListTheHardWay.dbq" />
     <EmbeddedResource Include="FormAutoFocus.resx">
       <DependentUpon>FormAutoFocus.cs</DependentUpon>

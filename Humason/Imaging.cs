@@ -501,15 +501,25 @@ namespace Humason
                 //  Otherwise, we're done with it
                 if (!(NHUtil.CloseEnough(targetADU, currentADU, 20.0)) || (currentADU > targetADU))
                 {
-                    if (currentADU > targetADU)
-                    { currentBrightness = currentBrightness - 5; }
-                    else
-                    { currentBrightness = currentBrightness + 5; }
+                    currentBrightness = AdjustedBrightness(targetADU, currentADU, currentBrightness);
                 }
                 else { break; }
             }
             lg.LogIt("FlatMan brightness calibration done");
             return (currentBrightness);
+        }
+
+        private int AdjustedBrightness(double targetADU, double currentADU, int currentBrightness)
+        {
+            //Calculates a new brightness level based on the current ADU and current Brightness  
+            //  that would produce the targetADU assuming linearity.
+            //Linearity should be true if the current ADU is less than the target ADU.  If it is not
+            //  then the result will probably overshoot the target (in the negative direction) but a
+            //  test should be close.
+            //Maxes out at 100, I think
+
+            return (int)Math.Min(100, (currentBrightness * (targetADU / currentADU)));
+
         }
 
         private double FlatManExposureCalibration(Filter filter, double startingexposure, int brightness, int targetADU)

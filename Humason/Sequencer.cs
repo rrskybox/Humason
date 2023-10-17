@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TheSky64Lib;
-using WeatherWatch;
 
 
 namespace Humason
@@ -406,66 +405,24 @@ namespace Humason
                 //  Mount will be returned to current target position if Park'ed during the interrum
                 if (openSession.IsWeatherEnabled)
                 {
-                    WeatherReader wrf = new WeatherReader(openSession.WeatherDataFilePath);
-                    if (!wrf.IsWeatherSafe())  //Unsafe condition
+                    //Check weather.  If delayed (dome closed, etc) then 
+                    //  if aborting, then break from session loop
+                    if (WeatherHold.WeatherCheckAndDelay(openSession))
                     {
-                        //Unsafe weather condition:
-                        //  Park telescope
-                        //  Home dome
-                        //  Close dome
-                        lg.LogIt("Waiting on unsafe weather conditions...");
-                        lg.LogIt("Parking telescope, if park is enabled");
-                        TSXLink.Mount.Park();
-                        if (openSession.HasDome)
-                        {
-                            //Close dome -- dome is homed before closing
-                            // Note that the mount will be left in the Park position
-                            lg.LogIt("Closing Dome");
-                            DomeControl.CloseDome();
-                        }
-                        do
-                        //Wait for conditions to improve by running a five minute wait
-                        // but enable the form for input, ect every second
-                        {
-                            for (int i = 0; i < 300; i++) //Five minute wait loop
-                            {
-                                System.Windows.Forms.Application.DoEvents();
-                                System.Threading.Thread.Sleep(1000);  //one second wait loop
-                                //Check for shutdown time
-                                if (LaunchPad.IsTimeToShutDown())
-                                { break; };
-                                //Check for abort
-                                if (FormHumason.IsAborting())
-                                {
-                                    lg.LogIt("Sequence aborted");
-                                    break;
-                                }
-                            }
-                        } while (!wrf.IsWeatherSafe());
-                        if (LaunchPad.IsTimeToShutDown()) { break; };
-                        if (wrf.IsWeatherSafe())
-                        {
-                            lg.LogIt("Weather conditions safe");
-                            if (openSession.HasDome)
-                            {
-                                lg.LogIt("Opening Dome");
-                                TSXLink.Dome.OpenSlit();
-                            }
-                            lg.LogIt("Unparking telescope");
-                            TSXLink.Mount.UnPark();
-                            //CLS to target.  If fails, then the weather must be bad (or something worse) so aboart
+                        //Weather has delayed sequence, i.e. parked the scope, then closed and possibly reopened the dome
+                        //if the dome is not reopened, then there has been an abort or time is up.
+                        //if not aborting or time to shut down, then CLS back to the target
+                        if (!FormHumason.IsAborting() && !LaunchPad.IsTimeToShutDown())
+                            //CLS the mount to the target.  If fails, then the weather must be bad (or something worse) so set abort
                             if (!CLSToTargetPlanCoordinates())
-                            {
                                 FormHumason.SetAbort();
-                                break;
-                            };
-                        }
                     }
                 }
-                //Check for abort, again
+
+                //Check for abort
                 if (FormHumason.IsAborting())
                 {
-                    lg.LogIt("Sequence aborted");
+                    lg.LogIt("Aborting after weather check");
                     break;
                 }
                 //Check for shut down time
