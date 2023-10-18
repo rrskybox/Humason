@@ -225,7 +225,7 @@ namespace Humason
             { fmgr.TakeFlats(); }
 
             //If autorun set, then run it, then... just park the mount and disconnect
-            if (openSession.ShutDownEnabled && !openSession.IsAttended)
+            if (openSession.ShutDownEnabled && !openSession.IsAttended && LaunchPad.IsTimeToShutDown())
             {
                 LaunchPad.RunShutDownApp();
                 return false;
@@ -272,7 +272,8 @@ namespace Humason
                 TSXLink.Connection.DisconnectAllDevices();
                 FormHumason.SetStopped();
             }
-            if ((!openSession.IsAttended) && openSession.ShutDownEnabled) { LaunchPad.RunShutDownApp(); }
+            if ((!openSession.IsAttended) && openSession.ShutDownEnabled && LaunchPad.IsTimeToShutDown())
+                LaunchPad.RunShutDownApp();
             lg.LogIt("Abort Completed -- awaiting new orders, Captain");
             return;
         }
