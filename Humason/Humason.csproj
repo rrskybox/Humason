@@ -26,7 +26,7 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>252</ApplicationRevision>
+    <ApplicationRevision>254</ApplicationRevision>
     <ApplicationVersion>4.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -101,6 +101,7 @@
     <Compile Include="FilterManager.cs" />
     <Compile Include="FlatMan.cs" />
     <Compile Include="FlatManager.cs" />
+    <Compile Include="FlatPresets.cs" />
     <Compile Include="FormAutoFocus.cs">
       <SubType>Form</SubType>
     </Compile>

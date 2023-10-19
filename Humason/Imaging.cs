@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using TheSky64Lib;
 
 namespace Humason
@@ -417,18 +418,27 @@ namespace Humason
             FlatMan flmn = new FlatMan { Light = true };
 
             //try to find the best brightness that is near, but less than the target
-            int brightness = FlatManBrightnessCalibration(filter, openSession.FlatsExposureTime, openSession.FlatManBrightness, openSession.FlatsTargetADU);
-            lg.LogIt("FlatMan brightness level set to " + brightness.ToString("0"));
+            int? brightness = FlatPresets.GetBrightness(filter.Index);
+            if (brightness == null)
+               brightness = FlatManBrightnessCalibration(filter, openSession.FlatsExposureTime, openSession.FlatManBrightness, openSession.FlatsTargetADU);
+            else
+                lg.LogIt("Flat brightness preset found");
+           lg.LogIt("FlatMan brightness level set to " + ((int)brightness).ToString("0"));
             //try to find the best exposure that is close to the target
-            double exposure = FlatManExposureCalibration(filter, openSession.FlatsExposureTime, brightness, openSession.FlatsTargetADU);
-            lg.LogIt("FlatMan exposure set to " + exposure.ToString("0.00"));
-            flmn.Bright = brightness;
+            double? exposure = FlatPresets.GetExposure(filter.Index);
+            if (exposure == null)
+                exposure = FlatManExposureCalibration(filter, openSession.FlatsExposureTime, (int)brightness, openSession.FlatsTargetADU);
+            else
+                lg.LogIt("Flat exposure preset found");
+            lg.LogIt("FlatMan exposure set to " + ((double)exposure).ToString("0.00"));
+            flmn.Bright = (int)brightness;
             int imagecount = filter.Repeat;
-            FlatManFlatsLoop(targetName, filter, imagecount, exposure, rotationPA, meridianSide);
+            FlatManFlatsLoop(targetName, filter, imagecount, (double)exposure, rotationPA, meridianSide);
             //Clean up
             lg.LogIt("Flats Imaging Done");
             //turn off flatman
             flmn.Light = false;
+            FlatPresets.SetPreset(filter.Index, (double)exposure, (int)brightness);
         }
 
         private void FlatManFlatsLoop(string targetName, Filter filter, int imagecount, double exposure, double rotationPA, string meridianSide)
@@ -449,7 +459,7 @@ namespace Humason
             for (int i = 0; i < imagecount; i++)
             {
                 lg.LogIt("Imaging Flat: " + "Filter " + asti.FilterIndex +
-                              " Exp: " + exposure.ToString("0.0") + "  " + i.ToString("0") + " of " + imagecount.ToString("0"));
+                              " Exp: " + exposure.ToString("0.0") + "  " + (i++).ToString("0") + " of " + imagecount.ToString("0"));
                 int camResult = tcam.GetImage();
                 if (camResult != 0)
                 {
