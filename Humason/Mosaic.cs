@@ -51,7 +51,7 @@ namespace Humason
                                                                 Convert.ToDouble(starget[4]),
                                                                 iFOVPA));
                     }
-                    catch (Exception ex)
+                    catch 
                     { return null; }
                 }
                 return mtargets;

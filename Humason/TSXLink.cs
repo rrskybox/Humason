@@ -227,7 +227,7 @@ namespace Humason
                         try { tsxf.Asynchronous = 0; }
                         catch (Exception ex) { lg.LogIt("Asynchronous Focuser Command Failed: " + ex.Message); }
                         try { status = tsxf.focDisconnect(); }
-                        catch (Exception ex) { lg.LogIt("Disconnecting Focuesr Failed: " + ex.Message); }
+                        catch (Exception ex) { lg.LogIt("Disconnecting Focuser Failed: " + ex.Message); }
                         break;
 
                     case Devices.Rotator:
@@ -245,15 +245,12 @@ namespace Humason
                             lg.LogIt("Disconnecting Dome");
                             sky6Dome tsxd = new sky6Dome();
                             lg.LogIt("Decoupling Dome from Mount");
-                            try { tsxd.IsCoupled = 0; }
+                            try { Dome.IsCoupled = false; }
                             catch (Exception ex)
                             { lg.LogIt("Decoupling Dome failed" + ex.Message); }
                             try { tsxd.Disconnect(); }
                             catch (Exception ex)
-                            {
-                                lg.LogIt("Disconnecting Rotator Failed: " + ex.Message);
-                                return;
-                            }
+                            { lg.LogIt("Disconnecting Dome Failed: " + ex.Message); }
                         }
                         break;
                     default:
@@ -791,18 +788,6 @@ namespace Humason
                     return false;
                 }
             }
-
-            private static void ToggleDomeCoupling()
-            {
-                //Uncouple dome tracking, then recouple dome tracking (synchronously)
-                sky6Dome tsxd = new sky6Dome();
-                Dome.IsCoupled = false;
-                System.Threading.Thread.Sleep(1000);
-                Dome.IsCoupled = true;
-                //Wait for all dome activity to stop
-                while (IsDomeTrackingUnderway()) { System.Threading.Thread.Sleep(1000); }
-                return;
-            }
         }
         #endregion
 
@@ -1192,7 +1177,7 @@ namespace Humason
                 get
                 {
                     sky6Dome tsxd = new sky6Dome();
-                    if (tsxd.IsCoupled == 1)
+                    if (Convert.ToBoolean(tsxd.isCoupledToMountTracking()))
                     {
                         LogEvent lg = new LogEvent();
                         lg.LogIt("Dome is Coupled to Mount");
@@ -1208,10 +1193,7 @@ namespace Humason
                 set
                 {
                     sky6Dome tsxd = new sky6Dome();
-                    if (value)
-                        tsxd.IsCoupled = 1;
-                    else
-                        tsxd.IsCoupled = 0;
+                    tsxd.setIsCoupledToMountTracking(Convert.ToInt32(value));
                     return;
                 }
 
@@ -1839,7 +1821,7 @@ namespace Humason
                     case 3:
                         try
                         { int focstat = tsxc.AtFocus3(3, false); }
-                        catch (Exception ex)
+                        catch
                         {
                             //Just close up, TSX will spawn error window unless this is an abort
                             //lg.LogIt("@Focus3 fails for " + ex.Message);

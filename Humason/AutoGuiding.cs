@@ -122,7 +122,7 @@ namespace Humason
             {
                 maxStarADU = sEx.GetPixelADU((int)CenterX[iMax], (int)CenterY[iMax]);
             }
-            catch (Exception ex)
+            catch 
             {
                 lg.LogIt("Light Source error -- no stars?");
             }

@@ -17,7 +17,6 @@ namespace Humason
             CloseSlitButton.BackColor = Color.LightGreen;
             GoToAzButton.BackColor = Color.LightGreen;
             SetCouplingCommandText();
-
         }
 
         private void DomeHomeAz_ValueChanged(object sender, EventArgs e)

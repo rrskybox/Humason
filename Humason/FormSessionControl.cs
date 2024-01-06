@@ -6,11 +6,9 @@ namespace Humason
 {
     public partial class FormSessionControl : Form
     {
-        private bool sessionFormInit = false;
 
         public FormSessionControl()
         {
-            sessionFormInit = true;
             InitializeComponent();
             SessionControl openSession = new SessionControl();
             //Update the autorun types checked 
@@ -34,7 +32,6 @@ namespace Humason
             openSession.StartUpEnabled = StartupEnabledCheckBox.Checked;
             openSession.ShutDownEnabled = ShutdownEnabledCheckBox.Checked;
             openSession.IsMeridianFlipEnabled = EnableMeridianFlipBox.Checked;
-            sessionFormInit = false;
             return;
         }
 
