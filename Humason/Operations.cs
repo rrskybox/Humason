@@ -260,12 +260,7 @@ namespace Humason
                 lg.LogIt("Parking Mount");
                 try { TSXLink.Mount.Park(); }
                 catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
-                //home dome (don't close as autorun is not enabled
-                if (openSession.HasDome)
-                {
-                    lg.LogIt("Homing Dome");
-                    TSXLink.Dome.HomeSlit();
-                }
+ 
                 lg.LogIt("Disconnecting all devices");
                 TSXLink.Connection.DisconnectAllDevices();
                 FormHumason.SetStopped();

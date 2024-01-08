@@ -1062,7 +1062,7 @@ namespace Humason
 
             }
 
-            public static bool HomeSlit()
+            public static bool HomeDome()
             {
                 LogEvent lg = new LogEvent();
                 sky6Dome tsxd = new sky6Dome();
@@ -1095,6 +1095,42 @@ namespace Humason
                     return false;
                 }
                 lg.LogIt("Goto Command Commenced");
+                return true;
+            }
+
+            public static bool ParkDome()
+            {
+                LogEvent lg = new LogEvent();
+                sky6Dome tsxd = new sky6Dome();
+                try
+                {
+                    tsxd.Park();
+                    System.Threading.Thread.Sleep(10);
+                }
+                catch
+                {
+                    lg.LogIt("Dome Park Command failed");
+                    return false;
+                }
+                lg.LogIt("Park Command Commenced");
+                return true;
+            }
+
+            public static bool UnparkDome()
+            {
+                LogEvent lg = new LogEvent();
+                sky6Dome tsxd = new sky6Dome();
+                try
+                {
+                    tsxd.Unpark();
+                    System.Threading.Thread.Sleep(10);
+                }
+                catch
+                {
+                    lg.LogIt("Dome Unpark Command failed");
+                    return false;
+                }
+                lg.LogIt("Unpark Command Commenced");
                 return true;
             }
 
@@ -1155,6 +1191,38 @@ namespace Humason
                     {
                         LogEvent lg = new LogEvent();
                         lg.LogIt("Dome Goto Azm Complete");
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+
+            public static bool IsParkComplete
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (tsxd.IsParkComplete == 1)
+                    {
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome Park Complete");
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+
+            public static bool IsUnparkComplete
+            {
+                get
+                {
+                    sky6Dome tsxd = new sky6Dome();
+                    if (tsxd.IsUnparkComplete == 1)
+                    {
+                        LogEvent lg = new LogEvent();
+                        lg.LogIt("Dome UnPark Complete");
                         return true;
                     }
                     else

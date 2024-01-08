@@ -68,7 +68,6 @@ namespace Humason
             //Method to open dome
             SessionControl openSession = new SessionControl();
             //Save mount and dome connect states
-            bool coupledState = TSXLink.Dome.IsCoupled;
             bool mountedState = TSXLink.Connection.IsConnected(TSXLink.Connection.Devices.Mount);
             bool domeState = TSXLink.Connection.IsConnected(TSXLink.Connection.Devices.Dome);
             //Disconnect the mount so the dome won't chase it
@@ -76,30 +75,43 @@ namespace Humason
             //Connect the dome, assuming it might be disconnected for some reason, if it fails, reset the connection states
             if (!TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome))
             {
-                if (mountedState) 
+                if (mountedState)
                     TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
                 return false;
             }
-            //Stop whatever the dome might have been doing, if it fails, reset the connection states
-            if (!TSXLink.Dome.AbortDomeOperation())
-            {
-                if (mountedState) 
-                    TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
-                return false;
-            }
-            //Slew dome to home position
-            ReliableGoToDomeAz(openSession.DomeHomeAz);
-            //Open Slit
-            OpenSlitStarter();
-            System.Threading.Thread.Sleep(10);  //Workaround for race condition in TSX
+            //Reconnect the dome, if possible
+            TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
+            //Decouple from mount
+            TSXLink.Dome.IsCoupled = false;
+            //Stop whatever the dome might be doing, if any and wait a few seconds for it to clear
+            TSXLink.Dome.AbortDomeOperation();
+            //If dome is at home/park position then home and park 
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.HomeDome();
+            System.Threading.Thread.Sleep(1000);
+            while (!TSXLink.Dome.IsFindHomeComplete)
+                System.Threading.Thread.Sleep(1000);
+            //Park the dome, if not already parked
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.ParkDome();
+            System.Threading.Thread.Sleep(1000);
+            while (!TSXLink.Dome.IsParkComplete)
+                System.Threading.Thread.Sleep(1000);
+            //Open the slit, wait for the command to propogate, then wait until the dome reports it is open
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.OpenSlit();
+            System.Threading.Thread.Sleep(1000);
             while (!TSXLink.Dome.IsOpenComplete)
-            { System.Threading.Thread.Sleep(1000); } //one second wait loop
-            //Reset device states
-            if (domeState) 
-                TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
-            if (coupledState) 
-                IsDomeCoupled = true;
-            if (mountedState) 
+                System.Threading.Thread.Sleep(1000);
+            //Unpark dome
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.UnparkDome();
+            System.Threading.Thread.Sleep(1000);
+            while (!TSXLink.Dome.IsUnparkComplete)
+                System.Threading.Thread.Sleep(1000);
+            //Enable dome coupling to mount slews
+            TSXLink.Dome.IsCoupled = true;
+            if (mountedState)
                 TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
             return true;
         }
@@ -120,27 +132,39 @@ namespace Humason
                 if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
                 return false;
             }
-            //Stop whatever the dome might have been doing, if it fails, reset the connection states
-            if (!TSXLink.Dome.AbortDomeOperation())
-            {
-                if (mountedState) TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
-                return false;
-            }
-            //Goto home position using goto rather than home (this will also decouple dome from mount)
-            ReliableGoToDomeAz(openSession.DomeHomeAz);
-            //Close slit
-            InitiateCloseSlit();
-            // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
-            System.Threading.Thread.Sleep(5000); 
-            // Wait for close slit competion
-            while (!TSXLink.Dome.IsCloseComplete)
+            //Reconnect the dome, if possible
+            TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
+            //Decouple from mount
+            TSXLink.Dome.IsCoupled = false;
+            //Stop whatever the dome might be doing, if any and wait a few seconds for it to clear
+            TSXLink.Dome.AbortDomeOperation();
+            //If dome is at home/park position then home and park 
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.HomeDome();
+            System.Threading.Thread.Sleep(1000);
+            while (!TSXLink.Dome.IsFindHomeComplete)
                 System.Threading.Thread.Sleep(1000);
-            //Reset device states
-            if (domeState) 
-                TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
-            if (coupledState) 
-                IsDomeCoupled = true;
-            if (mountedState) 
+            //Park the dome, if not already parked
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.ParkDome();
+            System.Threading.Thread.Sleep(1000);
+            while (!TSXLink.Dome.IsParkComplete)
+                System.Threading.Thread.Sleep(1000);
+            //Open the slit, wait for the command to propogate, then wait until the dome reports it is open
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.CloseSlit();
+            System.Threading.Thread.Sleep(1000);
+            while (!TSXLink.Dome.IsOpenComplete)
+                System.Threading.Thread.Sleep(1000);
+            //Unpark dome
+            System.Threading.Thread.Sleep(1000);
+            TSXLink.Dome.UnparkDome();
+            System.Threading.Thread.Sleep(1000);
+            while (!TSXLink.Dome.IsUnparkComplete)
+                System.Threading.Thread.Sleep(1000);
+            //Enable dome coupling to mount slews
+            TSXLink.Dome.IsCoupled = true;
+            if (mountedState)
                 TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
             return true;
         }
@@ -164,7 +188,7 @@ namespace Humason
             //Decouple with mount
             TSXLink.Dome.IsCoupled = false;
             //Find Home
-            InitiateFindHome();
+            TSXLink.Dome.HomeDome();
             System.Threading.Thread.Sleep(1000); // Release task thread so TSX can start FindHome -- Command in Progress exception otherwise
             while (!TSXLink.Dome.IsFindHomeComplete)
                 System.Threading.Thread.Sleep(1000);
@@ -194,6 +218,29 @@ namespace Humason
             return true;
         }
 
+        public static bool ReliableGoToHome(double az)
+        {
+            //Slews dome to home while avoiding lockup if already there
+            //Disconnect the mount
+            TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Mount);
+            //Decouple the dome
+            TSXLink.Dome.IsCoupled = false;
+            //Abort any other dome operations
+            AbortDome();
+            //Wait for command to clear
+            System.Threading.Thread.Sleep(1000);
+            //Go to the specified az/alt
+            double currentAz = TSXLink.Dome.CurrentDomeAzm;
+            if (currentAz - az > 1)
+            {
+                InitiateDomeGoTo(az);
+                System.Threading.Thread.Sleep(5000);
+                while (!TSXLink.Dome.IsGotoAzmComplete)
+                    System.Threading.Thread.Sleep(1000);
+            }
+            return true;
+        }
+
         private static void OpenSlitStarter()
         {
             //Operation in progress == 0
@@ -206,7 +253,7 @@ namespace Humason
                 {
                     failed = !TSXLink.Dome.OpenSlit();
                 }
-                catch 
+                catch
                 {
                     //Assume goto in progress error, wait until Goto is complete
                     System.Threading.Thread.Sleep(sleepOver);
@@ -227,7 +274,7 @@ namespace Humason
                 {
                     failed = !TSXLink.Dome.CloseSlit();
                 }
-                catch 
+                catch
                 {
                     //Assume goto in progress error, wait until Goto is complete
                     System.Threading.Thread.Sleep(sleepOver);
@@ -248,7 +295,7 @@ namespace Humason
                 {
                     failed = !TSXLink.Dome.GotoDomeAzm(az);
                 }
-                catch 
+                catch
                 {
                     //Assume goto in progress error, wait until Goto is complete
                     System.Threading.Thread.Sleep(sleepOver);
@@ -267,9 +314,9 @@ namespace Humason
             {
                 try
                 {
-                    failed = !TSXLink.Dome.HomeSlit();
+                    failed = !TSXLink.Dome.HomeDome();
                 }
-                catch 
+                catch
                 {
                     //Assume goto in progress error, wait until Goto is complete
                     System.Threading.Thread.Sleep(sleepOver);
