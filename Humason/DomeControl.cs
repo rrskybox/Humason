@@ -75,12 +75,18 @@ namespace Humason
             LogEntry("Bringing dome to park position");
             TSXLink.Dome.DomeParkReliably();
             //Open Slit
-            LogEntry("Opening dome slit");
-            TSXLink.Dome.OpenSlit();
+            LogEntry("Initiating opening dome slit");
+            while (!TSXLink.Dome.OpenSlit())
+            {
+                LogEntry("Attempt to start open failed.  Trying again.)");
+                System.Threading.Thread.Sleep(5000);
+            }
+            LogEntry("Starting open slit");
             //Give a wait to get goint
             System.Threading.Thread.Sleep(5000);
             while (!TSXLink.Dome.IsOpenComplete)
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(5000);
+            LogEntry("Slit open succeeded");
             //Unpark the dome so it can chase the mount
             System.Threading.Thread.Sleep(5000);
             LogEntry("Unparking dome, if parked");
@@ -128,13 +134,20 @@ namespace Humason
             TSXLink.Dome.DomeParkReliably();
             //Close slit
             System.Threading.Thread.Sleep(5000);
-            LogEntry("Closing dome slit");
-            TSXLink.Dome.CloseSlit();
+            LogEntry("Initiating dome slit close");
+           while (! TSXLink.Dome.CloseSlit())
+            {
+                LogEntry("Attempt at starting dome close failed. Trying again.");
+                System.Threading.Thread.Sleep(5000);
+            }
+            LogEntry("Close slit initiated successfully");
             // Release task thread so TSX can start Close Slit -- Command in Progress exception otherwise
             System.Threading.Thread.Sleep(5000);
             // Wait for close slit competion or receive timout -- meaning that the battery has failed, probably
+            LogEntry("Waiting on close slit completion");
             while (!TSXLink.Dome.IsCloseComplete)
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(5000);
+            LogEntry("Dome slit closed successfully");
             //Reset device states
             //Reset device states
             if (domeState)
