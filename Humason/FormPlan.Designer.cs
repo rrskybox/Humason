@@ -47,6 +47,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ImageForecastButton = new System.Windows.Forms.Button();
             this.SolarSystemBodyCheckBox = new System.Windows.Forms.CheckBox();
+            this.ReductionFramesButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -241,7 +242,7 @@
             // ImageForecastButton
             // 
             this.ImageForecastButton.ForeColor = System.Drawing.Color.Black;
-            this.ImageForecastButton.Location = new System.Drawing.Point(170, 124);
+            this.ImageForecastButton.Location = new System.Drawing.Point(170, 104);
             this.ImageForecastButton.Name = "ImageForecastButton";
             this.ImageForecastButton.Size = new System.Drawing.Size(79, 38);
             this.ImageForecastButton.TabIndex = 18;
@@ -263,12 +264,24 @@
             this.SolarSystemBodyCheckBox.UseVisualStyleBackColor = true;
             this.SolarSystemBodyCheckBox.CheckedChanged += new System.EventHandler(this.SolarSystemBodyCheckBox_CheckedChanged);
             // 
+            // ReductionFramesButton
+            // 
+            this.ReductionFramesButton.ForeColor = System.Drawing.Color.Black;
+            this.ReductionFramesButton.Location = new System.Drawing.Point(170, 148);
+            this.ReductionFramesButton.Name = "ReductionFramesButton";
+            this.ReductionFramesButton.Size = new System.Drawing.Size(79, 38);
+            this.ReductionFramesButton.TabIndex = 103;
+            this.ReductionFramesButton.Text = "Reduction Frames";
+            this.ReductionFramesButton.UseVisualStyleBackColor = true;
+            this.ReductionFramesButton.Click += new System.EventHandler(this.ReductionFramesButton_Click);
+            // 
             // FormPlan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 445);
+            this.Controls.Add(this.ReductionFramesButton);
             this.Controls.Add(this.SolarSystemBodyCheckBox);
             this.Controls.Add(this.ImageForecastButton);
             this.Controls.Add(this.LoadPlanButton);
@@ -312,5 +325,6 @@
         private System.Windows.Forms.Button RefreshButton;
         public System.Windows.Forms.ListBox ScheduleListBox;
         internal System.Windows.Forms.CheckBox SolarSystemBodyCheckBox;
+        private System.Windows.Forms.Button ReductionFramesButton;
     }
 }

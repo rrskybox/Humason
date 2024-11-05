@@ -402,7 +402,7 @@ namespace Humason
             return;
         }
 
-        public void DoFlatManFlats(string targetName, double rotationPA, string meridianSide, Filter filter)
+        public void DoFlatManFlats(string targetName, double rotationPA, string meridianSide, Filter filter, FlatMan fMan)
         {
             ///Image and save with flat frames
             /// Summary:  Image a set of flat for each of the filters, 
@@ -415,29 +415,29 @@ namespace Humason
             SessionControl openSession = new SessionControl();
 
             //Turn light on, if off
-            FlatMan flmn = new FlatMan { Light = true };
+            fMan.Light = true;
 
             //try to find the best brightness that is near, but less than the target
             int? brightness = FlatPresets.GetBrightness(filter.Index);
             if (brightness == null)
-               brightness = FlatManBrightnessCalibration(filter, openSession.FlatsExposureTime, openSession.FlatManBrightness, openSession.FlatsTargetADU);
+               brightness = FlatManBrightnessCalibration(filter, openSession.FlatsExposureTime, openSession.FlatManBrightness, openSession.FlatsTargetADU, fMan);
             else
                 lg.LogIt("Flat brightness preset found");
            lg.LogIt("FlatMan brightness level set to " + ((int)brightness).ToString("0"));
             //try to find the best exposure that is close to the target
             double? exposure = FlatPresets.GetExposure(filter.Index);
             if (exposure == null)
-                exposure = FlatManExposureCalibration(filter, openSession.FlatsExposureTime, (int)brightness, openSession.FlatsTargetADU);
+                exposure = FlatManExposureCalibration(filter, openSession.FlatsExposureTime, (int)brightness, openSession.FlatsTargetADU, fMan);
             else
                 lg.LogIt("Flat exposure preset found");
             lg.LogIt("FlatMan exposure set to " + ((double)exposure).ToString("0.00"));
-            flmn.Bright = (int)brightness;
+            fMan.Bright = (int)brightness;
             int imagecount = filter.Repeat;
             FlatManFlatsLoop(targetName, filter, imagecount, (double)exposure, rotationPA, meridianSide);
             //Clean up
             lg.LogIt("Flats Imaging Done");
             //turn off flatman
-            flmn.Light = false;
+            fMan.Light = false;
             FlatPresets.SetPreset(filter.Index, (double)exposure, (int)brightness);
         }
 
@@ -480,7 +480,7 @@ namespace Humason
             }
         }
 
-        private int FlatManBrightnessCalibration(Filter filter, double exposure, int startingBrightness, int targetADU)
+        private int FlatManBrightnessCalibration(Filter filter, double exposure, int startingBrightness, int targetADU, FlatMan fMan)
         {
             //Looks for brightness setting that produces something close (80%) to the target ADU at the given exposure
             //The brightness setting starts with the currently configured brightness.
@@ -497,12 +497,11 @@ namespace Humason
             //Neither the exposure nor the brightness is linear -- this is a problem
             lg.LogIt("Calibrating FlatMan brightness");
             //Try no more than 8 times to get a good brightness
-            FlatMan flmn = new FlatMan();
             for (int i = 0; i < 8; i++)
             {
                 lg.LogIt("Brightness reset to " + currentBrightness.ToString("0"));
                 //initially set brightness to the starting brightness, and wait a second for the FlatMan
-                flmn.Bright = currentBrightness;
+                fMan.Bright = currentBrightness;
                 System.Threading.Thread.Sleep(500);
                 //Get the ADU of a sample image (subframe)
                 currentADU = TakeFlatSample(filter, exposure);
@@ -532,7 +531,7 @@ namespace Humason
 
         }
 
-        private double FlatManExposureCalibration(Filter filter, double startingexposure, int brightness, int targetADU)
+        private double FlatManExposureCalibration(Filter filter, double startingexposure, int brightness, int targetADU, FlatMan fMan)
         {
             //Looks for exposure setting that produces something close (90%) to the target ADU at the given exposure
             //The exposure setting starts with the currently configured brightness.
@@ -551,12 +550,11 @@ namespace Humason
             //
             //Neither the exposure nor the brightness is linear -- this is a problem
             //Try no more than 8 times to get a good exposure
-            FlatMan flmn = new FlatMan();
             for (int i = 0; i < 8; i++)
             {
                 //Set Flatman brightness level
                 lg.LogIt("Flatman brightness set to " + brightness.ToString("0"));
-                flmn.Bright = brightness;
+                fMan.Bright = brightness;
                 //Take flats sample with current exposure and filter
                 currentADU = TakeFlatSample(filter, currentExposure);
                 if (NHUtil.CloseEnough(targetADU, currentADU, 10.0))

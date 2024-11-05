@@ -29,6 +29,7 @@ namespace Humason
 
         private readonly string nhDir;
         private Axess fReq;  //Flats Request file
+        private FlatMan fMan;
 
         public static string HumasonFlatStackFilename = "FlatStack.xml";
         public static string HumasonFlatsXCName = "HumasonFlats";
@@ -40,7 +41,105 @@ namespace Humason
             nhDir = openSession.HumasonDirectoryPath;
             //Create the flats request xml file, if it doesn't exist
             fReq = new Axess(nhDir + "\\" + HumasonFlatStackFilename, HumasonFlatsXCName);
+            if (openSession.IsFlatManEnabled)
+                fMan = new FlatMan();
         }
+
+        /// <summary>
+        /// FMSetUp
+        /// Prepares imaging for flats.  Closes dome, points telescope at MyFlat
+        /// </summary>
+        public bool FlatManStage()
+        {
+            //Console routine to set up the scope to use the FlatMan
+            //  to be called from CCDAP or other apps prior to running flats
+            //
+            //Routine will find the "My Flat Field" location via TSX, after
+            //  it has been installed in the SDB (see instructions)
+            //Then the slit will be closed, if open and dome homed and disconnected
+            //The mount will then be sent to that position and tracking turned off
+
+            LogEvent lg = new LogEvent();
+            SessionControl openSession = new SessionControl();
+
+            lg.LogIt("Establishing TSX interfaces: star chart, mount, dome.");
+            //If the dome is enabled,  Home it and disconnect
+            if (openSession.HasDome)
+            {
+                //Complete any dome commands, including homing and closing the dome, if needed
+                //The mount will be parked and disconnected during this operation
+                //Dome will be decoupled from mount
+                if (openSession.HasDome)
+                {
+                    lg.LogIt("Homing and Closing Dome");
+                    lg.LogIt("Connecting Dome");
+                    TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Dome);
+                    //No idea how we could be here, but lg.LogIt the error and quit
+                    //Clear any operation that might be underway for whatever bogus reason
+                    lg.LogIt("Aborting any active dome command... again");
+                    TSXLink.Dome.AbortDomeOperation();
+                    //Wait for five seconds for everything to clear (Maxdome is a bit slow)
+                    lg.LogIt("Waiting for dome operations to abort, if any");
+                    System.Threading.Thread.Sleep(5000);
+                    //Close Dome (if open) -- Close dome will home the dome before closing
+                    TSXLink.Dome.CloseSlit();
+                    //Uncouple the dome from the mount
+                    lg.LogIt("Disconnecting Dome");
+                    TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Dome);
+                }
+            }
+            //Connect to telescope, 
+            // if manual set up, then park the mount (to keep it from tracking someplace bad)
+            //  and ask the user for permission to continue, abort if user cancels, otherwise continue.
+            lg.LogIt("Connecting mount");
+            TSXLink.Connection.ConnectDevice(TSXLink.Connection.Devices.Mount);
+            if (openSession.IsFlatManManualSetupEnabled)
+            {
+                lg.LogIt("Parking mount to wait for manual flatman set up");
+                TSXLink.Mount.Park();
+                DialogResult dr = MessageBox.Show("Manual FlatMan set up selected:  Continue?", "Manual FlatMan Preparation", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.Cancel) return false;
+            }
+            //Unpark (if parked), look up My Flat Field, slew to it, turn off tracking
+            TSXLink.Mount.UnPark();
+            lg.LogIt("Looking up flat panel position");
+            TSXLink.Target ffTarget = TSXLink.StarChart.FindTarget("MyFlatField");
+            if (ffTarget == null)
+            {
+                lg.LogIt("Could not find My Flat Field");
+                return false;
+            }
+            double altitude = ffTarget.Altitude;
+            double azimuth = ffTarget.Azimuth;
+            lg.LogIt("Slewing to flat panel position");
+            try
+            {
+                TSXLink.Mount.SlewRADec(ffTarget.RA, ffTarget.Dec, ffTarget.Name);
+            }
+            catch (Exception ex)
+            {
+                //If manual set up and slew error, then log and just keep going, otherwise terminate the flats session
+                if (openSession.IsFlatManManualSetupEnabled)
+                {
+                    MessageBox.Show("Slew to Flats Box failure. " + ex.Message + " \r\n Manual setup so continuing flats session.");
+                }
+                else
+                {
+                    MessageBox.Show("Slew to Flats Box failure. " + ex.Message + " \r\n Turn off slew limits.  Ending flats session.");
+                    return false;
+                }
+            }
+            lg.LogIt("Turning off tracking");
+            TSXLink.Mount.TurnTrackingOff();
+            //Disconnect from mount
+            lg.LogIt("Disconnecting Mount");
+            TSXLink.Connection.DisconnectDevice(TSXLink.Connection.Devices.Mount);
+            lg.LogIt("FlatMan positioning complete");
+
+            //All done -- garbage collect and exit
+            return true;
+                    }
+
 
         public void TakeFlats()
         {
@@ -65,9 +164,8 @@ namespace Humason
             if (openSession.IsFlatManEnabled)
             {
                 //Stage the mount to the flatman
-                FlatMan flmn = new FlatMan();
                 lg.LogIt("Staging FlatMan");
-                bool stgResult = flmn.FlatManStage();
+                bool stgResult = FlatManStage();
                 if (!stgResult)
                 {
                     lg.LogIt("FlatMan Staging Failed -- aborting flats");
@@ -94,7 +192,7 @@ namespace Humason
                 }
                 //Turn on Flatman panel, if it hasn't been done already
                 lg.LogIt("Lighting up FlatMan panel");
-                flmn.Light = true;
+                fMan.Light = true;
             }
             else //Dusk or dawn flats
             {
@@ -134,7 +232,7 @@ namespace Humason
                                     Rotator.RotateToRotatorPA(iFlat.RotationPA);
                                 }
                                 Imaging nhi = new Imaging();
-                                nhi.DoFlatManFlats(iFlat.TargetName, iFlat.RotationPA, iFlat.SideOfPier, iFlat.FlatFilter);
+                                nhi.DoFlatManFlats(iFlat.TargetName, iFlat.RotationPA, iFlat.SideOfPier, iFlat.FlatFilter, fMan);
                                 RemoveFlat(iFlat);  //remove flat from flat stack file
                             }
                             break;
@@ -164,11 +262,10 @@ namespace Humason
             if (openSession.IsFlatManEnabled)
             {
                 //Turn off flatman functions
-                FlatMan flmn = new FlatMan();
                 lg.LogIt("Terminating FlatMan");
                 //Turn on Flatman panel, if it hasn't been done already
                 lg.LogIt("Turning off FlatMan panel");
-                flmn.Light = false;
+                fMan.Light = false;
                 //If Manual Setup is selected, then pause for user to position the FlatMan for flats
                 if (openSession.IsFlatManManualSetupEnabled)
                 {

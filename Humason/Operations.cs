@@ -220,9 +220,9 @@ namespace Humason
 
             //done with imaging.  Check on flats  See if any flats have been requested
 
-            FlatManager fmgr = new FlatManager();
-            if (fmgr.HaveFlatsToDo() && !FormHumason.IsAborting())
-            { fmgr.TakeFlats(); }
+            FlatManager fSuper = new FlatManager();
+            if (fSuper.HaveFlatsToDo() && !FormHumason.IsAborting())
+            { fSuper.TakeFlats(); }
 
             //If autorun set, then run it, then... just park the mount and disconnect
             if (openSession.ShutDownEnabled && !openSession.IsAttended)

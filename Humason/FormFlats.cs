@@ -6,12 +6,14 @@ namespace Humason
 {
     public partial class FormFlats : Form
     {
+
+        private FlatManager fSuper;
+
         public FormFlats()
         {
             InitializeComponent();
 
             SessionControl openSession = new SessionControl();
-            FlatMan flmn = new FlatMan();
             if (openSession.FlatsTargetADU != 0) { FlatsTargetADU.Value = openSession.FlatsTargetADU; }
             else { openSession.FlatsTargetADU = (int)FlatsTargetADU.Value; }
             if (openSession.FlatsRepetitions != 0) { FlatsRepetitionsBox.Value = openSession.FlatsRepetitions; }
@@ -43,15 +45,17 @@ namespace Humason
             FlatManPortNum.Value = openSession.FlatManComPort;
 
             //If FlatMan has been chosen for flats, make sure the panel is turned off
-            if (openSession.IsFlatManEnabled)
-            { flmn.Light = false; }
+            //if (openSession.IsFlatManEnabled)
+            //fMan.Light = false; }
 
             //Paint buttons green
             NHUtil.ButtonGreen(TakeFlatsButton);
-            NHUtil.ButtonGreen(FlatManOnButton);
             NHUtil.ButtonGreen(FlatManStageButton);
             NHUtil.ButtonGreen(MakeFlatsButton);
             NHUtil.ButtonGreen(ClearFlatsButton);
+
+            fSuper = new FlatManager();
+
             return;
         }
 
@@ -59,8 +63,7 @@ namespace Humason
         {
             NHUtil.ButtonRed(TakeFlatsButton);
             SessionControl openSession = new SessionControl();
-            FlatManager fmgr = new FlatManager();
-            fmgr.TakeFlats();
+            fSuper.TakeFlats();
             FlatManBrightnessNum.Value = openSession.FlatManBrightness;
             NHUtil.ButtonGreen(TakeFlatsButton);
             return;
@@ -68,32 +71,14 @@ namespace Humason
 
         private void FlatManStageButton_Click(object sender, EventArgs e)
         {
-            FlatMan flmn = new FlatMan();
+
             NHUtil.ButtonRed(FlatManStageButton);
-            flmn.FlatManStage();
+            fSuper.FlatManStage();
             NHUtil.ButtonGreen(FlatManStageButton);
             return;
         }
 
-        private void FlatManOnButton_Click(object sender, EventArgs e)
-        {
-            SessionControl openSession = new SessionControl();
-            SessionControl tplan = openSession;
-            if (NHUtil.IsButtonGreen(FlatManOnButton))
-            {
-                FlatMan flmn = new FlatMan();
-                NHUtil.ButtonRed(FlatManOnButton);
-                FlatManOnButton.Text = "Turn Off";
-                flmn.Light = true;
-            }
-            else
-            {
-                NHUtil.ButtonGreen(FlatManOnButton);
-                FlatManOnButton.Text = "Turn On";
-                FlatMan flmn = new FlatMan();
-                flmn.Light = false;
-            }
-        }
+
 
         private void FlatManBrightnessNum_ValueChanged(object sender, EventArgs e)
         {

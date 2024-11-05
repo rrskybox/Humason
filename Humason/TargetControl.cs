@@ -576,7 +576,14 @@ namespace Humason
 
         public int LRGBRatio
         {
-            get => Convert.ToInt32(hTargetPlanX.GetItem(LRGBRatioXName));
+            get
+            {
+                int lrgbr = Convert.ToInt32(hTargetPlanX.GetItem(LRGBRatioXName));
+                if (lrgbr <= 0)
+                    return 1;
+                else
+                    return lrgbr;
+            }
             set => hTargetPlanX.ReplaceItem(LRGBRatioXName, value.ToString());
         }
 

@@ -44,7 +44,6 @@
             this.FlatsTargetADU = new System.Windows.Forms.NumericUpDown();
             this.TakeFlatsButton = new System.Windows.Forms.Button();
             this.FlatsRepetitionsBox = new System.Windows.Forms.NumericUpDown();
-            this.FlatManOnButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.FlatManStageButton = new System.Windows.Forms.Button();
@@ -285,17 +284,6 @@
             0});
             this.FlatsRepetitionsBox.ValueChanged += new System.EventHandler(this.FlatsRepetitionsBox_ValueChanged);
             // 
-            // FlatManOnButton
-            // 
-            this.FlatManOnButton.ForeColor = System.Drawing.Color.Black;
-            this.FlatManOnButton.Location = new System.Drawing.Point(148, 19);
-            this.FlatManOnButton.Name = "FlatManOnButton";
-            this.FlatManOnButton.Size = new System.Drawing.Size(75, 27);
-            this.FlatManOnButton.TabIndex = 35;
-            this.FlatManOnButton.Text = "Turn On";
-            this.FlatManOnButton.UseVisualStyleBackColor = true;
-            this.FlatManOnButton.Click += new System.EventHandler(this.FlatManOnButton_Click);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.groupBox3);
@@ -318,7 +306,6 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.FlatManStageButton);
-            this.groupBox3.Controls.Add(this.FlatManOnButton);
             this.groupBox3.ForeColor = System.Drawing.Color.White;
             this.groupBox3.Location = new System.Drawing.Point(15, 126);
             this.groupBox3.Name = "groupBox3";
@@ -330,7 +317,7 @@
             // FlatManStageButton
             // 
             this.FlatManStageButton.ForeColor = System.Drawing.Color.Black;
-            this.FlatManStageButton.Location = new System.Drawing.Point(17, 19);
+            this.FlatManStageButton.Location = new System.Drawing.Point(74, 19);
             this.FlatManStageButton.Name = "FlatManStageButton";
             this.FlatManStageButton.Size = new System.Drawing.Size(75, 27);
             this.FlatManStageButton.TabIndex = 39;
@@ -486,7 +473,6 @@
         internal System.Windows.Forms.Label FlatsCountLabel;
         internal System.Windows.Forms.Button TakeFlatsButton;
         internal System.Windows.Forms.NumericUpDown FlatsRepetitionsBox;
-        internal System.Windows.Forms.Button FlatManOnButton;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown FlatManBrightnessNum;

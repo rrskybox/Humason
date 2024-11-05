@@ -259,19 +259,6 @@ namespace Humason
             { ScheduleListBox.Items.Remove(ScheduleListBox.SelectedItem); }
         }
 
-        private void ImageForecastButton_Click(object sender, EventArgs e)
-        {
-            //Launches ImageForecast to create target plans
-            NHUtil.ButtonRed(ImageForecastButton);
-            string toolName = "Image Planner.appref-ms";
-            string ttdir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
-            Process pSystemExe = new Process();
-            string ifbPath = ttdir + "\\" + toolName;
-            pSystemExe.StartInfo.FileName = ifbPath;
-            if (System.IO.File.Exists(ifbPath))
-            { pSystemExe.Start(); }
-            NHUtil.ButtonGreen(ImageForecastButton);
-        }
 
         public bool IsTopPlanTargetName()
         {
@@ -409,6 +396,34 @@ namespace Humason
                 tPlan.DeltaRARate = tsxtgt.DeltaRARate;
                 tPlan.DeltaDecRate = tsxtgt.DeltaDecRate;
             }
+        }
+
+        private void ImageForecastButton_Click(object sender, EventArgs e)
+        {
+            //Launches ImageForecast to create target plans
+            NHUtil.ButtonRed(ImageForecastButton);
+            string toolName = "Image Planner.appref-ms";
+            string ttdir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
+            Process pSystemExe = new Process();
+            string ifbPath = ttdir + "\\" + toolName;
+            pSystemExe.StartInfo.FileName = ifbPath;
+            if (System.IO.File.Exists(ifbPath))
+            { pSystemExe.Start(); }
+            NHUtil.ButtonGreen(ImageForecastButton);
+        }
+
+        private void ReductionFramesButton_Click(object sender, EventArgs e)
+        {
+            //Launches Calibration Frame Factory to create reduction image library
+            NHUtil.ButtonRed(ReductionFramesButton);
+            string toolName = "Calibration Frame Factory.appref-ms";
+            string ttdir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
+            Process pSystemExe = new Process();
+            string ifbPath = ttdir + "\\" + toolName;
+            pSystemExe.StartInfo.FileName = ifbPath;
+            if (System.IO.File.Exists(ifbPath))
+            { pSystemExe.Start(); }
+            NHUtil.ButtonGreen(ReductionFramesButton);
         }
     }
 }
