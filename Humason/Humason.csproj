@@ -284,15 +284,6 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="MaxIm">
-      <Guid>{B4955EC7-F7F2-11D2-AA9C-444553540000}</Guid>
-      <VersionMajor>3</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="TheSky64Lib">
       <Guid>{AECFC6C9-1BED-4028-B248-0D9156598264}</Guid>
       <VersionMajor>1</VersionMajor>

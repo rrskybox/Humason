@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using TheSky64Lib;
 
-
 namespace Humason
 {
     public class Sequencer
