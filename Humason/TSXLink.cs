@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 using TheSky64Lib;
 
@@ -119,6 +120,7 @@ namespace Humason
                     case Devices.Guider:
                         ccdsoftCamera tsxg = new ccdsoftCamera();
                         lg.LogIt("Connecting guider");
+
                         tsxg.Autoguider = 1;
                         tsxg.Asynchronous = 0;
                         try { status = tsxg.Connect(); }
@@ -344,6 +346,7 @@ namespace Humason
                 catch (Exception ex) { lg.LogIt("Camera connection error: " + ex.Message); }
 
                 lg.LogIt("Connecting guide camera");
+
                 ccdsoftCamera tsxg = new ccdsoftCamera { Autoguider = 1 };
                 try { status = tsxg.Connect(); }
                 catch (Exception ex) { lg.LogIt("Autoguider connection error: " + ex.Message); }
@@ -376,15 +379,16 @@ namespace Humason
                 SelectedHardware tsxh = new SelectedHardware();       //hardware inventory object
 
                 //Abort Autoguiding, turn off Temp regulation (if  any) and disconnect
-                lg.LogIt("Aborting guiding");
-                ccdsoftCamera tsxg = new ccdsoftCamera() { Autoguider = 1 };
-                tsxg.Abort();
-                lg.LogIt("Shutting down guider temperature regulation, if any");
-                tsxg.ShutDownTemperatureRegulationOnDisconnect = 1;
-                lg.LogIt("Disconnecting guider");
-                try { tsxg.Disconnect(); }
-                catch (Exception ex) { lg.LogIt("Connecting Guider Failed: " + ex.Message); }
-
+ 
+                    lg.LogIt("Aborting guiding");
+                    ccdsoftCamera tsxg = new ccdsoftCamera() { Autoguider = 1 };
+                    tsxg.Abort();
+                    lg.LogIt("Shutting down guider temperature regulation, if any");
+                    tsxg.ShutDownTemperatureRegulationOnDisconnect = 1;
+                    lg.LogIt("Disconnecting guider");
+                    try { tsxg.Disconnect(); }
+                    catch (Exception ex) { lg.LogIt("Connecting Guider Failed: " + ex.Message); }
+                
                 //Disconnect the focuser
                 ccdsoftCamera tsxc = new ccdsoftCamera();
                 lg.LogIt("Disconnecting focuser");
@@ -403,7 +407,7 @@ namespace Humason
                 lg.LogIt("Aborting imaging");
                 tsxc.Abort();
                 lg.LogIt("Turning off camera temperature regulation");
-                tsxg.ShutDownTemperatureRegulationOnDisconnect = 1;
+                tsxc.ShutDownTemperatureRegulationOnDisconnect = 1;
                 lg.LogIt("Disconnecting camera");
                 try { tsxc.Disconnect(); }
                 catch (Exception ex) { lg.LogIt("Disconnecting Camera Failed: " + ex.Message); }
@@ -686,6 +690,21 @@ namespace Humason
         }
         #endregion
 
+        #region Image Class
+
+        public partial class Image
+        {
+            public static bool ImageTransferIn(string path)
+            {
+                ccdsoftImage tsxi = new ccdsoftImage();
+                tsxi.Path = path;
+                int stat = tsxi.Open();
+                return (stat == 0);
+            }
+        }
+
+        #endregion
+
         #region Image Linking
         public static class ImageSolution
         {
@@ -697,7 +716,8 @@ namespace Humason
                 tsxl.scale = TSXLink.FOVI.GetFOVScale();
                 {
                     tsxl.pathToFITS = path;
-                };
+                }
+                ;
                 try
                 { tsxl.execute(); }
                 catch (Exception ex)
@@ -825,7 +845,17 @@ namespace Humason
 
             public int SourceExtractGuider()
             {
-                int aStat = timg.AttachToActiveAutoguider();
+                SessionControl openSession = new SessionControl();
+                int aStat;
+                if (!openSession.UseMDLGuider)
+                    aStat = timg.AttachToActiveAutoguider();
+                int iStat = timg.ShowInventory();
+                return iStat;
+            }
+
+            public int SourceExtractFIT()
+            {
+                //int aStat = timg.AttachToActiveAutoguider();
                 int iStat = timg.ShowInventory();
                 return iStat;
             }
@@ -888,7 +918,9 @@ namespace Humason
             public List<double> GetSourceExtractionList(SourceExtractionType dataIndex)
             {
                 {
-                    object[] iA = timg.InventoryArray((int)dataIndex);
+                    object[] iA;
+                    try { iA = timg.InventoryArray((int)dataIndex); }
+                    catch { return null; }
                     List<double> sexArray = ConvertDoubleList(iA);
                     return sexArray;
                 }
@@ -1456,6 +1488,30 @@ namespace Humason
 
             //Properties
 
+            public static double RA
+            {
+                get
+                {
+                    sky6RASCOMTele tsxm = new sky6RASCOMTele();
+                    tsxm.Connect();
+                    tsxm.GetRaDec();
+                    double ra = tsxm.dRa;
+                    return ra;
+                }
+            }
+
+            public static double Dec
+            {
+                get
+                {
+                    sky6RASCOMTele tsxm = new sky6RASCOMTele();
+                    tsxm.Connect();
+                    tsxm.GetRaDec();
+                    double dec = tsxm.dDec;
+                    return dec;
+                }
+            }
+
             public static double Azm
             {
                 get
@@ -1577,15 +1633,22 @@ namespace Humason
                 return path;
             }
 
-            public double CCDTemperature
+            public static double CCDTemperature
             {
                 //reads the current ccd temperature and writes the set point
-                get => tsxc.Temperature;
+
+                get
+                {
+                    ccdsoftCamera tsxc = new ccdsoftCamera();
+                    return tsxc.Temperature;
+                }
                 set
                 {
+                    ccdsoftCamera tsxc = new ccdsoftCamera();
                     tsxc.TemperatureSetPoint = value;
                     try { tsxc.RegulateTemperature = 1; }
-                    catch { };
+                    catch { }
+                    ;
                 }
             }
 
@@ -1655,54 +1718,6 @@ namespace Humason
             {
                 get => tsxc.BinY;
                 set => tsxc.BinY = value;
-            }
-
-            public double CalibrationVectorXPositiveXComponent
-            {
-                get => tsxc.CalibrationVectorXPositiveXComponent;
-                set => tsxc.CalibrationVectorXPositiveXComponent = value;
-            }
-
-            public double CalibrationVectorXPositiveYComponent
-            {
-                get => tsxc.CalibrationVectorXPositiveYComponent;
-                set => tsxc.CalibrationVectorXPositiveYComponent = value;
-            }
-
-            public double CalibrationVectorYPositiveXComponent
-            {
-                get => tsxc.CalibrationVectorYPositiveXComponent;
-                set => tsxc.CalibrationVectorYPositiveXComponent = value;
-            }
-
-            public double CalibrationVectorYPositiveYComponent
-            {
-                get => tsxc.CalibrationVectorYPositiveYComponent;
-                set => tsxc.CalibrationVectorYPositiveYComponent = value;
-            }
-
-            public double CalibrationVectorXNegativeXComponent
-            {
-                get => tsxc.CalibrationVectorXNegativeXComponent;
-                set => tsxc.CalibrationVectorXNegativeXComponent = value;
-            }
-
-            public double CalibrationVectorXNegativeYComponent
-            {
-                get => tsxc.CalibrationVectorXNegativeYComponent;
-                set => tsxc.CalibrationVectorXNegativeYComponent = value;
-            }
-
-            public double CalibrationVectorYNegativeXComponent
-            {
-                get => tsxc.CalibrationVectorYNegativeXComponent;
-                set => tsxc.CalibrationVectorYNegativeXComponent = value;
-            }
-
-            public double CalibrationVectorYNegativeYComponent
-            {
-                get => tsxc.CalibrationVectorYNegativeYComponent;
-                set => tsxc.CalibrationVectorYNegativeYComponent = value;
             }
 
             public double DeclinationAtCalibration => tsxc.DeclinationAtCalibration;
@@ -1800,7 +1815,8 @@ namespace Humason
                 tsxc.Abort();
                 //ccdsoftCameraState agState = tsxc.State;
                 //make sure that autoguide is aborted and idle
-                while (tsxc.State != ccdsoftCameraState.cdStateNone) { System.Threading.Thread.Sleep(1000); };
+                while (tsxc.State != ccdsoftCameraState.cdStateNone) { System.Threading.Thread.Sleep(1000); }
+                ;
                 return;
             }
 
@@ -1817,6 +1833,7 @@ namespace Humason
                     return false;
                 }
             }
+
         }
         #endregion
 
@@ -1860,7 +1877,7 @@ namespace Humason
         }
         #endregion
 
-        #region FOV
+        #region FOV Class
 
         public partial class FOVI
         {
@@ -1912,7 +1929,7 @@ namespace Humason
         }
 
 
-        #endregion
+        #endregion Class
 
         #region Focus Class
 

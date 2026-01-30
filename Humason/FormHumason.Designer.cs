@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormHumason));
             this.HumasonTabs = new System.Windows.Forms.TabControl();
+            this.SessionTab = new System.Windows.Forms.TabPage();
+            this.DevicesTab = new System.Windows.Forms.TabPage();
+            this.ImageTab = new System.Windows.Forms.TabPage();
             this.PlanTab = new System.Windows.Forms.TabPage();
             this.TargetTab = new System.Windows.Forms.TabPage();
-            this.SessionTab = new System.Windows.Forms.TabPage();
-            this.ImageTab = new System.Windows.Forms.TabPage();
             this.FlatsTab = new System.Windows.Forms.TabPage();
-            this.DevicesTab = new System.Windows.Forms.TabPage();
             this.FocusTab = new System.Windows.Forms.TabPage();
             this.GuideTab = new System.Windows.Forms.TabPage();
             this.RotatorTab = new System.Windows.Forms.TabPage();
@@ -80,6 +80,33 @@
             this.HumasonTabs.TabIndex = 0;
             this.HumasonTabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabPageSelected_Click);
             // 
+            // SessionTab
+            // 
+            this.SessionTab.Location = new System.Drawing.Point(23, 4);
+            this.SessionTab.Name = "SessionTab";
+            this.SessionTab.Size = new System.Drawing.Size(278, 445);
+            this.SessionTab.TabIndex = 9;
+            this.SessionTab.Text = "Session";
+            this.SessionTab.UseVisualStyleBackColor = true;
+            // 
+            // DevicesTab
+            // 
+            this.DevicesTab.Location = new System.Drawing.Point(23, 4);
+            this.DevicesTab.Name = "DevicesTab";
+            this.DevicesTab.Size = new System.Drawing.Size(278, 445);
+            this.DevicesTab.TabIndex = 4;
+            this.DevicesTab.Text = "Devices";
+            this.DevicesTab.UseVisualStyleBackColor = true;
+            // 
+            // ImageTab
+            // 
+            this.ImageTab.Location = new System.Drawing.Point(23, 4);
+            this.ImageTab.Name = "ImageTab";
+            this.ImageTab.Size = new System.Drawing.Size(278, 445);
+            this.ImageTab.TabIndex = 11;
+            this.ImageTab.Text = "Image";
+            this.ImageTab.UseVisualStyleBackColor = true;
+            // 
             // PlanTab
             // 
             this.PlanTab.Location = new System.Drawing.Point(23, 4);
@@ -98,24 +125,6 @@
             this.TargetTab.Text = "Target";
             this.TargetTab.UseVisualStyleBackColor = true;
             // 
-            // SessionTab
-            // 
-            this.SessionTab.Location = new System.Drawing.Point(23, 4);
-            this.SessionTab.Name = "SessionTab";
-            this.SessionTab.Size = new System.Drawing.Size(278, 445);
-            this.SessionTab.TabIndex = 9;
-            this.SessionTab.Text = "Session";
-            this.SessionTab.UseVisualStyleBackColor = true;
-            // 
-            // ImageTab
-            // 
-            this.ImageTab.Location = new System.Drawing.Point(23, 4);
-            this.ImageTab.Name = "ImageTab";
-            this.ImageTab.Size = new System.Drawing.Size(278, 445);
-            this.ImageTab.TabIndex = 11;
-            this.ImageTab.Text = "Image";
-            this.ImageTab.UseVisualStyleBackColor = true;
-            // 
             // FlatsTab
             // 
             this.FlatsTab.Location = new System.Drawing.Point(23, 4);
@@ -124,15 +133,6 @@
             this.FlatsTab.TabIndex = 0;
             this.FlatsTab.Text = "Flats";
             this.FlatsTab.UseVisualStyleBackColor = true;
-            // 
-            // DevicesTab
-            // 
-            this.DevicesTab.Location = new System.Drawing.Point(23, 4);
-            this.DevicesTab.Name = "DevicesTab";
-            this.DevicesTab.Size = new System.Drawing.Size(278, 445);
-            this.DevicesTab.TabIndex = 4;
-            this.DevicesTab.Text = "Devices";
-            this.DevicesTab.UseVisualStyleBackColor = true;
             // 
             // FocusTab
             // 
@@ -185,7 +185,7 @@
             // 
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.CloseButton.ForeColor = System.Drawing.Color.Black;
-            this.CloseButton.Location = new System.Drawing.Point(245, 549);
+            this.CloseButton.Location = new System.Drawing.Point(253, 549);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(48, 23);
             this.CloseButton.TabIndex = 5;
@@ -271,7 +271,7 @@
             // 
             this.AboutButton.BackColor = System.Drawing.Color.Transparent;
             this.AboutButton.ForeColor = System.Drawing.Color.Black;
-            this.AboutButton.Location = new System.Drawing.Point(160, 550);
+            this.AboutButton.Location = new System.Drawing.Point(146, 549);
             this.AboutButton.Name = "AboutButton";
             this.AboutButton.Size = new System.Drawing.Size(49, 23);
             this.AboutButton.TabIndex = 17;
@@ -326,7 +326,7 @@
             this.StatusBox.Multiline = true;
             this.StatusBox.Name = "StatusBox";
             this.StatusBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.StatusBox.Size = new System.Drawing.Size(281, 170);
+            this.StatusBox.Size = new System.Drawing.Size(281, 105);
             this.StatusBox.TabIndex = 21;
             // 
             // FormHumason
@@ -334,7 +334,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkCyan;
-            this.ClientSize = new System.Drawing.Size(305, 755);
+            this.ClientSize = new System.Drawing.Size(305, 690);
             this.Controls.Add(this.StatusBox);
             this.Controls.Add(this.AboutButton);
             this.Controls.Add(this.CloseButton);
@@ -345,7 +345,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "FormHumason";
-            this.Text = "Humason V2.0";
+            this.Text = "Humason V";
             this.TransparencyKey = System.Drawing.Color.Red;
             this.HumasonTabs.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);

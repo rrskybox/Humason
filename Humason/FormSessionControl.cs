@@ -20,6 +20,9 @@ namespace Humason
             StageSystemFilePathBox.Text = Path.GetFileName(openSession.StagingFilePath);
             StartUpFilePathBox.Text = Path.GetFileName(openSession.StartUpFilePath);
             ShutDownFilePathBox.Text = Path.GetFileName(openSession.ShutDownFilePath);
+
+            SessionParkCheckBox.Checked = openSession.SessionEndParkEnabled;
+
             //Set the default browse locations to the TSX ToolKit Start Up directory
             string ttdir = "C:\\Users\\" + System.Environment.UserName + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\TSXToolkit\\TSXToolkit";
             if (Directory.Exists(ttdir))
@@ -160,6 +163,11 @@ namespace Humason
             }
         }
 
+        private void SessionParkCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.SessionEndParkEnabled = SessionParkCheckBox.Checked;
 
+        }
     }
 }

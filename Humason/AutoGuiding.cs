@@ -31,11 +31,17 @@ namespace Humason
                 SubFrame = 1,
                 Delay = 0,
                 Exposure = exposure,
-                AutoSave = 0
+                AutoSave = 0,
+                Path = openSession.NextGuiderImagePath()
             };
-            //Create camera object -- note, autosave is turned off     
-            TSXLink.Camera gCam = new TSXLink.Camera(asti);
+            //Create camera object -- note, autosave is turned off
+            return TSXMaxGuiderPixel(tPlan, asti);
+        }
 
+        public static double TSXMaxGuiderPixel(TargetPlan tPlan, AstroImage asti)
+        {
+            LogEvent lg = new LogEvent();
+            TSXLink.Camera gCam = new TSXLink.Camera(asti);
             //Center up AO, just in case and if enabled
             if (tPlan.AOEnabled) { gCam.CenterAO(); }
 
@@ -46,7 +52,6 @@ namespace Humason
             gCam.SubframeBottom = (int)(tPlan.GuideStarY * tPlan.GuiderBinning) + (sizeY / 2);
             gCam.SubframeLeft = (int)(tPlan.GuideStarX * tPlan.GuiderBinning) - (sizeX / 2);
             gCam.SubframeRight = (int)(tPlan.GuideStarX * tPlan.GuiderBinning) + (sizeX / 2);
-
             int tstat = gCam.GetImage();
             if (tstat != 0)
             {
@@ -54,7 +59,6 @@ namespace Humason
                 return 0;
             }
             lg.LogIt("Guider Subframe image successful");
-
             double maxPixel = gCam.MaximumPixel;
             return maxPixel;
         }
@@ -81,14 +85,20 @@ namespace Humason
                 BinY = tPlan.GuiderBinning,
                 Delay = 0,
                 Exposure = exposure,
-                AutoSave = 1
+                AutoSave = 1,
+                Path = openSession.NextGuiderImagePath()
             };
+            return TSXGetGuideStarADU(tPlan, asti);
+
+        }
+
+        public static double TSXGetGuideStarADU(TargetPlan tPlan, AstroImage asti)
+        {
+            LogEvent lg = new LogEvent();
             TSXLink.Camera gCam = new TSXLink.Camera(asti);
             //Center up AO, just in case and if enabled
             if (tPlan.AOEnabled)
-            {
                 gCam.CenterAO();
-            }
 
             //Compute the subframe from the trackbox size
             int sizeX = gCam.TrackBoxX;
@@ -115,22 +125,18 @@ namespace Humason
             List<double> FWHMlist = sEx.GetSourceExtractionList(TSXLink.SexTractor.SourceExtractionType.sexFWHM);
             List<double> CenterX = sEx.GetSourceExtractionList(TSXLink.SexTractor.SourceExtractionType.sexX);
             List<double> CenterY = sEx.GetSourceExtractionList(TSXLink.SexTractor.SourceExtractionType.sexY);
-            int iMax = sEx.GetListLargest(FWHMlist);
-
+            int iMax = 0;
+            if (FWHMlist != null)
+                iMax = sEx.GetListLargest(FWHMlist);
             double maxStarADU = 0;
-            try
-            {
+            if (CenterX != null && CenterY != null)
                 maxStarADU = sEx.GetPixelADU((int)CenterX[iMax], (int)CenterY[iMax]);
-            }
-            catch 
-            {
+            else
                 lg.LogIt("Light Source error -- no stars?");
-            }
             if (maxStarADU == 0)
             { maxStarADU = gCam.MaximumPixel; }
             return maxStarADU;
         }
-
         //Grease slick to check if autoguiding is already running
         public static bool IsAutoGuideOn()
         {
@@ -151,7 +157,6 @@ namespace Humason
             double autoguideExposureTime = tPlan.GuideExposure;
 
             lg.LogIt("Starting Autoguiding");
-            LogVectors();
 
             AstroImage asti = new AstroImage
             {
@@ -174,17 +179,17 @@ namespace Humason
             //then center the AO, if enabled
             //Autosave is off
             TSXLink.Camera gCam = new TSXLink.Camera(asti);
-            ;
             if (tPlan.AOEnabled)
             {
                 try { gCam.CenterAO(); }
                 catch (Exception e) { lg.LogIt("AO Centering Error: " + e.Message); }
             }
-
             //guide star and exposure should have already been run
             //turn on guiding
             int agstat = gCam.AutoGuiderOn();
-            if (agstat != 0) { lg.LogIt("Autoguide start up error " + agstat.ToString()); }
+            if (agstat != 0)
+                lg.LogIt("Autoguide start up error " + agstat.ToString());
+
             lg.LogIt("Autoguiding Started");
         }
 
@@ -193,6 +198,7 @@ namespace Humason
         {
             //Halt Autoguiding
             //Open default image so we can turn the guider off then open guider and turn it off
+            SessionControl openSession = new SessionControl();
             AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Guider };
             TSXLink.Camera gCam = new TSXLink.Camera(asti);
             gCam.AutoGuiderOff();
@@ -224,10 +230,19 @@ namespace Humason
                 BinY = tPlan.GuiderBinning,
                 SubFrame = 0,
                 Exposure = tPlan.GuideExposure,
-                AutoSave = 0
+                AutoSave = 0,
+                Path = openSession.NextGuiderImagePath()
             };
             if (subFrameIt)
                 asti.SubFrame = 1;
+            TSXCalibrateAutoguiding(tPlan, asti, subFrameIt);
+            lg.LogIt("Guider Calibration Complete");
+        }
+
+
+        public static void TSXCalibrateAutoguiding(TargetPlan tPlan, AstroImage asti, bool subFrameIt)
+        {
+            LogEvent lg = new LogEvent();
             //Create camera object from parameters, turn off Autosave
             TSXLink.Camera gCam = new TSXLink.Camera(asti);
             //Set subframe around star, if enabled.  
@@ -264,17 +279,15 @@ namespace Humason
                 lg.LogIt("Calibrating AO");
                 gCam.Calibrate(true, (int)tPlan.XAxisMoveTime, (int)tPlan.YAxisMoveTime);
             }
-            //Store vectors
-            tPlan.CalVectorXPosXComponent = gCam.CalibrationVectorXPositiveXComponent;
-            tPlan.CalVectorXPosYComponent = gCam.CalibrationVectorXPositiveYComponent;
-            tPlan.CalVectorXPosXComponent = gCam.CalibrationVectorXPositiveXComponent;
-            tPlan.CalVectorXPosYComponent = gCam.CalibrationVectorXPositiveYComponent;
-            tPlan.CalVectorYNegXComponent = gCam.CalibrationVectorXNegativeXComponent;
-            tPlan.CalVectorYNegYComponent = gCam.CalibrationVectorXNegativeYComponent;
-            tPlan.CalVectorYNegXComponent = gCam.CalibrationVectorXNegativeXComponent;
-            tPlan.CalVectorYNegYComponent = gCam.CalibrationVectorXNegativeYComponent;
-            lg.LogIt("Guider Calibration Complete");
         }
+
+        public static int GuiderTrackBoxX(AstroImage asti)
+        {
+            SessionControl openSession = new SessionControl();
+            TSXLink.Camera tsxg = new TSXLink.Camera(asti);
+            return tsxg.TrackBoxX;
+        }
+        
 
         //*** SetAutoGuideStar picks a guide star and places a subframe around it
         public static bool SetAutoGuideStar()
@@ -323,196 +336,191 @@ namespace Humason
                 BinY = tPlan.GuiderBinning,
                 Delay = 0,
                 Exposure = tPlan.GuideExposure,
-                AutoSave = 1
+                AutoSave = 1,
+                Path = openSession.NextGuiderImagePath()
             };
-            //Autosave is on
-            TSXLink.Camera guider = new TSXLink.Camera(asti);
-            //Center AO, if configured
-            if (tPlan.AOEnabled)
-            {
-                guider.CenterAO();
-            }
 
-            //Take an image f
-            int camResult = guider.GetImage();
+                 TSXLink.Camera gcam = new TSXLink.Camera(asti);
+                //Center AO, if configured
+                if (tPlan.AOEnabled)
+                    gcam.CenterAO();
+                //Take an image f
+                int camResult = gcam.GetImage();
+                //acquire the current trackbox size (need it later)
+                int TrackBoxSize = GuiderTrackBoxX(asti);
 
-            //acquire the current trackbox size (need it later)
-            int TrackBoxSize = guider.TrackBoxX;
+                TSXLink.SexTractor tsex = new TSXLink.SexTractor();
+                try
+                {
+                    int sStat = tsex.SourceExtractFIT();
+                }
+                catch (Exception ex)
+                {
+                    // Just close up, TSX will spawn error window
+                    lg.LogIt("Some problem with guider image: " + ex.Message);
+                    tsex.Close();
+                    return false;
+                }
 
-            TSXLink.SexTractor tsex = new TSXLink.SexTractor();
+                int Xsize = tsex.WidthInPixels;
+                int Ysize = tsex.HeightInPixels;
 
-            try
-            {
-                int sStat = tsex.SourceExtractGuider();
-            }
-            catch (Exception ex)
-            {
-                // Just close up, TSX will spawn error window
-                lg.LogIt("Some problem with guider image: " + ex.Message);
-                tsex.Close();
-                return false;
-            }
+                // Collect astrometric light source data from the image linking into single index arrays: 
+                //  magnitude, fmhm, ellipsicity, x and y positionc
+                //
 
-            int Xsize = tsex.WidthInPixels;
-            int Ysize = tsex.HeightInPixels;
+                double[] MagArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexMagnitude);
+                int starCount = MagArr.Length;
 
-            // Collect astrometric light source data from the image linking into single index arrays: 
-            //  magnitude, fmhm, ellipsicity, x and y positionc
-            //
+                if (starCount == 0)
+                {
+                    lg.LogIt("No astrometric sources found");
+                    tsex.Close();
+                    return false;
+                }
+                double[] FWHMArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexFWHM);
+                double[] XPosArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexX);
+                double[] YPosArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexY);
+                double[] ElpArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexEllipticity);
+                double[] ClsArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexClass);
 
-            double[] MagArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexMagnitude);
-            int starCount = MagArr.Length;
+                // Get some useful statistics
+                // Max and min magnitude
+                // Max and min FWHM
+                // Max and min ellipticity
+                // max and min class
+                // Average FWHM
 
-            if (starCount == 0)
-            {
-                lg.LogIt("No astrometric sources found");
-                tsex.Close();
-                return false;
-            }
-            double[] FWHMArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexFWHM);
-            double[] XPosArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexX);
-            double[] YPosArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexY);
-            double[] ElpArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexEllipticity);
-            double[] ClsArr = tsex.GetSourceExtractionArray(TSXLink.SexTractor.SourceExtractionType.sexClass);
+                double maxMag = MagArr[0];
+                double minMag = MagArr[0];
+                double maxFWHM = FWHMArr[0];
+                double minFWHM = FWHMArr[0];
+                double maxElp = ElpArr[0];
+                double minElp = ElpArr[0];
+                double maxCls = ClsArr[0];
+                double minCls = ClsArr[0];
 
-            // Get some useful statistics
-            // Max and min magnitude
-            // Max and min FWHM
-            // Max and min ellipticity
-            // max and min class
-            // Average FWHM
+                double avgFWHM = 0;
+                double avgMag = 0;
 
-            double maxMag = MagArr[0];
-            double minMag = MagArr[0];
-            double maxFWHM = FWHMArr[0];
-            double minFWHM = FWHMArr[0];
-            double maxElp = ElpArr[0];
-            double minElp = ElpArr[0];
-            double maxCls = ClsArr[0];
-            double minCls = ClsArr[0];
+                for (int i = 0; i < starCount; i++)
+                {
+                    if (MagArr[i] < minMag) { minMag = MagArr[i]; }
+                    if (MagArr[i] > maxMag) { maxMag = MagArr[i]; }
+                    if (FWHMArr[i] < minFWHM) { minFWHM = FWHMArr[i]; }
+                    if (FWHMArr[i] > maxFWHM) { maxFWHM = FWHMArr[i]; }
+                    if (ElpArr[i] < minElp) { minElp = ElpArr[i]; }
+                    if (ElpArr[i] > maxElp) { maxElp = ElpArr[i]; }
+                    if (ClsArr[i] < minCls) { minCls = ClsArr[i]; }
+                    if (ClsArr[i] > maxCls) { maxCls = ClsArr[i]; }
+                    avgFWHM += FWHMArr[i];
+                    avgMag += MagArr[i];
+                }
 
-            double avgFWHM = 0;
-            double avgMag = 0;
+                avgFWHM /= starCount;
+                avgMag /= starCount;
 
-            for (int i = 0; i < starCount; i++)
-            {
-                if (MagArr[i] < minMag) { minMag = MagArr[i]; }
-                if (MagArr[i] > maxMag) { maxMag = MagArr[i]; }
-                if (FWHMArr[i] < minFWHM) { minFWHM = FWHMArr[i]; }
-                if (FWHMArr[i] > maxFWHM) { maxFWHM = FWHMArr[i]; }
-                if (ElpArr[i] < minElp) { minElp = ElpArr[i]; }
-                if (ElpArr[i] > maxElp) { maxElp = ElpArr[i]; }
-                if (ClsArr[i] < minCls) { minCls = ClsArr[i]; }
-                if (ClsArr[i] > maxCls) { maxCls = ClsArr[i]; }
-                avgFWHM += FWHMArr[i];
-                avgMag += MagArr[i];
-            }
+                // Create a set of "best" values
+                double optMag = minMag;       // Magnitudes increase with negative values
+                double optFWHM = avgFWHM;     // Looking for the closest to maximum FWHM
+                double optElp = minElp;     // Want the minimum amount of elongation
+                double optCls = maxCls;      // 1 = star,0 = galaxy
+                                             // Create a set of ranges
+                double rangeMag = maxMag - minMag;
+                double rangeFWHM = maxFWHM - minFWHM;
+                double rangeElp = maxElp - minElp;
+                double rangeCls = maxCls - minCls;
+                // Create interrum variables for weights
+                double normMag;
+                double normFWHM;
+                double normElp;
+                double normCls;
+                // Count keepers for statistics
+                int SourceCount = 0;
+                int EdgeCount = 0;
+                int NeighborCount = 0;
+                int edgekeepout;
 
-            avgFWHM /= starCount;
-            avgMag /= starCount;
+                // Create a selection array to store normilized and summed difference values
+                double[] NormArr = new double[starCount];
 
-            // Create a set of "best" values
-            double optMag = minMag;       // Magnitudes increase with negative values
-            double optFWHM = avgFWHM;     // Looking for the closest to maximum FWHM
-            double optElp = minElp;     // Want the minimum amount of elongation
-            double optCls = maxCls;      // 1 = star,0 = galaxy
-                                         // Create a set of ranges
-            double rangeMag = maxMag - minMag;
-            double rangeFWHM = maxFWHM - minFWHM;
-            double rangeElp = maxElp - minElp;
-            double rangeCls = maxCls - minCls;
-            // Create interrum variables for weights
-            double normMag;
-            double normFWHM;
-            double normElp;
-            double normCls;
-            // Count keepers for statistics
-            int SourceCount = 0;
-            int EdgeCount = 0;
-            int NeighborCount = 0;
-            int edgekeepout;
+                // Convert all points to normalized differences, checking for zero ranges (e.g.single or identical data points)
+                for (int i = 0; i < starCount; i++)
+                {
+                    if (rangeMag != 0) { normMag = 1 - Math.Abs(optMag - MagArr[i]) / rangeMag; }
+                    else { normMag = 0; }
+                    if (rangeFWHM != 0) { normFWHM = 1 - Math.Abs(optFWHM - FWHMArr[i]) / rangeFWHM; }
+                    else { normFWHM = 0; }
+                    if (rangeElp != 0) { normElp = 1 - Math.Abs(optElp - ElpArr[i]) / rangeElp; }
+                    else { normElp = 0; }
+                    if (rangeCls != 0) { normCls = 1 - Math.Abs(optCls - ClsArr[i]) / rangeCls; }
+                    else { normCls = 0; }
 
-            // Create a selection array to store normilized and summed difference values
-            double[] NormArr = new double[starCount];
+                    // Sum the normalized points, weight and store value
+                    NormArr[i] = (normMag * MagWeight) + (normFWHM * FWHMWeight) + (normElp * ElpWeight) + (normCls * ClsWeight);
+                    SourceCount += 1;
 
-            // Convert all points to normalized differences, checking for zero ranges (e.g.single or identical data points)
-            for (int i = 0; i < starCount; i++)
-            {
-                if (rangeMag != 0) { normMag = 1 - Math.Abs(optMag - MagArr[i]) / rangeMag; }
-                else { normMag = 0; }
-                if (rangeFWHM != 0) { normFWHM = 1 - Math.Abs(optFWHM - FWHMArr[i]) / rangeFWHM; }
-                else { normFWHM = 0; }
-                if (rangeElp != 0) { normElp = 1 - Math.Abs(optElp - ElpArr[i]) / rangeElp; }
-                else { normElp = 0; }
-                if (rangeCls != 0) { normCls = 1 - Math.Abs(optCls - ClsArr[i]) / rangeCls; }
-                else { normCls = 0; }
+                    // Remove neighbors and edge liers
+                    edgekeepout = openSession.GuideStarEdgeMargin;
 
-                // Sum the normalized points, weight and store value
-                NormArr[i] = (normMag * MagWeight) + (normFWHM * FWHMWeight) + (normElp * ElpWeight) + (normCls * ClsWeight);
-                SourceCount += 1;
+                    if (IsOnEdge((int)XPosArr[i], (int)YPosArr[i], Xsize, Ysize, edgekeepout)) { NormArr[i] = -1; }
+                    else
+                    {
+                        for (int j = i + 1; j < starCount - 1; j++)
+                        {
+                            if (IsNeighbor((int)XPosArr[i], (int)YPosArr[i], (int)XPosArr[j], (int)YPosArr[j], TrackBoxSize)) { NormArr[i] = -2; }
+                        }
+                    }
+                }
 
-                // Remove neighbors and edge liers
-                edgekeepout = openSession.GuideStarEdgeMargin;
+                // Now find the best remaining entry
 
-                if (IsOnEdge((int)XPosArr[i], (int)YPosArr[i], Xsize, Ysize, edgekeepout)) { NormArr[i] = -1; }
+                int bestOne = 0;
+                for (int i = 0; i < starCount; i++)
+                {
+                    if (NormArr[i] > NormArr[bestOne])
+                    {
+                        bestOne = i;
+                    }
+                }
+
+                asti.SubframeLeft = (int)(XPosArr[bestOne] - (TrackBoxSize / 2)) * asti.BinX;
+                asti.SubframeRight = (int)(XPosArr[bestOne] + (TrackBoxSize / 2)) * asti.BinX;
+                asti.SubframeTop = (int)(YPosArr[bestOne] - (TrackBoxSize / 2)) * asti.BinY;
+                asti.SubframeBottom = (int)(YPosArr[bestOne] + (TrackBoxSize / 2)) * asti.BinY;
+                double gsX = XPosArr[bestOne] * asti.BinX;
+                double gsY = YPosArr[bestOne] * asti.BinY;
+
+                if (NormArr[bestOne] != -1)
+                {
+                    gcam.GuideStarX = gsX;
+                    gcam.GuideStarY = gsY;
+                    tPlan.GuideStarX = gcam.GuideStarX / asti.BinX;
+                    tPlan.GuideStarY = gcam.GuideStarY / asti.BinY;
+                    lg.LogIt("Guide star coordinates set");
+                    tsex.Close();
+                    return true;
+                }
                 else
                 {
-                    for (int j = i + 1; j < starCount - 1; j++)
+                    // run statistics -- only if (total failure
+                    for (int i = 0; i < SourceCount; i++)
                     {
-                        if (IsNeighbor((int)XPosArr[i], (int)YPosArr[i], (int)XPosArr[j], (int)YPosArr[j], TrackBoxSize)) { NormArr[i] = -2; }
+                        if (NormArr[i] == -1)
+                            EdgeCount += 1;
+                        if (NormArr[i] == -2)
+                            NeighborCount += 1;
                     }
+                    lg.LogIt("No Guide star found out of " +
+                                            SourceCount.ToString() + " stars, " +
+                                            NeighborCount.ToString() + " had neighbors and " +
+                                            EdgeCount.ToString() + " were on the edge.");
+                    lg.LogIt("No Guide star coordinates set");
+                    tsex.Close();
+                    return false;
                 }
             }
-
-            // Now find the best remaining entry
-
-            int bestOne = 0;
-            for (int i = 0; i < starCount; i++)
-            {
-                if (NormArr[i] > NormArr[bestOne])
-                {
-                    bestOne = i;
-                }
-            }
-
-            guider.GuideStarX = XPosArr[bestOne] * asti.BinX;
-            guider.GuideStarY = YPosArr[bestOne] * asti.BinY;
-            asti.SubframeLeft = (int)(XPosArr[bestOne] - (TrackBoxSize / 2)) * asti.BinX;
-            asti.SubframeRight = (int)(XPosArr[bestOne] + (TrackBoxSize / 2)) * asti.BinX;
-            asti.SubframeTop = (int)(YPosArr[bestOne] - (TrackBoxSize / 2)) * asti.BinY;
-            asti.SubframeBottom = (int)(YPosArr[bestOne] + (TrackBoxSize / 2)) * asti.BinY;
-
-            if (NormArr[bestOne] != -1)
-            {
-                tPlan.GuideStarX = guider.GuideStarX / asti.BinX;
-                tPlan.GuideStarY = guider.GuideStarY / asti.BinY;
-                lg.LogIt("Guide star coordinates set");
-                tsex.Close();
-                return true;
-            }
-            else
-            {
-                // run statistics -- only if (total failure
-                for (int i = 0; i < SourceCount; i++)
-                {
-                    if (NormArr[i] == -1)
-                    {
-                        EdgeCount += 1;
-                    }
-                    if (NormArr[i] == -2)
-                    {
-                        NeighborCount += 1;
-                    }
-                }
-                lg.LogIt("No Guide star found out of " +
-                                        SourceCount.ToString() + " stars, " +
-                                        NeighborCount.ToString() + " had neighbors and " +
-                                        EdgeCount.ToString() + " were on the edge.");
-                lg.LogIt("No Guide star coordinates set");
-                tsex.Close();
-                return false;
-            }
-        }
+        
 
         //*** Optimize Exposure determines the best exposure time for the target star
         public static double OptimizeExposure()
@@ -600,41 +608,8 @@ namespace Humason
             if ((Math.Abs(Xpos1 - Xpos2) >= limit) || (Math.Abs(Ypos1 - Ypos2) >= limit))
             { return false; }
             else
-            { return true; };
-        }
-
-        //*** Logs calibration vectors in configuration file
-        public static void LogVectors()
-        {
-            SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
-            LogEvent lg = new LogEvent();
-            //Get calibration vectors
-            //Make null image def to retrieve directly from TSX
-            //Null definition
-            AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Guider };
-            TSXLink.Camera gCam = new TSXLink.Camera(asti);
-            //Write vectors to tPlan file
-            //Store vectors
-            tPlan.CalVectorXPosXComponent = gCam.CalibrationVectorXPositiveXComponent;
-            tPlan.CalVectorXPosYComponent = gCam.CalibrationVectorXPositiveYComponent;
-            tPlan.CalVectorXPosXComponent = gCam.CalibrationVectorXPositiveXComponent;
-            tPlan.CalVectorXPosYComponent = gCam.CalibrationVectorXPositiveYComponent;
-            tPlan.CalVectorYNegXComponent = gCam.CalibrationVectorXNegativeXComponent;
-            tPlan.CalVectorYNegYComponent = gCam.CalibrationVectorXNegativeYComponent;
-            tPlan.CalVectorYNegXComponent = gCam.CalibrationVectorXNegativeXComponent;
-            tPlan.CalVectorYNegYComponent = gCam.CalibrationVectorXNegativeYComponent;
-
-            //write a line of the 8 log vectors
-            lg.LogIt("Calibration Vectors:  ");
-            lg.LogIt("CalVectorXPosXComponent: " + tPlan.CalVectorXPosXComponent);
-            lg.LogIt("CalVectorXPosYComponent: " + tPlan.CalVectorXPosYComponent);
-            lg.LogIt("CalVectorXNegXComponent: " + tPlan.CalVectorXPosXComponent);
-            lg.LogIt("CalVectorXNegYComponent: " + tPlan.CalVectorXPosYComponent);
-            lg.LogIt("CalVectorYPosXComponent: " + tPlan.CalVectorXNegXComponent);
-            lg.LogIt("CalVectorYPosYComponent: " + tPlan.CalVectorXNegYComponent);
-            lg.LogIt("CalVectorYNegXComponent: " + tPlan.CalVectorXNegXComponent);
-            lg.LogIt("CalVectorYNegYComponent: " + tPlan.CalVectorXNegYComponent);
+            { return true; }
+            ;
         }
 
         public static bool DitherAndStart()

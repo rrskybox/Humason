@@ -26,7 +26,7 @@
     <ProductName>Humason</ProductName>
     <PublisherName>TSXToolKit</PublisherName>
     <SuiteName>TSXToolKit</SuiteName>
-    <ApplicationRevision>261</ApplicationRevision>
+    <ApplicationRevision>262</ApplicationRevision>
     <ApplicationVersion>4.3.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -168,7 +168,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ImageAnalysis.cs" />
     <Compile Include="ImageFileManager.cs" />
-    <Compile Include="Imaging.cs" />
+    <Compile Include="MainCameraImaging.cs" />
     <Compile Include="LaunchPad.cs" />
     <Compile Include="LogEvent.cs" />
     <Compile Include="FormHumason.cs">
@@ -284,6 +284,15 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <COMReference Include="MaxIm">
+      <Guid>{B4955EC7-F7F2-11D2-AA9C-444553540000}</Guid>
+      <VersionMajor>3</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
     <COMReference Include="TheSky64Lib">
       <Guid>{AECFC6C9-1BED-4028-B248-0D9156598264}</Guid>
       <VersionMajor>1</VersionMajor>

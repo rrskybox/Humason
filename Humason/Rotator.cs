@@ -129,18 +129,19 @@ namespace Humason
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
             AstroImage asti = new AstroImage
             {
+                Camera = AstroImage.CameraType.Imaging,
                 Frame = AstroImage.ImageType.Light,
                 Exposure = tPlan.PlateSolveExposureTime,
                 FilterIndex = tPlan.CLSFilter,
                 ImageReduction = (AstroImage.ReductionType)openSession.ImageReductionType,
                 Delay = 0,
-                AutoSave = 1
+                AutoSave = 1                
             };
             lg.LogIt("Plate Solve: Imaging");
-            Imaging imgo = new Imaging();
+            MainCameraImaging imgo = new MainCameraImaging();
             int rslt = imgo.TakeLightFrame(asti);
             string path = asti.Path;
-            //TSXLink.Camera gCam = new TSXLink.Camera(asti);
+            //MaximLink.Camera gCam = new MaximLink.Camera(asti);
             //int cStat = gCam.GetImage();
             if (rslt != 0)
             {

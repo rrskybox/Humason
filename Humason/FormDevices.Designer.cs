@@ -30,13 +30,14 @@
         {
             this.AutoguideCheck = new System.Windows.Forms.CheckBox();
             this.AutofocusCheck = new System.Windows.Forms.CheckBox();
-            this.RotatorCheckBox = new System.Windows.Forms.CheckBox();
+            this.UseRotatorCheckBox = new System.Windows.Forms.CheckBox();
             this.FilterListBox = new System.Windows.Forms.CheckedListBox();
             this.FocusFilterNum = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.CLSFilterNum = new System.Windows.Forms.NumericUpDown();
             this.FiltersGroupBox = new System.Windows.Forms.GroupBox();
+            this.NoFilterWheelCheckBox = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.LumFilterNum = new System.Windows.Forms.NumericUpDown();
             this.RefreshFiltersButton = new System.Windows.Forms.Button();
@@ -52,11 +53,12 @@
             this.GuiderCalibrateCheck = new System.Windows.Forms.CheckBox();
             this.RotatorGroupBox = new System.Windows.Forms.GroupBox();
             this.RecalibrateAfterFlipCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoFilterWheelCheckBox = new System.Windows.Forms.CheckBox();
             this.HasDomeCheckBox = new System.Windows.Forms.CheckBox();
             this.HasWeatherCheckBox = new System.Windows.Forms.CheckBox();
             this.HasRotatorCheckBox = new System.Windows.Forms.CheckBox();
             this.WeatherFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.ResyncPeriodBox = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.FocusFilterNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CLSFilterNum)).BeginInit();
             this.FiltersGroupBox.SuspendLayout();
@@ -65,6 +67,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.RefocustTemperatureChangeBox)).BeginInit();
             this.GuiderGroupBox.SuspendLayout();
             this.RotatorGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ResyncPeriodBox)).BeginInit();
             this.SuspendLayout();
             // 
             // AutoguideCheck
@@ -72,6 +75,7 @@
             this.AutoguideCheck.AutoSize = true;
             this.AutoguideCheck.ForeColor = System.Drawing.Color.White;
             this.AutoguideCheck.Location = new System.Drawing.Point(26, 19);
+            this.AutoguideCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AutoguideCheck.Name = "AutoguideCheck";
             this.AutoguideCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.AutoguideCheck.Size = new System.Drawing.Size(74, 17);
@@ -85,6 +89,7 @@
             this.AutofocusCheck.AutoSize = true;
             this.AutofocusCheck.ForeColor = System.Drawing.Color.White;
             this.AutofocusCheck.Location = new System.Drawing.Point(26, 19);
+            this.AutofocusCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AutofocusCheck.Name = "AutofocusCheck";
             this.AutofocusCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.AutofocusCheck.Size = new System.Drawing.Size(96, 17);
@@ -93,34 +98,37 @@
             this.AutofocusCheck.UseVisualStyleBackColor = true;
             this.AutofocusCheck.CheckedChanged += new System.EventHandler(this.AutofocusCheck_CheckedChanged);
             // 
-            // RotatorCheckBox
+            // UseRotatorCheckBox
             // 
-            this.RotatorCheckBox.AutoSize = true;
-            this.RotatorCheckBox.ForeColor = System.Drawing.Color.White;
-            this.RotatorCheckBox.Location = new System.Drawing.Point(27, 19);
-            this.RotatorCheckBox.Name = "RotatorCheckBox";
-            this.RotatorCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.RotatorCheckBox.Size = new System.Drawing.Size(83, 17);
-            this.RotatorCheckBox.TabIndex = 71;
-            this.RotatorCheckBox.Text = "Use Rotator";
-            this.RotatorCheckBox.UseVisualStyleBackColor = true;
-            this.RotatorCheckBox.CheckedChanged += new System.EventHandler(this.RotatorCheckBox_CheckedChanged);
+            this.UseRotatorCheckBox.AutoSize = true;
+            this.UseRotatorCheckBox.ForeColor = System.Drawing.Color.White;
+            this.UseRotatorCheckBox.Location = new System.Drawing.Point(26, 19);
+            this.UseRotatorCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.UseRotatorCheckBox.Name = "UseRotatorCheckBox";
+            this.UseRotatorCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.UseRotatorCheckBox.Size = new System.Drawing.Size(83, 17);
+            this.UseRotatorCheckBox.TabIndex = 71;
+            this.UseRotatorCheckBox.Text = "Use Rotator";
+            this.UseRotatorCheckBox.UseVisualStyleBackColor = true;
+            this.UseRotatorCheckBox.CheckedChanged += new System.EventHandler(this.RotatorCheckBox_CheckedChanged);
             // 
             // FilterListBox
             // 
             this.FilterListBox.CheckOnClick = true;
             this.FilterListBox.FormattingEnabled = true;
-            this.FilterListBox.Location = new System.Drawing.Point(11, 19);
+            this.FilterListBox.Location = new System.Drawing.Point(6, 42);
+            this.FilterListBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FilterListBox.Name = "FilterListBox";
-            this.FilterListBox.Size = new System.Drawing.Size(108, 94);
+            this.FilterListBox.Size = new System.Drawing.Size(108, 64);
             this.FilterListBox.TabIndex = 84;
             this.FilterListBox.SelectedIndexChanged += new System.EventHandler(this.FilterList_SelectedIndexChanged);
             // 
             // FocusFilterNum
             // 
-            this.FocusFilterNum.Location = new System.Drawing.Point(198, 97);
+            this.FocusFilterNum.Location = new System.Drawing.Point(198, 120);
+            this.FocusFilterNum.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FocusFilterNum.Name = "FocusFilterNum";
-            this.FocusFilterNum.Size = new System.Drawing.Size(33, 20);
+            this.FocusFilterNum.Size = new System.Drawing.Size(34, 20);
             this.FocusFilterNum.TabIndex = 85;
             this.FocusFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.FocusFilterNum.ValueChanged += new System.EventHandler(this.FocusFilterNum_ValueChanged);
@@ -129,7 +137,8 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(136, 94);
+            this.label1.Location = new System.Drawing.Point(136, 117);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 86;
@@ -139,7 +148,8 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(141, 73);
+            this.label3.Location = new System.Drawing.Point(142, 96);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(52, 13);
             this.label3.TabIndex = 89;
@@ -147,15 +157,17 @@
             // 
             // CLSFilterNum
             // 
-            this.CLSFilterNum.Location = new System.Drawing.Point(198, 71);
+            this.CLSFilterNum.Location = new System.Drawing.Point(198, 94);
+            this.CLSFilterNum.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CLSFilterNum.Name = "CLSFilterNum";
-            this.CLSFilterNum.Size = new System.Drawing.Size(33, 20);
+            this.CLSFilterNum.Size = new System.Drawing.Size(34, 20);
             this.CLSFilterNum.TabIndex = 88;
             this.CLSFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.CLSFilterNum.ValueChanged += new System.EventHandler(this.CLSFilterNum_ValueChanged);
             // 
             // FiltersGroupBox
             // 
+            this.FiltersGroupBox.Controls.Add(this.NoFilterWheelCheckBox);
             this.FiltersGroupBox.Controls.Add(this.label6);
             this.FiltersGroupBox.Controls.Add(this.LumFilterNum);
             this.FiltersGroupBox.Controls.Add(this.RefreshFiltersButton);
@@ -165,18 +177,35 @@
             this.FiltersGroupBox.Controls.Add(this.FocusFilterNum);
             this.FiltersGroupBox.Controls.Add(this.FilterListBox);
             this.FiltersGroupBox.ForeColor = System.Drawing.Color.White;
-            this.FiltersGroupBox.Location = new System.Drawing.Point(12, 35);
+            this.FiltersGroupBox.Location = new System.Drawing.Point(12, 11);
+            this.FiltersGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FiltersGroupBox.Name = "FiltersGroupBox";
-            this.FiltersGroupBox.Size = new System.Drawing.Size(254, 126);
+            this.FiltersGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.FiltersGroupBox.Size = new System.Drawing.Size(254, 149);
             this.FiltersGroupBox.TabIndex = 90;
             this.FiltersGroupBox.TabStop = false;
-            this.FiltersGroupBox.Text = "Filters";
+            this.FiltersGroupBox.Text = "Camera";
+            // 
+            // NoFilterWheelCheckBox
+            // 
+            this.NoFilterWheelCheckBox.AutoSize = true;
+            this.NoFilterWheelCheckBox.ForeColor = System.Drawing.SystemColors.Control;
+            this.NoFilterWheelCheckBox.Location = new System.Drawing.Point(10, 19);
+            this.NoFilterWheelCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.NoFilterWheelCheckBox.Name = "NoFilterWheelCheckBox";
+            this.NoFilterWheelCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.NoFilterWheelCheckBox.Size = new System.Drawing.Size(99, 17);
+            this.NoFilterWheelCheckBox.TabIndex = 115;
+            this.NoFilterWheelCheckBox.Text = "No Filter Wheel";
+            this.NoFilterWheelCheckBox.UseVisualStyleBackColor = true;
+            this.NoFilterWheelCheckBox.CheckedChanged += new System.EventHandler(this.NoFilterWheelCheckBox_CheckedChanged_1);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(142, 47);
+            this.label6.Location = new System.Drawing.Point(142, 70);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(52, 13);
             this.label6.TabIndex = 92;
@@ -184,9 +213,10 @@
             // 
             // LumFilterNum
             // 
-            this.LumFilterNum.Location = new System.Drawing.Point(198, 45);
+            this.LumFilterNum.Location = new System.Drawing.Point(198, 68);
+            this.LumFilterNum.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.LumFilterNum.Name = "LumFilterNum";
-            this.LumFilterNum.Size = new System.Drawing.Size(33, 20);
+            this.LumFilterNum.Size = new System.Drawing.Size(34, 20);
             this.LumFilterNum.TabIndex = 91;
             this.LumFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.LumFilterNum.ValueChanged += new System.EventHandler(this.LumFilterNum_ValueChanged);
@@ -194,7 +224,8 @@
             // RefreshFiltersButton
             // 
             this.RefreshFiltersButton.ForeColor = System.Drawing.Color.Black;
-            this.RefreshFiltersButton.Location = new System.Drawing.Point(175, 13);
+            this.RefreshFiltersButton.Location = new System.Drawing.Point(174, 36);
+            this.RefreshFiltersButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RefreshFiltersButton.Name = "RefreshFiltersButton";
             this.RefreshFiltersButton.Size = new System.Drawing.Size(70, 26);
             this.RefreshFiltersButton.TabIndex = 90;
@@ -212,7 +243,9 @@
             this.FocuserGroupBox.Controls.Add(this.AtFocus2RadioButton);
             this.FocuserGroupBox.ForeColor = System.Drawing.Color.White;
             this.FocuserGroupBox.Location = new System.Drawing.Point(12, 243);
+            this.FocuserGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FocuserGroupBox.Name = "FocuserGroupBox";
+            this.FocuserGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FocuserGroupBox.Size = new System.Drawing.Size(254, 85);
             this.FocuserGroupBox.TabIndex = 94;
             this.FocuserGroupBox.TabStop = false;
@@ -226,7 +259,8 @@
             0,
             0,
             65536});
-            this.RefocustTemperatureChangeBox.Location = new System.Drawing.Point(89, 56);
+            this.RefocustTemperatureChangeBox.Location = new System.Drawing.Point(90, 56);
+            this.RefocustTemperatureChangeBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RefocustTemperatureChangeBox.Maximum = new decimal(new int[] {
             10,
             0,
@@ -238,7 +272,7 @@
             0,
             65536});
             this.RefocustTemperatureChangeBox.Name = "RefocustTemperatureChangeBox";
-            this.RefocustTemperatureChangeBox.Size = new System.Drawing.Size(47, 20);
+            this.RefocustTemperatureChangeBox.Size = new System.Drawing.Size(46, 20);
             this.RefocustTemperatureChangeBox.TabIndex = 73;
             this.RefocustTemperatureChangeBox.Value = new decimal(new int[] {
             1,
@@ -251,6 +285,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(144, 58);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(74, 13);
             this.label5.TabIndex = 72;
@@ -260,6 +295,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(24, 58);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 13);
             this.label2.TabIndex = 71;
@@ -269,7 +305,8 @@
             // 
             this.AtFocus3RadioButton.AutoSize = true;
             this.AtFocus3RadioButton.ForeColor = System.Drawing.Color.White;
-            this.AtFocus3RadioButton.Location = new System.Drawing.Point(161, 35);
+            this.AtFocus3RadioButton.Location = new System.Drawing.Point(162, 35);
+            this.AtFocus3RadioButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AtFocus3RadioButton.Name = "AtFocus3RadioButton";
             this.AtFocus3RadioButton.Size = new System.Drawing.Size(71, 17);
             this.AtFocus3RadioButton.TabIndex = 70;
@@ -281,7 +318,8 @@
             // 
             this.AtFocus2RadioButton.AutoSize = true;
             this.AtFocus2RadioButton.ForeColor = System.Drawing.Color.White;
-            this.AtFocus2RadioButton.Location = new System.Drawing.Point(161, 12);
+            this.AtFocus2RadioButton.Location = new System.Drawing.Point(162, 11);
+            this.AtFocus2RadioButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AtFocus2RadioButton.Name = "AtFocus2RadioButton";
             this.AtFocus2RadioButton.Size = new System.Drawing.Size(71, 17);
             this.AtFocus2RadioButton.TabIndex = 69;
@@ -293,7 +331,8 @@
             // 
             this.DitherCheck.AutoSize = true;
             this.DitherCheck.ForeColor = System.Drawing.Color.White;
-            this.DitherCheck.Location = new System.Drawing.Point(99, 42);
+            this.DitherCheck.Location = new System.Drawing.Point(98, 42);
+            this.DitherCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.DitherCheck.Name = "DitherCheck";
             this.DitherCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.DitherCheck.Size = new System.Drawing.Size(54, 17);
@@ -304,13 +343,17 @@
             // 
             // GuiderGroupBox
             // 
+            this.GuiderGroupBox.Controls.Add(this.label4);
+            this.GuiderGroupBox.Controls.Add(this.ResyncPeriodBox);
             this.GuiderGroupBox.Controls.Add(this.ResyncCheck);
             this.GuiderGroupBox.Controls.Add(this.GuiderCalibrateCheck);
             this.GuiderGroupBox.Controls.Add(this.DitherCheck);
             this.GuiderGroupBox.Controls.Add(this.AutoguideCheck);
             this.GuiderGroupBox.ForeColor = System.Drawing.Color.White;
             this.GuiderGroupBox.Location = new System.Drawing.Point(12, 167);
+            this.GuiderGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.GuiderGroupBox.Name = "GuiderGroupBox";
+            this.GuiderGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.GuiderGroupBox.Size = new System.Drawing.Size(254, 70);
             this.GuiderGroupBox.TabIndex = 95;
             this.GuiderGroupBox.TabStop = false;
@@ -320,7 +363,8 @@
             // 
             this.ResyncCheck.AutoSize = true;
             this.ResyncCheck.ForeColor = System.Drawing.Color.White;
-            this.ResyncCheck.Location = new System.Drawing.Point(169, 42);
+            this.ResyncCheck.Location = new System.Drawing.Point(129, 19);
+            this.ResyncCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.ResyncCheck.Name = "ResyncCheck";
             this.ResyncCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.ResyncCheck.Size = new System.Drawing.Size(62, 17);
@@ -334,6 +378,7 @@
             this.GuiderCalibrateCheck.AutoSize = true;
             this.GuiderCalibrateCheck.ForeColor = System.Drawing.Color.White;
             this.GuiderCalibrateCheck.Location = new System.Drawing.Point(26, 42);
+            this.GuiderCalibrateCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.GuiderCalibrateCheck.Name = "GuiderCalibrateCheck";
             this.GuiderCalibrateCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.GuiderCalibrateCheck.Size = new System.Drawing.Size(67, 17);
@@ -345,10 +390,12 @@
             // RotatorGroupBox
             // 
             this.RotatorGroupBox.Controls.Add(this.RecalibrateAfterFlipCheckbox);
-            this.RotatorGroupBox.Controls.Add(this.RotatorCheckBox);
+            this.RotatorGroupBox.Controls.Add(this.UseRotatorCheckBox);
             this.RotatorGroupBox.ForeColor = System.Drawing.Color.White;
             this.RotatorGroupBox.Location = new System.Drawing.Point(12, 356);
+            this.RotatorGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RotatorGroupBox.Name = "RotatorGroupBox";
+            this.RotatorGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RotatorGroupBox.Size = new System.Drawing.Size(254, 42);
             this.RotatorGroupBox.TabIndex = 96;
             this.RotatorGroupBox.TabStop = false;
@@ -359,6 +406,7 @@
             this.RecalibrateAfterFlipCheckbox.AutoSize = true;
             this.RecalibrateAfterFlipCheckbox.ForeColor = System.Drawing.Color.White;
             this.RecalibrateAfterFlipCheckbox.Location = new System.Drawing.Point(124, 19);
+            this.RecalibrateAfterFlipCheckbox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RecalibrateAfterFlipCheckbox.Name = "RecalibrateAfterFlipCheckbox";
             this.RecalibrateAfterFlipCheckbox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.RecalibrateAfterFlipCheckbox.Size = new System.Drawing.Size(124, 17);
@@ -367,24 +415,12 @@
             this.RecalibrateAfterFlipCheckbox.UseVisualStyleBackColor = true;
             this.RecalibrateAfterFlipCheckbox.CheckedChanged += new System.EventHandler(this.RecalibrateAfterFlipCheckbox_CheckedChanged);
             // 
-            // NoFilterWheelCheckBox
-            // 
-            this.NoFilterWheelCheckBox.AutoSize = true;
-            this.NoFilterWheelCheckBox.ForeColor = System.Drawing.SystemColors.Control;
-            this.NoFilterWheelCheckBox.Location = new System.Drawing.Point(12, 12);
-            this.NoFilterWheelCheckBox.Name = "NoFilterWheelCheckBox";
-            this.NoFilterWheelCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.NoFilterWheelCheckBox.Size = new System.Drawing.Size(99, 17);
-            this.NoFilterWheelCheckBox.TabIndex = 115;
-            this.NoFilterWheelCheckBox.Text = "No Filter Wheel";
-            this.NoFilterWheelCheckBox.UseVisualStyleBackColor = true;
-            this.NoFilterWheelCheckBox.CheckedChanged += new System.EventHandler(this.NoFilterWheelCheckBox_CheckedChanged_1);
-            // 
             // HasDomeCheckBox
             // 
             this.HasDomeCheckBox.AutoSize = true;
             this.HasDomeCheckBox.ForeColor = System.Drawing.SystemColors.Control;
-            this.HasDomeCheckBox.Location = new System.Drawing.Point(151, 416);
+            this.HasDomeCheckBox.Location = new System.Drawing.Point(150, 416);
+            this.HasDomeCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.HasDomeCheckBox.Name = "HasDomeCheckBox";
             this.HasDomeCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.HasDomeCheckBox.Size = new System.Drawing.Size(115, 17);
@@ -398,6 +434,7 @@
             this.HasWeatherCheckBox.AutoSize = true;
             this.HasWeatherCheckBox.ForeColor = System.Drawing.SystemColors.Control;
             this.HasWeatherCheckBox.Location = new System.Drawing.Point(12, 416);
+            this.HasWeatherCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.HasWeatherCheckBox.Name = "HasWeatherCheckBox";
             this.HasWeatherCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.HasWeatherCheckBox.Size = new System.Drawing.Size(127, 17);
@@ -411,6 +448,7 @@
             this.HasRotatorCheckBox.AutoSize = true;
             this.HasRotatorCheckBox.ForeColor = System.Drawing.Color.White;
             this.HasRotatorCheckBox.Location = new System.Drawing.Point(12, 334);
+            this.HasRotatorCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.HasRotatorCheckBox.Name = "HasRotatorCheckBox";
             this.HasRotatorCheckBox.Size = new System.Drawing.Size(83, 17);
             this.HasRotatorCheckBox.TabIndex = 112;
@@ -422,6 +460,23 @@
             // 
             this.WeatherFileDialog.FileName = "CCDAP";
             // 
+            // ResyncPeriodBox
+            // 
+            this.ResyncPeriodBox.Location = new System.Drawing.Point(192, 18);
+            this.ResyncPeriodBox.Name = "ResyncPeriodBox";
+            this.ResyncPeriodBox.Size = new System.Drawing.Size(52, 20);
+            this.ResyncPeriodBox.TabIndex = 73;
+            this.ResyncPeriodBox.ValueChanged += new System.EventHandler(this.ResyncPeriodBox_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(203, 41);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.TabIndex = 74;
+            this.label4.Text = "(min)";
+            // 
             // FormDevices
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -429,7 +484,6 @@
             this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 445);
             this.ControlBox = false;
-            this.Controls.Add(this.NoFilterWheelCheckBox);
             this.Controls.Add(this.HasDomeCheckBox);
             this.Controls.Add(this.HasWeatherCheckBox);
             this.Controls.Add(this.HasRotatorCheckBox);
@@ -439,6 +493,7 @@
             this.Controls.Add(this.FiltersGroupBox);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormDevices";
@@ -456,6 +511,7 @@
             this.GuiderGroupBox.PerformLayout();
             this.RotatorGroupBox.ResumeLayout(false);
             this.RotatorGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ResyncPeriodBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -464,7 +520,7 @@
         #endregion
         internal System.Windows.Forms.CheckBox AutoguideCheck;
         internal System.Windows.Forms.CheckBox AutofocusCheck;
-        internal System.Windows.Forms.CheckBox RotatorCheckBox;
+        internal System.Windows.Forms.CheckBox UseRotatorCheckBox;
         private System.Windows.Forms.CheckedListBox FilterListBox;
         private System.Windows.Forms.NumericUpDown FocusFilterNum;
         private System.Windows.Forms.Label label1;
@@ -491,5 +547,7 @@
         internal System.Windows.Forms.CheckBox HasWeatherCheckBox;
         private System.Windows.Forms.CheckBox HasRotatorCheckBox;
         private System.Windows.Forms.OpenFileDialog WeatherFileDialog;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown ResyncPeriodBox;
     }
 }

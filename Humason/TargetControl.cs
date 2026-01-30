@@ -49,15 +49,6 @@ namespace Humason
         public const string GuiderBinningXName = "GuiderBinning";
         public const string GuiderSubframeEnabledXName = "GuiderSubframeEnabled";
 
-        public const string CalVectorXPosXComponentXName = "CalVectorXPosXComponent";
-        public const string CalVectorXPosYComponentXName = "CalVectorXPosYComponent";
-        public const string CalVectorYPosXComponentXName = "CalVectorXPosXComponent";
-        public const string CalVectorYPosYComponentXName = "CalVectorXPosYComponent";
-        public const string CalVectorXNegXComponentXName = "CalVectorYNegXComponent";
-        public const string CalVectorXNegYComponentXName = "CalVectorYNegYComponent";
-        public const string CalVectorYNegXComponentXName = "CalVectorYNegXComponent";
-        public const string CalVectorYNegYComponentXName = "CalVectorYNegYComponent";
-
         public const string TargetNameXName = "TargetName";
         public const string TargetAdjustCheckedXName = "TargetAdjustChecked";
         public const string TargetRAXName = "TargetRA";
@@ -66,7 +57,6 @@ namespace Humason
         public const string SequenceStartTimeXName = "SequenceStartTime";
         public const string SequenceEndTimeXName = "SequenceEndTime";
         public const string SequenceDawnTimeXName = "SequenceDawnTime";
-
 
         public const string ImageExposureTimeXName = "ImageExposureTime";
         public const string LoopsXName = "Loops";
@@ -81,6 +71,7 @@ namespace Humason
         public const string DitherCheckedXName = "DitherChecked";
         public const string GuiderCalibrateCheckedXName = "CalibrateChecked";
         public const string ResyncCheckedXName = "ResyncChecked";
+        public const string ResyncPeriodXName = "ResyncPeriod";
         public const string CLSFilterXName = "CLSFilter";
         public const string LumFilterXName = "LumFilter";
         public const string OverheadXName = "ImageOverheadTime";
@@ -288,15 +279,6 @@ namespace Humason
             defaultTP.SetItem(GuiderBinningXName, 1);
             defaultTP.SetItem(GuiderSubframeEnabledXName, false);
 
-            defaultTP.SetItem(CalVectorXPosXComponentXName, 0);
-            defaultTP.SetItem(CalVectorXPosYComponentXName, 0);
-            defaultTP.SetItem(CalVectorYPosXComponentXName, 0);
-            defaultTP.SetItem(CalVectorYPosYComponentXName, 0);
-            defaultTP.SetItem(CalVectorXNegXComponentXName, 0);
-            defaultTP.SetItem(CalVectorXNegYComponentXName, 0);
-            defaultTP.SetItem(CalVectorYNegXComponentXName, 0);
-            defaultTP.SetItem(CalVectorYNegYComponentXName, 0);
-
             defaultTP.SetItem(TargetNameXName, "Default");
             defaultTP.SetItem(TargetAdjustCheckedXName, false);
             defaultTP.SetItem(SequenceStartTimeXName, 0);
@@ -315,6 +297,7 @@ namespace Humason
             defaultTP.SetItem(DitherCheckedXName, false);
             defaultTP.SetItem(GuiderCalibrateCheckedXName, false);
             defaultTP.SetItem(ResyncCheckedXName, false);
+            defaultTP.SetItem(ResyncPeriodXName, 0);
             defaultTP.SetItem(CLSFilterXName, 3);
             defaultTP.SetItem(LumFilterXName, 3);
             defaultTP.SetItem(OverheadXName, 0);
@@ -441,54 +424,6 @@ namespace Humason
         {
             get => Convert.ToInt32(hTargetPlanX.GetItem(GuiderBinningXName));
             set => hTargetPlanX.ReplaceItem(GuiderBinningXName, value);
-        }
-
-        public double CalVectorXPosXComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorXPosXComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorXPosXComponentXName, value.ToString());
-        }
-
-        public double CalVectorXPosYComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorXPosYComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorXPosYComponentXName, value.ToString());
-        }
-
-        public double CalVectorYPosXComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorYPosXComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorXPosYComponentXName, value.ToString());
-        }
-
-        public double CalVectorYPosYComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorYPosYComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorYPosYComponentXName, value.ToString());
-        }
-
-        public double CalVectorXNegXComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorXNegXComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorXNegXComponentXName, value.ToString());
-        }
-
-        public double CalVectorXNegYComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorXNegYComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorXNegYComponentXName, value.ToString());
-        }
-
-        public double CalVectorYNegXComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorYNegXComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorXNegYComponentXName, value.ToString());
-        }
-
-        public double CalVectorYNegYComponent
-        {
-            get => Convert.ToDouble(hTargetPlanX.GetItem(CalVectorYNegYComponentXName));
-            set => hTargetPlanX.ReplaceItem(CalVectorYPosYComponentXName, value.ToString());
         }
 
         public string TargetName
@@ -639,6 +574,12 @@ namespace Humason
         {
             get => Convert.ToBoolean(hTargetPlanX.GetItem(ResyncCheckedXName));
             set => hTargetPlanX.ReplaceItem(ResyncCheckedXName, value.ToString());
+        }
+
+        public int ResyncPeriod
+        {
+            get => Convert.ToInt16(hTargetPlanX.GetItem(ResyncPeriodXName));
+            set => hTargetPlanX.ReplaceItem(ResyncPeriodXName, value.ToString());
         }
 
         public int CLSFilter

@@ -108,9 +108,7 @@ namespace Humason
             lg.LogIt("Sidereal Tracking On");
 
             //Bring camera to temperature (if not already), then clear the objects
-            AstroImage asti = new AstroImage() { Camera = AstroImage.CameraType.Imaging };
-            TSXLink.Camera cCam = new TSXLink.Camera(asti);
-            cCam.CCDTemperature = openSession.CameraTemperatureSet;
+            TSXLink.Camera.CCDTemperature = openSession.CameraTemperatureSet;
             lg.LogIt("Camera Temperature set to " + openSession.CameraTemperatureSet.ToString("0.0"));
 
             //************************  Starting up the target plans  *************************
@@ -151,7 +149,8 @@ namespace Humason
                     lg.LogIt("Failed to center target");
                     GracefulAbort();
                     return false;
-                };
+                }
+                ;
 
                 //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
                 if (tPlan.RotatorEnabled)
@@ -175,7 +174,8 @@ namespace Humason
                             lg.LogIt("Failed to center target after rotation");
                             GracefulAbort();
                             return false;
-                        };
+                        }
+                        ;
                     }
                 }
                 else lg.LogIt("Rotator not enabled");
@@ -235,6 +235,13 @@ namespace Humason
                 //Disconnect devices
                 TSXLink.Connection.DisconnectAllDevices();
             }
+            if (openSession.SessionEndParkEnabled)
+            {
+                lg.LogIt("Parking Mount");
+                try { TSXLink.Mount.Park(); }
+                catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
+            }
+
             return true;
         }
 
@@ -260,13 +267,22 @@ namespace Humason
                 lg.LogIt("Parking Mount");
                 try { TSXLink.Mount.Park(); }
                 catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
- 
+
                 lg.LogIt("Disconnecting all devices");
                 TSXLink.Connection.DisconnectAllDevices();
                 FormHumason.SetStopped();
             }
             if ((!openSession.IsAttended) && openSession.ShutDownEnabled && LaunchPad.IsTimeToShutDown())
                 LaunchPad.RunShutDownApp();
+            if (openSession.SessionEndParkEnabled)
+            {
+                lg.LogIt("Parking Mount");
+                try { TSXLink.Mount.Park(); }
+                catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
+            }
+            lg.LogIt("Disconnecting all devices");
+            TSXLink.Connection.DisconnectAllDevices();
+            FormHumason.SetStopped();
             lg.LogIt("Abort Completed -- awaiting new orders, Captain");
             return;
         }

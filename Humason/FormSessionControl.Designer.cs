@@ -49,6 +49,7 @@
             this.OTAButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.EnableMeridianFlipBox = new System.Windows.Forms.CheckBox();
+            this.SessionParkCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox5.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -255,12 +256,24 @@
             this.EnableMeridianFlipBox.UseVisualStyleBackColor = true;
             this.EnableMeridianFlipBox.CheckedChanged += new System.EventHandler(this.EnableMeridianFlipBox_CheckedChanged);
             // 
+            // SessionParkCheckBox
+            // 
+            this.SessionParkCheckBox.AutoSize = true;
+            this.SessionParkCheckBox.Location = new System.Drawing.Point(18, 365);
+            this.SessionParkCheckBox.Name = "SessionParkCheckBox";
+            this.SessionParkCheckBox.Size = new System.Drawing.Size(170, 17);
+            this.SessionParkCheckBox.TabIndex = 80;
+            this.SessionParkCheckBox.Text = "Park On Session End or Dawn";
+            this.SessionParkCheckBox.UseVisualStyleBackColor = true;
+            this.SessionParkCheckBox.CheckedChanged += new System.EventHandler(this.SessionParkCheckBox_CheckedChanged);
+            // 
             // FormSessionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(278, 445);
+            this.Controls.Add(this.SessionParkCheckBox);
             this.Controls.Add(this.EnableMeridianFlipBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.OTAButton);
@@ -309,5 +322,6 @@
         private System.Windows.Forms.Button OTAButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox EnableMeridianFlipBox;
+        private System.Windows.Forms.CheckBox SessionParkCheckBox;
     }
 }

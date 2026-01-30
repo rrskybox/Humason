@@ -56,6 +56,8 @@ namespace Humason
 
         public bool CurrentTargetSideWest { get; set; }//Records where the mount is pointing for current shot:  true = east, false = West
 
+        public DateTime LastResyncTime { get; set; } = DateTime.Now;  //Records the time of the last resync operation
+
         //Set up array of frames for imaging
         //Each member of the array will be the definition for one image, or frame
         //The definition will consist of five items: filter, exposure, binning, frame type and delay.
@@ -482,7 +484,7 @@ namespace Humason
                 //  on the first image.  The rest will follow accordingly.  if the CLS fails, then we might as well abort
                 if (tPlan.AutoGuideEnabled)
                 {
-                    if (tPlan.ResyncEnabled)
+                    if (tPlan.ResyncEnabled && CheckResync())
                     {
                         StopAutoguiding();
                         if (!StartAutoguiding())
@@ -491,7 +493,8 @@ namespace Humason
                             {
                                 FormHumason.SetAbort();
                                 break;
-                            };
+                            }
+                            ;
                         }
                     }
                     else
@@ -509,11 +512,12 @@ namespace Humason
                             {
                                 FormHumason.SetAbort();
                                 break;
-                            };
+                            }
+                            ;
                         }
                     }
                 }
-                else if (tPlan.ResyncEnabled)  //(and Autoguide is not enabled)
+                else if (tPlan.ResyncEnabled && CheckResync())  //(and Autoguide is not enabled)
                 {
                     if (!CLSToTargetPlanCoordinates())
                     {
@@ -521,12 +525,14 @@ namespace Humason
                         break;
                     }
                 }
-                else if (frmdef == 0) //(and Autoguide is not enabled, and ReSync is not enabled)
+                else if (frmdef == 0) //(and Autoguide is not enabled, and ReSync is not enabled) then just cruise through
+                {
                     if (!CLSToTargetPlanCoordinates())
                     {
                         FormHumason.SetAbort();
                         break;
                     }
+                }
 
                 //Check for SmallSolarSystemObject
                 //  if so, then set the tracking rates based on the sequence deltaRA and deltaDec values, if any
@@ -561,7 +567,7 @@ namespace Humason
                 DateTime imageStart = DateTime.Now;
 
                 //Start the imaging
-                Imaging imgo = new Imaging();
+                MainCameraImaging imgo = new MainCameraImaging();
                 int camResult = imgo.TakeLightFrame(asti);
                 //Check for a user abort
                 System.Windows.Forms.Application.DoEvents();
@@ -693,7 +699,8 @@ namespace Humason
             {
                 FormHumason.SetAbort();
                 return false;
-            };
+            }
+            ;
 
             //Rotate the camera, if enabled
             //Now lets get the rotator positioned properly, plate solve, then rotate, then plate solve
@@ -706,7 +713,8 @@ namespace Humason
                     lg.LogIt("Failed rotation");
                     FormHumason.SetAbort();
                     return false;
-                };
+                }
+                ;
                 // Because rotation may not be quite symmetrical, do another CLS to make sure
                 //  the guide star and target is still centered
                 lg.LogIt("CLS to center target after rotation");
@@ -715,7 +723,8 @@ namespace Humason
                     lg.LogIt("Failed to center target after rotation");
                     FormHumason.SetAbort();
                     return false;
-                };
+                }
+                ;
                 //
                 // Before we go, because of an apparent TSX AO bug, must recalibrate guider if using AO
                 //
@@ -990,7 +999,8 @@ namespace Humason
                     lg.LogIt("Could not CLS after @Focus2.  Aborting.");
                     FormHumason.SetAbort();
                     return false;
-                };
+                }
+                ;
             }
             return true;
         }
@@ -1063,6 +1073,22 @@ namespace Humason
             return 0;
         }
 
+        private bool CheckResync()
+        {
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            TimeSpan resyncInterval = TimeSpan.FromMinutes(tPlan.ResyncPeriod);
+            DateTime currentTime = DateTime.Now;
+            if ((currentTime - LastResyncTime) >= resyncInterval)
+            {
+                LastResyncTime = currentTime;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
     }
 }

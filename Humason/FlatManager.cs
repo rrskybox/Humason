@@ -231,7 +231,7 @@ namespace Humason
                                 {
                                     Rotator.RotateToRotatorPA(iFlat.RotationPA);
                                 }
-                                Imaging nhi = new Imaging();
+                                MainCameraImaging nhi = new MainCameraImaging();
                                 nhi.DoFlatManFlats(iFlat.TargetName, iFlat.RotationPA, iFlat.SideOfPier, iFlat.FlatFilter, fMan);
                                 RemoveFlat(iFlat);  //remove flat from flat stack file
                             }
@@ -241,7 +241,7 @@ namespace Humason
                         {
                             //  ********************  Use Dusk
                             Flat iFlat = GetLowestIndexFlat();
-                            Imaging nhi = new Imaging();
+                            MainCameraImaging nhi = new MainCameraImaging();
                             nhi.DoTwilightFlats(iFlat, true);
                             RemoveFlat(iFlat);  //remove flat from flat stack file
                             break;
@@ -250,7 +250,7 @@ namespace Humason
                         {
                             //  ********************  Use Dawn
                             Flat iFlat = GetHighestIndexFlat();
-                            Imaging nhi = new Imaging();
+                            MainCameraImaging nhi = new MainCameraImaging();
                             nhi.DoTwilightFlats(iFlat, false);
                             RemoveFlat(iFlat);  //remove flat from flat stack file
                             break;

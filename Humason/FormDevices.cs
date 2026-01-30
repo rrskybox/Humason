@@ -43,8 +43,10 @@ namespace Humason
             if (oldFilters != null)
                 foreach (Filter fltr in oldFilters)
                     tPlan.SetFilter(fltr, false);
-            //Generate a list of filters from tsx, in index order
-            List<string> fwlist = TSXLink.FilterWheel.FilterWheelList();
+            //Generate a list of filters from tsx or mdl, in index order
+            List<string> fwlist = new List<string>();
+            fwlist = TSXLink.FilterWheel.FilterWheelList();
+
             if (fwlist == null)
                 return;
             List<Filter> tsxFilterList = new List<Filter>();
@@ -66,6 +68,81 @@ namespace Humason
                 }
             }
         }
+
+        public void ResetConfiguration()
+        {
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
+            if (tPlan.TargetPlanPath != null)
+            {
+                AutoguideCheck.Checked = tPlan.AutoGuideEnabled;
+                AutofocusCheck.Checked = tPlan.AutoFocusEnabled;
+                int atfocusPick = tPlan.AtFocusSelect;
+                if (atfocusPick == 3)
+                { AtFocus3RadioButton.Checked = true; }
+                else
+                { AtFocus2RadioButton.Checked = true; }
+                RefocustTemperatureChangeBox.Value = (decimal)openSession.RefocusAtTemperatureDifference;
+                UseRotatorCheckBox.Checked = tPlan.RotatorEnabled;
+                RecalibrateAfterFlipCheckbox.Checked = tPlan.RecalibrateAfterFlipEnabled;
+                DitherCheck.Checked = tPlan.DitherEnabled;
+                GuiderCalibrateCheck.Checked = tPlan.GuiderCalibrateEnabled;
+                ResyncCheck.Checked = tPlan.ResyncEnabled;
+                ResyncPeriodBox.Value = tPlan.ResyncPeriod;
+                //Pre set clear and filter numbers from configuration file
+                CLSFilterNum.Value = tPlan.CLSFilter;
+                LumFilterNum.Value = tPlan.LumFilter;
+                FocusFilterNum.Value = tPlan.FocusFilter;
+                //Clear the filter list
+                FilterListBox.Items.Clear();
+                //Read in configured filter set -- do not try pulling them from TSX until camera can connect (i.e. after power on)
+                List<Filter> fset = tPlan.FilterWheelList;
+                if (fset != null)
+                {
+                    foreach (Filter filter in fset)
+                    {
+                        //Add the filter to the filter list
+                        FilterListBox.Items.Add(filter.Name + "-" + filter.Index, true);
+                    }
+                }
+                //Fill in checkboxes with existing settings
+                HasRotatorCheckBox.Checked = Convert.ToBoolean(openSession.HasRotator);
+                HasWeatherCheckBox.Checked = Convert.ToBoolean(openSession.HasWeather);
+                HasDomeCheckBox.Checked = Convert.ToBoolean(openSession.HasDome);
+                NoFilterWheelCheckBox.Checked = Convert.ToBoolean(openSession.NoFilterWheel);
+                return;
+            }
+        }
+
+        public void UploadDevicesConfiguration()
+        {
+            SessionControl openSession = new SessionControl();
+            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
+            {
+                AutoGuideEnabled = AutoguideCheck.Checked,
+                RotatorEnabled = UseRotatorCheckBox.Checked,
+                DitherEnabled = DitherCheck.Checked,
+                AutoFocusEnabled = AutofocusCheck.Checked,
+                GuiderCalibrateEnabled = GuiderCalibrateCheck.Checked,
+                ResyncEnabled = ResyncCheck.Checked,
+                ResyncPeriod = (int)ResyncPeriodBox.Value,
+                //CameraTemperatureSet = (double)CameraTemperatureSet.Value
+            };
+            openSession.RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value;
+            if (!IsInitializing)
+            {
+                if (AtFocus2RadioButton.Checked)
+                {
+                    tPlan.AtFocusSelect = 2;
+                }
+                else
+                {
+                    tPlan.AtFocusSelect = 3;
+                }
+            }
+        }
+
+        #region CheckboxChanged
 
         private void FocusFilterNum_ValueChanged(object sender, EventArgs e)
         {
@@ -111,7 +188,7 @@ namespace Humason
             //Record the rotator device control selection in the session control file
             //  and to the settings
             SessionControl openSession = new SessionControl();
-            openSession.IsRotationEnabled = RotatorCheckBox.Checked;
+            openSession.IsRotationEnabled = UseRotatorCheckBox.Checked;
             return;
         }
 
@@ -126,7 +203,6 @@ namespace Humason
         {
             SessionControl openSession = new SessionControl();
             openSession.NoFilterWheel = NoFilterWheelCheckBox.Checked;
-            return;
         }
 
         private void WeatherCheck_CheckedChanged(object sender, System.EventArgs e)
@@ -152,77 +228,6 @@ namespace Humason
                 HasWeatherCheckBox.Checked = false;
             }
             return;
-        }
-
-        public void ResetConfiguration()
-        {
-            SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
-            if (tPlan.TargetPlanPath != null)
-            {
-                AutoguideCheck.Checked = tPlan.AutoGuideEnabled;
-                AutofocusCheck.Checked = tPlan.AutoFocusEnabled;
-                int atfocusPick = tPlan.AtFocusSelect;
-                if (atfocusPick == 3)
-                { AtFocus3RadioButton.Checked = true; }
-                else
-                { AtFocus2RadioButton.Checked = true; }
-                RefocustTemperatureChangeBox.Value = (decimal)openSession.RefocusAtTemperatureDifference;
-                RotatorCheckBox.Checked = tPlan.RotatorEnabled;
-                RecalibrateAfterFlipCheckbox.Checked = tPlan.RecalibrateAfterFlipEnabled;
-                DitherCheck.Checked = tPlan.DitherEnabled;
-                GuiderCalibrateCheck.Checked = tPlan.GuiderCalibrateEnabled;
-                ResyncCheck.Checked = tPlan.ResyncEnabled;
-                //Pre set clear and filter numbers from configuration file
-                CLSFilterNum.Value = tPlan.CLSFilter;
-                LumFilterNum.Value = tPlan.LumFilter;
-                FocusFilterNum.Value = tPlan.FocusFilter;
-                //Clear the filter list
-                FilterListBox.Items.Clear();
-                //Read in configured filter set -- do not try pulling them from TSX until camera can connect (i.e. after power on)
-                List<Filter> fset = tPlan.FilterWheelList;
-                if (fset != null)
-                {
-                    foreach (Filter filter in fset)
-                    {
-                        //Add the filter to the filter list
-                        FilterListBox.Items.Add(filter.Name + "-" + filter.Index, true);
-                    }
-                }
-                //Fill in checkboxes with existing settings
-                HasRotatorCheckBox.Checked = Convert.ToBoolean(openSession.HasRotator);
-                HasWeatherCheckBox.Checked = Convert.ToBoolean(openSession.HasWeather);
-                HasDomeCheckBox.Checked = Convert.ToBoolean(openSession.HasDome);
-                NoFilterWheelCheckBox.Checked = Convert.ToBoolean(openSession.NoFilterWheel);
-                return;
-            }
-        }
-
-        public void UploadDevicesConfiguration()
-        {
-            SessionControl openSession = new SessionControl();
-            TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName)
-            {
-                AutoGuideEnabled = AutoguideCheck.Checked,
-                RotatorEnabled = RotatorCheckBox.Checked,
-                DitherEnabled = DitherCheck.Checked,
-                AutoFocusEnabled = AutofocusCheck.Checked,
-                GuiderCalibrateEnabled = GuiderCalibrateCheck.Checked,
-                ResyncEnabled = ResyncCheck.Checked,
-                //CameraTemperatureSet = (double)CameraTemperatureSet.Value
-            };
-            openSession.RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value;
-            if (!IsInitializing)
-            {
-                if (AtFocus2RadioButton.Checked)
-                {
-                    tPlan.AtFocusSelect = 2;
-                }
-                else
-                {
-                    tPlan.AtFocusSelect = 3;
-                }
-            }
         }
 
         private void FilterList_SelectedIndexChanged(object sender, EventArgs e)
@@ -265,18 +270,28 @@ namespace Humason
             };
         }
 
+        private void HasRotatorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl();
+            openSession.HasRotator = HasRotatorCheckBox.Checked;
+            return;
+        }
+
         private void RotatorCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             //Store it in the configuration and move on
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
-            if (openSession.IsRotationEnabled)
+            if (openSession.HasRotator)
             {
-                tPlan.RotatorEnabled = RotatorCheckBox.Checked;
+                openSession.IsRotationEnabled = true;
+                tPlan.RotatorEnabled = UseRotatorCheckBox.Checked;
             }
             else
             {
-                RotatorCheckBox.Checked = false;
+                openSession.IsRotationEnabled = false;
+                UseRotatorCheckBox.Checked = false;
+                tPlan.RotatorEnabled = false;
             }
         }
 
@@ -375,14 +390,6 @@ namespace Humason
             return;
         }
 
-        private void HasRotatorCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            SessionControl openSession = new SessionControl();
-            openSession.HasRotator = HasRotatorCheckBox.Checked;
-            return;
-
-        }
-
         private void HasWeatherCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             SessionControl openSession = new SessionControl();
@@ -396,6 +403,19 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             openSession.HasDome = HasDomeCheckBox.Checked;
             return;
+
+        }
+
+        #endregion
+
+        private void ResyncPeriodBox_ValueChanged(object sender, EventArgs e)
+        {
+            //Store it in the configuration and move on
+            SessionControl openSession = new SessionControl();
+            _ = new TargetPlan(openSession.CurrentTargetName)
+            {
+                ResyncPeriod = (int)ResyncPeriodBox.Value
+            };
 
         }
     }

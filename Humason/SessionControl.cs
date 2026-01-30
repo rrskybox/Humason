@@ -15,6 +15,7 @@ namespace Humason
         const string HumasonSummaryFilename = "SequenceSummaries.xml";
         const string HumasonSessionControlFilename = "SessionControl.xml";
         const string HumasonDefaultPlanFileName = "Default.TargetPlan.xml";
+        const string HumasonGuiderImageFolderFileName = "Guider_Images";
 
         const string HumasonTargetPlanSearchPattern = "*.TargetPlan.xml";
 
@@ -47,6 +48,8 @@ namespace Humason
         const string StagingEnabledXName = "StagingEnabled";
         const string StagingDateTimeXName = "StagingDateTime";
         const string StagingFilePathXName = "StagingFilePath";
+
+        const string SessionEndParkEnabledXName = "SessionEndParkEnabled";
 
         const string StartUpEnabledXName = "StartUpEnabled";
         const string StartUpDateTimeXName = "StartUpDateTime";
@@ -82,6 +85,8 @@ namespace Humason
 
         //Other
         const string NoFilterWheelXName = "NoFilterWheel";
+        const string UseMDLFilterWheelXName = "UseMDLFilterWheel";
+        const string UseMDLGuiderXName = "UseMDLGuider";
         const string HasDomeXName = "DomeAddOnEnabled";
         const string CameraTemperatureSetXName = "CameraTemperatureSet";
 
@@ -280,6 +285,17 @@ namespace Humason
         {
             get => DirectXcess.GetItem(ShutDownFilePathXName);
             set => DirectXcess.SetItem(ShutDownFilePathXName, value);
+        }
+
+        public bool SessionEndParkEnabled
+        {
+            get
+            {
+                if (Convert.ToBoolean(DirectXcess.GetItem(SessionEndParkEnabledXName)))
+                { return Convert.ToBoolean(DirectXcess.GetItem(SessionEndParkEnabledXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(SessionEndParkEnabledXName, value);
         }
 
         public bool StagingEnabled
@@ -712,6 +728,38 @@ namespace Humason
                 else { return 0; }
             }
             set => DirectXcess.ReplaceItem(CameraTemperatureSetXName, value);
+        }
+
+        public bool UseMDLGuider
+        {
+            get
+            {
+                if (DirectXcess.GetItem(UseMDLGuiderXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(UseMDLGuiderXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(UseMDLGuiderXName, value);
+        }
+
+        public bool UseMDLFilterWheel
+        {
+            get
+            {
+                if (DirectXcess.GetItem(UseMDLFilterWheelXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(UseMDLFilterWheelXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(UseMDLFilterWheelXName, value);
+        }
+
+     public string NextGuiderImagePath()
+        {
+            string humPath = DirectXcess.GetItem(HumasonDirectoryPathXName);
+            string giPath = HumasonDirectoryPath + "\\" + HumasonGuiderImageFolderFileName;
+            if (!Directory.Exists(giPath))
+                Directory.CreateDirectory(giPath);
+            string giFileName = DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss-ff");
+            return giPath + "\\" + giFileName;
         }
 
         #endregion
