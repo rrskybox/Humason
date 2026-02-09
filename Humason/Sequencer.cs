@@ -365,6 +365,8 @@ namespace Humason
             //Prepare for focusing, if (selected
             //Save the current temperature
             double lastFocusTemperature = TSXLink.Focus.GetTemperature();
+            //Save the current time
+            DateTime lastFocusTime = DateTime.Now;
             if (tPlan.AutoFocusEnabled)
             {
                 if (!RunAutoFocus())
@@ -439,8 +441,9 @@ namespace Humason
                     break;
                 }
                 //Check for refocus -- if (the current temperature is more than a degree greater than the last temperature,{ refocus
-                lastFocusTemperature = CheckAutoFocus(lastFocusTemperature);
                 lg.LogIt("Last autofocus temperature at: " + lastFocusTemperature.ToString("0.0") + " degC");
+                lg.LogIt("Last autofocus time at: " + lastFocusTime.ToString("hh:mm:ss"));
+                (lastFocusTemperature, lastFocusTime) = CheckAutoFocus(lastFocusTemperature, lastFocusTime);
                 lg.LogIt("Current focuser temperature at: " + TSXLink.Focus.GetTemperature().ToString("0.0") + " degC");
 
                 //Store the current location
@@ -956,23 +959,37 @@ namespace Humason
             AutoGuiding.AutoGuideStop();
         }
 
-        private double CheckAutoFocus(double lastFocusTemp)
+        private (double, DateTime) CheckAutoFocus(double lastFocusTemp, DateTime lastFocusTime)
         {
             //Checks for need to refocus();
             //Get Maximum Temperature Variation value from the Session database
+            //Set a flag if (the current temperature is more than the maximum variation from the last focus temperature
+            //  or the time since the last focus is more than the maximum time between focuses, if that is enabled
+            bool refocusFlag = false;
             SessionControl openSession = new SessionControl();
             double atDiff = openSession.RefocusAtTemperatureDifference;
-            if (Math.Abs(TSXLink.Focus.GetTemperature() - lastFocusTemp) >= atDiff)
+            TimeSpan afterInterval = TimeSpan.FromMinutes(openSession.RefocusAfterInterval);
+            //if either the time or temperature condition is met, then set the refocus flag to true
+            if (afterInterval != TimeSpan.FromMinutes(0) &&
+                (DateTime.Now - lastFocusTime) >= afterInterval)
+                refocusFlag = true;
+            if (!refocusFlag && atDiff != 0 && 
+                Math.Abs(TSXLink.Focus.GetTemperature() - lastFocusTemp) >= atDiff)
+                refocusFlag = true;
+            if (refocusFlag)
             {
                 //Run autofocus fails, just return like nothing happened.
                 // If it was because of a failed CLS, then an Abort will have been filed
                 //  Otherwise just let the current focus stay
+                //If autofocus is successful, then update the last focus temperature and time, otherwise just return the current values
+                // 
                 if (!RunAutoFocus())
                     lastFocusTemp = TSXLink.Focus.GetTemperature();
                 else
                     lastFocusTemp = TSXLink.Focus.GetTemperature();
+                lastFocusTime = DateTime.Now;
             }
-            return lastFocusTemp;
+            return (lastFocusTemp, lastFocusTime);
         }
 
         private bool RunAutoFocus()

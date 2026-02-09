@@ -64,6 +64,7 @@ namespace Humason
         const string OverheadXName = "Overhead";
 
         const string RefocusAtTemperatureDifferenceXName = "RefocusAtTemperatureDifference";
+        const string RefocusAfterIntervalXName = "RefocusAfterInterval";
         const string GuideStarEdgeMarginXName = "GuideStarEdgeMargin";
 
         const string FlatManPortNumXName = "FlatManPort";
@@ -481,6 +482,17 @@ namespace Humason
                 else { return 1.0; }
             }
             set => DirectXcess.ReplaceItem(RefocusAtTemperatureDifferenceXName, value);
+        }
+
+        public int RefocusAfterInterval
+        {
+            get
+            {
+                if (DirectXcess.GetItem(RefocusAfterIntervalXName) != null)
+                { return Convert.ToInt16(DirectXcess.GetItem(RefocusAfterIntervalXName)); }
+                else { return 0; }
+            }
+            set => DirectXcess.ReplaceItem(RefocusAfterIntervalXName, value);
         }
 
         public Int16 GuideStarEdgeMargin

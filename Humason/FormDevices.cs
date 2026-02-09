@@ -382,6 +382,14 @@ namespace Humason
                 RefocusAtTemperatureDifference = (double)RefocustTemperatureChangeBox.Value
             };
         }
+                private void RefocusIntervalBox_ValueChanged(object sender, EventArgs e)
+        {
+            SessionControl openSession = new SessionControl
+            {
+                RefocusAfterInterval = (int)RefocusIntervalBox.Value
+            };
+
+        }
 
         private void NoFilterWheelCheckBox_CheckedChanged_1(object sender, EventArgs e)
         {
@@ -418,6 +426,7 @@ namespace Humason
             };
 
         }
+
     }
 }
 
