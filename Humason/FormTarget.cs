@@ -376,7 +376,6 @@ namespace Humason
             NHUtil.ButtonGreen(SaveDefaultButton);
         }
 
-
         #region Event Handlers
 
         private void TargetResetEvent_Handler(object sender, TargetEvent.TargetEventArgs e)
@@ -397,9 +396,16 @@ namespace Humason
             UpdateStatusBar(e.ProgressPercent);
         }
 
+        private void PauseBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PauseBox.Checked == true)
+            {
+                SessionControl openSession = new SessionControl();
+                openSession.PauseNextImage = true;
+                PauseBox.Checked = false;
+            }
+        }
 
         #endregion
-
-
     }
 }

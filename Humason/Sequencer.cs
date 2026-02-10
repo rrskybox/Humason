@@ -470,6 +470,15 @@ namespace Humason
                     }
                 }
 
+                //Check for pause before imaging, if so, then pause and wait for user to resume
+                if (openSession.PauseNextImage)
+                    {
+                    lg.LogIt("Sequence paused before image " + (frmdef + 1).ToString("0") + " of " + totalImageCount.ToString("0"));
+                    MessageBox.Show("Sequence paused at user request." +
+                        "  Right click OK to resume.", "Humason Sequence Paused", MessageBoxButtons.OK);
+                    openSession.PauseNextImage = false;
+                }
+
                 //if AutoGuide is selected:
                 //if resync is enabled, then stop, resync and restart autoguiding
                 // otherwise,  if this is frame 0, then start autoguiding

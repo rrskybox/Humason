@@ -90,6 +90,7 @@ namespace Humason
         const string UseMDLGuiderXName = "UseMDLGuider";
         const string HasDomeXName = "DomeAddOnEnabled";
         const string CameraTemperatureSetXName = "CameraTemperatureSet";
+        const string PauseNextImageXName = "PauseNextImage";
 
         //Options Definition (for FormOptions)
         const string HasWeatherXName = "HasWeather";
@@ -774,7 +775,20 @@ namespace Humason
             return giPath + "\\" + giFileName;
         }
 
+        public bool PauseNextImage
+        {
+            get
+            {
+                if (DirectXcess.GetItem(PauseNextImageXName) != null)
+                { return Convert.ToBoolean(DirectXcess.GetItem(PauseNextImageXName)); }
+                else { return false; }
+            }
+            set => DirectXcess.ReplaceItem(PauseNextImageXName, value);
+        }
+
         #endregion
+
+
 
     }
 }
