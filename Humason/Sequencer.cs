@@ -477,6 +477,11 @@ namespace Humason
                     MessageBox.Show("Sequence paused at user request." +
                         "  Right click OK to resume.", "Humason Sequence Paused", MessageBoxButtons.OK);
                     openSession.PauseNextImage = false;
+                    if (!CLSToTargetPlanCoordinates())
+                    {
+                        FormHumason.SetAbort();
+                        break;
+                    }
                 }
 
                 //if AutoGuide is selected:
