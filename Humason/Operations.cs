@@ -224,12 +224,14 @@ namespace Humason
             if (fSuper.HaveFlatsToDo() && !FormHumason.IsAborting())
             { fSuper.TakeFlats(); }
 
-            //If autorun set, then run it, then... just park the mount and disconnect
+            //if running attended, then just wait for orders.  If running unattended, then shut down, or... just park the mount, home the dome and disconnect
             if (openSession.IsAttended)
                 return true;
+   
+            //If autorun set, then run it, then... just park the mount and disconnect
             if (openSession.ShutDownEnabled)
                 LaunchPad.RunShutDownApp();
-            else 
+            else
             {
                 try { TSXLink.Mount.Park(); }
                 catch (Exception ex)
@@ -250,13 +252,17 @@ namespace Humason
             SessionControl openSession = new SessionControl();
 
             LogEvent lg = new LogEvent();
-            lg.LogIt("Aborting and Closing Down");
+            lg.LogIt("Aborting and Closing Down if Attended not set");
             FormHumason.SetAbort();
 
             //All done.  Abort autoguiding, assuming is running -- should be off, but you never know
             AutoGuiding.AutoGuideStop();
 
-            //If autorun set and we're running unattended, then shut down, or... just park the mount, home the dome and disconnect
+            //If we're running attended, then just stop the sequence and wait for orders.  If we're running unattended, then don't do anything
+            if (openSession.IsAttended)
+                return;
+
+            //If we're running unattended, then shut down, or... just park the mount, home the dome and disconnect
             if (FormHumason.SessionState != FormHumason.SessionStateFlag.Stopped)
             {
                 lg.LogIt("Parking Mount");
@@ -267,8 +273,9 @@ namespace Humason
                 TSXLink.Connection.DisconnectAllDevices();
                 FormHumason.SetStopped();
             }
-            if ((!openSession.IsAttended) && openSession.ShutDownEnabled && LaunchPad.IsTimeToShutDown())
+            if (openSession.ShutDownEnabled && LaunchPad.IsTimeToShutDown())
                 LaunchPad.RunShutDownApp();
+
             if (openSession.SessionEndParkEnabled)
             {
                 lg.LogIt("Parking Mount");
