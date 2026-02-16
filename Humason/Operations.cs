@@ -225,9 +225,11 @@ namespace Humason
             { fSuper.TakeFlats(); }
 
             //If autorun set, then run it, then... just park the mount and disconnect
-            if (openSession.ShutDownEnabled && !openSession.IsAttended)
+            if (openSession.IsAttended)
+                return true;
+            if (openSession.ShutDownEnabled)
                 LaunchPad.RunShutDownApp();
-            else
+            else 
             {
                 try { TSXLink.Mount.Park(); }
                 catch (Exception ex)
@@ -235,13 +237,6 @@ namespace Humason
                 //Disconnect devices
                 TSXLink.Connection.DisconnectAllDevices();
             }
-            if (openSession.SessionEndParkEnabled)
-            {
-                lg.LogIt("Parking Mount");
-                try { TSXLink.Mount.Park(); }
-                catch (Exception ex) { lg.LogIt("Could not Park: " + ex.Message); }
-            }
-
             return true;
         }
 
