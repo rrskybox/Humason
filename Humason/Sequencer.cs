@@ -441,10 +441,13 @@ namespace Humason
                     break;
                 }
                 //Check for refocus -- if (the current temperature is more than a degree greater than the last temperature,{ refocus
-                lg.LogIt("Last autofocus temperature at: " + lastFocusTemperature.ToString("0.0") + " degC");
-                lg.LogIt("Last autofocus time at: " + lastFocusTime.ToString("hh:mm:ss"));
-                (lastFocusTemperature, lastFocusTime) = CheckAutoFocus(lastFocusTemperature, lastFocusTime);
-                lg.LogIt("Current focuser temperature at: " + TSXLink.Focus.GetTemperature().ToString("0.0") + " degC");
+                if (tPlan.AutoFocusEnabled)
+                {
+                    lg.LogIt("Last autofocus temperature at: " + lastFocusTemperature.ToString("0.0") + " degC");
+                    lg.LogIt("Last autofocus time at: " + lastFocusTime.ToString("hh:mm:ss"));
+                    (lastFocusTemperature, lastFocusTime) = CheckAutoFocus(lastFocusTemperature, lastFocusTime);
+                    lg.LogIt("Current focuser temperature at: " + TSXLink.Focus.GetTemperature().ToString("0.0") + " degC");
+                }
 
                 //Store the current location
                 CacheTargetSideOfMeridian();
