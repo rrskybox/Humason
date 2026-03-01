@@ -83,6 +83,8 @@ namespace Humason
                 else
                 { AtFocus2RadioButton.Checked = true; }
                 RefocustTemperatureChangeBox.Value = (decimal)openSession.RefocusAtTemperatureDifference;
+                RefocusIntervalBox.Value = openSession.RefocusAfterInterval;
+                RefocusTriggerBox.SelectedItem = openSession.RefocusTriggerType;    
                 UseRotatorCheckBox.Checked = tPlan.RotatorEnabled;
                 RecalibrateAfterFlipCheckbox.Checked = tPlan.RecalibrateAfterFlipEnabled;
                 DitherCheck.Checked = tPlan.DitherEnabled;
@@ -427,6 +429,12 @@ namespace Humason
 
         }
 
+        private void RefocusTriggerBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Store it in the configuration and move on
+            SessionControl openSession = new SessionControl();
+            openSession.RefocusTriggerType = RefocusTriggerBox.SelectedItem.ToString();
+        }
     }
 }
 

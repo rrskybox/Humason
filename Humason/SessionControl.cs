@@ -63,6 +63,7 @@ namespace Humason
 
         const string OverheadXName = "Overhead";
 
+        const string RefocusTriggerTypeXName = "RefocusTriggerType";
         const string RefocusAtTemperatureDifferenceXName = "RefocusAtTemperatureDifference";
         const string RefocusAfterIntervalXName = "RefocusAfterInterval";
         const string GuideStarEdgeMarginXName = "GuideStarEdgeMargin";
@@ -472,6 +473,17 @@ namespace Humason
                 else { return -1; }
             }
             set => DirectXcess.ReplaceItem(RotatorDirectionXName, value);
+        }
+
+        public string RefocusTriggerType
+        {
+            get
+            {
+                if (DirectXcess.GetItem(RefocusTriggerTypeXName) != null)
+                { return Convert.ToString(DirectXcess.GetItem(RefocusTriggerTypeXName)); }
+                else { return ""; }
+            }
+            set => DirectXcess.ReplaceItem(RefocusTriggerTypeXName, value);
         }
 
         public double RefocusAtTemperatureDifference

@@ -42,9 +42,10 @@
             this.LumFilterNum = new System.Windows.Forms.NumericUpDown();
             this.RefreshFiltersButton = new System.Windows.Forms.Button();
             this.FocuserGroupBox = new System.Windows.Forms.GroupBox();
+            this.RefocusIntervalBox = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.RefocustTemperatureChangeBox = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.AtFocus3RadioButton = new System.Windows.Forms.RadioButton();
             this.AtFocus2RadioButton = new System.Windows.Forms.RadioButton();
             this.DitherCheck = new System.Windows.Forms.CheckBox();
@@ -59,30 +60,29 @@
             this.HasWeatherCheckBox = new System.Windows.Forms.CheckBox();
             this.HasRotatorCheckBox = new System.Windows.Forms.CheckBox();
             this.WeatherFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.RefocusIntervalBox = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.RefocusTriggerBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.FocusFilterNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CLSFilterNum)).BeginInit();
             this.FiltersGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LumFilterNum)).BeginInit();
             this.FocuserGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RefocusIntervalBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RefocustTemperatureChangeBox)).BeginInit();
             this.GuiderGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResyncPeriodBox)).BeginInit();
             this.RotatorGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RefocusIntervalBox)).BeginInit();
             this.SuspendLayout();
             // 
             // AutoguideCheck
             // 
             this.AutoguideCheck.AutoSize = true;
             this.AutoguideCheck.ForeColor = System.Drawing.Color.White;
-            this.AutoguideCheck.Location = new System.Drawing.Point(52, 37);
-            this.AutoguideCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.AutoguideCheck.Location = new System.Drawing.Point(26, 19);
+            this.AutoguideCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AutoguideCheck.Name = "AutoguideCheck";
             this.AutoguideCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.AutoguideCheck.Size = new System.Drawing.Size(141, 29);
+            this.AutoguideCheck.Size = new System.Drawing.Size(74, 17);
             this.AutoguideCheck.TabIndex = 67;
             this.AutoguideCheck.Text = "Autoguide";
             this.AutoguideCheck.UseVisualStyleBackColor = true;
@@ -92,11 +92,11 @@
             // 
             this.AutofocusCheck.AutoSize = true;
             this.AutofocusCheck.ForeColor = System.Drawing.Color.White;
-            this.AutofocusCheck.Location = new System.Drawing.Point(52, 37);
-            this.AutofocusCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.AutofocusCheck.Location = new System.Drawing.Point(10, 19);
+            this.AutofocusCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AutofocusCheck.Name = "AutofocusCheck";
             this.AutofocusCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.AutofocusCheck.Size = new System.Drawing.Size(184, 29);
+            this.AutofocusCheck.Size = new System.Drawing.Size(96, 17);
             this.AutofocusCheck.TabIndex = 68;
             this.AutofocusCheck.Text = "Use Autofocus";
             this.AutofocusCheck.UseVisualStyleBackColor = true;
@@ -106,11 +106,11 @@
             // 
             this.UseRotatorCheckBox.AutoSize = true;
             this.UseRotatorCheckBox.ForeColor = System.Drawing.Color.White;
-            this.UseRotatorCheckBox.Location = new System.Drawing.Point(52, 37);
-            this.UseRotatorCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.UseRotatorCheckBox.Location = new System.Drawing.Point(26, 19);
+            this.UseRotatorCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.UseRotatorCheckBox.Name = "UseRotatorCheckBox";
             this.UseRotatorCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.UseRotatorCheckBox.Size = new System.Drawing.Size(158, 29);
+            this.UseRotatorCheckBox.Size = new System.Drawing.Size(83, 17);
             this.UseRotatorCheckBox.TabIndex = 71;
             this.UseRotatorCheckBox.Text = "Use Rotator";
             this.UseRotatorCheckBox.UseVisualStyleBackColor = true;
@@ -120,19 +120,19 @@
             // 
             this.FilterListBox.CheckOnClick = true;
             this.FilterListBox.FormattingEnabled = true;
-            this.FilterListBox.Location = new System.Drawing.Point(12, 81);
-            this.FilterListBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.FilterListBox.Location = new System.Drawing.Point(6, 42);
+            this.FilterListBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FilterListBox.Name = "FilterListBox";
-            this.FilterListBox.Size = new System.Drawing.Size(212, 116);
+            this.FilterListBox.Size = new System.Drawing.Size(108, 49);
             this.FilterListBox.TabIndex = 84;
             this.FilterListBox.SelectedIndexChanged += new System.EventHandler(this.FilterList_SelectedIndexChanged);
             // 
             // FocusFilterNum
             // 
-            this.FocusFilterNum.Location = new System.Drawing.Point(396, 196);
-            this.FocusFilterNum.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.FocusFilterNum.Location = new System.Drawing.Point(198, 102);
+            this.FocusFilterNum.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FocusFilterNum.Name = "FocusFilterNum";
-            this.FocusFilterNum.Size = new System.Drawing.Size(68, 31);
+            this.FocusFilterNum.Size = new System.Drawing.Size(34, 20);
             this.FocusFilterNum.TabIndex = 85;
             this.FocusFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.FocusFilterNum.ValueChanged += new System.EventHandler(this.FocusFilterNum_ValueChanged);
@@ -141,10 +141,10 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(272, 190);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(136, 99);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 25);
+            this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 86;
             this.label1.Text = "Focus Filter";
             // 
@@ -152,19 +152,19 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(284, 150);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(142, 78);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(107, 25);
+            this.label3.Size = new System.Drawing.Size(52, 13);
             this.label3.TabIndex = 89;
             this.label3.Text = "CLS Filter";
             // 
             // CLSFilterNum
             // 
-            this.CLSFilterNum.Location = new System.Drawing.Point(396, 146);
-            this.CLSFilterNum.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.CLSFilterNum.Location = new System.Drawing.Point(198, 76);
+            this.CLSFilterNum.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.CLSFilterNum.Name = "CLSFilterNum";
-            this.CLSFilterNum.Size = new System.Drawing.Size(68, 31);
+            this.CLSFilterNum.Size = new System.Drawing.Size(34, 20);
             this.CLSFilterNum.TabIndex = 88;
             this.CLSFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.CLSFilterNum.ValueChanged += new System.EventHandler(this.CLSFilterNum_ValueChanged);
@@ -181,11 +181,11 @@
             this.FiltersGroupBox.Controls.Add(this.FocusFilterNum);
             this.FiltersGroupBox.Controls.Add(this.FilterListBox);
             this.FiltersGroupBox.ForeColor = System.Drawing.Color.White;
-            this.FiltersGroupBox.Location = new System.Drawing.Point(24, 21);
-            this.FiltersGroupBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.FiltersGroupBox.Location = new System.Drawing.Point(12, 11);
+            this.FiltersGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FiltersGroupBox.Name = "FiltersGroupBox";
-            this.FiltersGroupBox.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.FiltersGroupBox.Size = new System.Drawing.Size(508, 253);
+            this.FiltersGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.FiltersGroupBox.Size = new System.Drawing.Size(254, 132);
             this.FiltersGroupBox.TabIndex = 90;
             this.FiltersGroupBox.TabStop = false;
             this.FiltersGroupBox.Text = "Camera";
@@ -194,11 +194,11 @@
             // 
             this.NoFilterWheelCheckBox.AutoSize = true;
             this.NoFilterWheelCheckBox.ForeColor = System.Drawing.SystemColors.Control;
-            this.NoFilterWheelCheckBox.Location = new System.Drawing.Point(20, 37);
-            this.NoFilterWheelCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.NoFilterWheelCheckBox.Location = new System.Drawing.Point(10, 19);
+            this.NoFilterWheelCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.NoFilterWheelCheckBox.Name = "NoFilterWheelCheckBox";
             this.NoFilterWheelCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.NoFilterWheelCheckBox.Size = new System.Drawing.Size(192, 29);
+            this.NoFilterWheelCheckBox.Size = new System.Drawing.Size(99, 17);
             this.NoFilterWheelCheckBox.TabIndex = 115;
             this.NoFilterWheelCheckBox.Text = "No Filter Wheel";
             this.NoFilterWheelCheckBox.UseVisualStyleBackColor = true;
@@ -208,19 +208,19 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(284, 100);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(142, 52);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(107, 25);
+            this.label6.Size = new System.Drawing.Size(52, 13);
             this.label6.TabIndex = 92;
             this.label6.Text = "Lum Filter";
             // 
             // LumFilterNum
             // 
-            this.LumFilterNum.Location = new System.Drawing.Point(396, 96);
-            this.LumFilterNum.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.LumFilterNum.Location = new System.Drawing.Point(198, 50);
+            this.LumFilterNum.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.LumFilterNum.Name = "LumFilterNum";
-            this.LumFilterNum.Size = new System.Drawing.Size(68, 31);
+            this.LumFilterNum.Size = new System.Drawing.Size(34, 20);
             this.LumFilterNum.TabIndex = 91;
             this.LumFilterNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.LumFilterNum.ValueChanged += new System.EventHandler(this.LumFilterNum_ValueChanged);
@@ -228,10 +228,10 @@
             // RefreshFiltersButton
             // 
             this.RefreshFiltersButton.ForeColor = System.Drawing.Color.Black;
-            this.RefreshFiltersButton.Location = new System.Drawing.Point(348, 34);
-            this.RefreshFiltersButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.RefreshFiltersButton.Location = new System.Drawing.Point(174, 18);
+            this.RefreshFiltersButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RefreshFiltersButton.Name = "RefreshFiltersButton";
-            this.RefreshFiltersButton.Size = new System.Drawing.Size(140, 50);
+            this.RefreshFiltersButton.Size = new System.Drawing.Size(70, 26);
             this.RefreshFiltersButton.TabIndex = 90;
             this.RefreshFiltersButton.Text = "Refresh";
             this.RefreshFiltersButton.UseVisualStyleBackColor = true;
@@ -239,24 +239,48 @@
             // 
             // FocuserGroupBox
             // 
+            this.FocuserGroupBox.Controls.Add(this.RefocusTriggerBox);
+            this.FocuserGroupBox.Controls.Add(this.label2);
             this.FocuserGroupBox.Controls.Add(this.RefocusIntervalBox);
             this.FocuserGroupBox.Controls.Add(this.label7);
-            this.FocuserGroupBox.Controls.Add(this.label8);
             this.FocuserGroupBox.Controls.Add(this.RefocustTemperatureChangeBox);
             this.FocuserGroupBox.Controls.Add(this.AutofocusCheck);
             this.FocuserGroupBox.Controls.Add(this.label5);
-            this.FocuserGroupBox.Controls.Add(this.label2);
             this.FocuserGroupBox.Controls.Add(this.AtFocus3RadioButton);
             this.FocuserGroupBox.Controls.Add(this.AtFocus2RadioButton);
             this.FocuserGroupBox.ForeColor = System.Drawing.Color.White;
-            this.FocuserGroupBox.Location = new System.Drawing.Point(24, 433);
-            this.FocuserGroupBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.FocuserGroupBox.Location = new System.Drawing.Point(12, 225);
+            this.FocuserGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.FocuserGroupBox.Name = "FocuserGroupBox";
-            this.FocuserGroupBox.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.FocuserGroupBox.Size = new System.Drawing.Size(508, 197);
+            this.FocuserGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.FocuserGroupBox.Size = new System.Drawing.Size(254, 102);
             this.FocuserGroupBox.TabIndex = 94;
             this.FocuserGroupBox.TabStop = false;
             this.FocuserGroupBox.Text = "Focuser";
+            // 
+            // RefocusIntervalBox
+            // 
+            this.RefocusIntervalBox.Location = new System.Drawing.Point(110, 67);
+            this.RefocusIntervalBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.RefocusIntervalBox.Maximum = new decimal(new int[] {
+            600,
+            0,
+            0,
+            0});
+            this.RefocusIntervalBox.Name = "RefocusIntervalBox";
+            this.RefocusIntervalBox.Size = new System.Drawing.Size(46, 20);
+            this.RefocusIntervalBox.TabIndex = 76;
+            this.RefocusIntervalBox.ValueChanged += new System.EventHandler(this.RefocusIntervalBox_ValueChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(164, 69);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(76, 13);
+            this.label7.TabIndex = 75;
+            this.label7.Text = "min (zero = off)";
             // 
             // RefocustTemperatureChangeBox
             // 
@@ -266,8 +290,8 @@
             0,
             0,
             65536});
-            this.RefocustTemperatureChangeBox.Location = new System.Drawing.Point(180, 108);
-            this.RefocustTemperatureChangeBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.RefocustTemperatureChangeBox.Location = new System.Drawing.Point(110, 44);
+            this.RefocustTemperatureChangeBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RefocustTemperatureChangeBox.Maximum = new decimal(new int[] {
             10,
             0,
@@ -279,7 +303,7 @@
             0,
             65536});
             this.RefocustTemperatureChangeBox.Name = "RefocustTemperatureChangeBox";
-            this.RefocustTemperatureChangeBox.Size = new System.Drawing.Size(92, 31);
+            this.RefocustTemperatureChangeBox.Size = new System.Drawing.Size(46, 20);
             this.RefocustTemperatureChangeBox.TabIndex = 73;
             this.RefocustTemperatureChangeBox.Value = new decimal(new int[] {
             1,
@@ -291,31 +315,21 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(288, 112);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(164, 46);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(146, 25);
+            this.label5.Size = new System.Drawing.Size(74, 13);
             this.label5.TabIndex = 72;
             this.label5.Text = "deg C change";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(27, 112);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(115, 25);
-            this.label2.TabIndex = 71;
-            this.label2.Text = "Refocus at";
             // 
             // AtFocus3RadioButton
             // 
             this.AtFocus3RadioButton.AutoSize = true;
             this.AtFocus3RadioButton.ForeColor = System.Drawing.Color.White;
-            this.AtFocus3RadioButton.Location = new System.Drawing.Point(324, 67);
-            this.AtFocus3RadioButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.AtFocus3RadioButton.Location = new System.Drawing.Point(179, 19);
+            this.AtFocus3RadioButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AtFocus3RadioButton.Name = "AtFocus3RadioButton";
-            this.AtFocus3RadioButton.Size = new System.Drawing.Size(135, 29);
+            this.AtFocus3RadioButton.Size = new System.Drawing.Size(71, 17);
             this.AtFocus3RadioButton.TabIndex = 70;
             this.AtFocus3RadioButton.Text = "@Focus3";
             this.AtFocus3RadioButton.UseVisualStyleBackColor = true;
@@ -325,10 +339,10 @@
             // 
             this.AtFocus2RadioButton.AutoSize = true;
             this.AtFocus2RadioButton.ForeColor = System.Drawing.Color.White;
-            this.AtFocus2RadioButton.Location = new System.Drawing.Point(324, 21);
-            this.AtFocus2RadioButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.AtFocus2RadioButton.Location = new System.Drawing.Point(110, 19);
+            this.AtFocus2RadioButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.AtFocus2RadioButton.Name = "AtFocus2RadioButton";
-            this.AtFocus2RadioButton.Size = new System.Drawing.Size(135, 29);
+            this.AtFocus2RadioButton.Size = new System.Drawing.Size(71, 17);
             this.AtFocus2RadioButton.TabIndex = 69;
             this.AtFocus2RadioButton.Text = "@Focus2";
             this.AtFocus2RadioButton.UseVisualStyleBackColor = true;
@@ -338,11 +352,11 @@
             // 
             this.DitherCheck.AutoSize = true;
             this.DitherCheck.ForeColor = System.Drawing.Color.White;
-            this.DitherCheck.Location = new System.Drawing.Point(196, 81);
-            this.DitherCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.DitherCheck.Location = new System.Drawing.Point(98, 42);
+            this.DitherCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.DitherCheck.Name = "DitherCheck";
             this.DitherCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.DitherCheck.Size = new System.Drawing.Size(101, 29);
+            this.DitherCheck.Size = new System.Drawing.Size(54, 17);
             this.DitherCheck.TabIndex = 70;
             this.DitherCheck.Text = "Dither";
             this.DitherCheck.UseVisualStyleBackColor = true;
@@ -357,11 +371,11 @@
             this.GuiderGroupBox.Controls.Add(this.DitherCheck);
             this.GuiderGroupBox.Controls.Add(this.AutoguideCheck);
             this.GuiderGroupBox.ForeColor = System.Drawing.Color.White;
-            this.GuiderGroupBox.Location = new System.Drawing.Point(24, 286);
-            this.GuiderGroupBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.GuiderGroupBox.Location = new System.Drawing.Point(12, 149);
+            this.GuiderGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.GuiderGroupBox.Name = "GuiderGroupBox";
-            this.GuiderGroupBox.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.GuiderGroupBox.Size = new System.Drawing.Size(508, 135);
+            this.GuiderGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.GuiderGroupBox.Size = new System.Drawing.Size(254, 70);
             this.GuiderGroupBox.TabIndex = 95;
             this.GuiderGroupBox.TabStop = false;
             this.GuiderGroupBox.Text = "Guider";
@@ -369,19 +383,17 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(406, 79);
-            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label4.Location = new System.Drawing.Point(203, 41);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(60, 25);
+            this.label4.Size = new System.Drawing.Size(29, 13);
             this.label4.TabIndex = 74;
             this.label4.Text = "(min)";
             // 
             // ResyncPeriodBox
             // 
-            this.ResyncPeriodBox.Location = new System.Drawing.Point(384, 35);
-            this.ResyncPeriodBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ResyncPeriodBox.Location = new System.Drawing.Point(192, 18);
             this.ResyncPeriodBox.Name = "ResyncPeriodBox";
-            this.ResyncPeriodBox.Size = new System.Drawing.Size(104, 31);
+            this.ResyncPeriodBox.Size = new System.Drawing.Size(52, 20);
             this.ResyncPeriodBox.TabIndex = 73;
             this.ResyncPeriodBox.ValueChanged += new System.EventHandler(this.ResyncPeriodBox_ValueChanged);
             // 
@@ -389,11 +401,11 @@
             // 
             this.ResyncCheck.AutoSize = true;
             this.ResyncCheck.ForeColor = System.Drawing.Color.White;
-            this.ResyncCheck.Location = new System.Drawing.Point(258, 37);
-            this.ResyncCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.ResyncCheck.Location = new System.Drawing.Point(129, 19);
+            this.ResyncCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.ResyncCheck.Name = "ResyncCheck";
             this.ResyncCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ResyncCheck.Size = new System.Drawing.Size(116, 29);
+            this.ResyncCheck.Size = new System.Drawing.Size(62, 17);
             this.ResyncCheck.TabIndex = 72;
             this.ResyncCheck.Text = "Resync";
             this.ResyncCheck.UseVisualStyleBackColor = true;
@@ -403,11 +415,11 @@
             // 
             this.GuiderCalibrateCheck.AutoSize = true;
             this.GuiderCalibrateCheck.ForeColor = System.Drawing.Color.White;
-            this.GuiderCalibrateCheck.Location = new System.Drawing.Point(52, 81);
-            this.GuiderCalibrateCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.GuiderCalibrateCheck.Location = new System.Drawing.Point(26, 42);
+            this.GuiderCalibrateCheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.GuiderCalibrateCheck.Name = "GuiderCalibrateCheck";
             this.GuiderCalibrateCheck.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.GuiderCalibrateCheck.Size = new System.Drawing.Size(130, 29);
+            this.GuiderCalibrateCheck.Size = new System.Drawing.Size(67, 17);
             this.GuiderCalibrateCheck.TabIndex = 71;
             this.GuiderCalibrateCheck.Text = "Calibrate";
             this.GuiderCalibrateCheck.UseVisualStyleBackColor = true;
@@ -418,11 +430,11 @@
             this.RotatorGroupBox.Controls.Add(this.RecalibrateAfterFlipCheckbox);
             this.RotatorGroupBox.Controls.Add(this.UseRotatorCheckBox);
             this.RotatorGroupBox.ForeColor = System.Drawing.Color.White;
-            this.RotatorGroupBox.Location = new System.Drawing.Point(24, 685);
-            this.RotatorGroupBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.RotatorGroupBox.Location = new System.Drawing.Point(12, 356);
+            this.RotatorGroupBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RotatorGroupBox.Name = "RotatorGroupBox";
-            this.RotatorGroupBox.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.RotatorGroupBox.Size = new System.Drawing.Size(508, 81);
+            this.RotatorGroupBox.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.RotatorGroupBox.Size = new System.Drawing.Size(254, 42);
             this.RotatorGroupBox.TabIndex = 96;
             this.RotatorGroupBox.TabStop = false;
             this.RotatorGroupBox.Text = "Rotator";
@@ -431,11 +443,11 @@
             // 
             this.RecalibrateAfterFlipCheckbox.AutoSize = true;
             this.RecalibrateAfterFlipCheckbox.ForeColor = System.Drawing.Color.White;
-            this.RecalibrateAfterFlipCheckbox.Location = new System.Drawing.Point(248, 37);
-            this.RecalibrateAfterFlipCheckbox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.RecalibrateAfterFlipCheckbox.Location = new System.Drawing.Point(124, 19);
+            this.RecalibrateAfterFlipCheckbox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RecalibrateAfterFlipCheckbox.Name = "RecalibrateAfterFlipCheckbox";
             this.RecalibrateAfterFlipCheckbox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.RecalibrateAfterFlipCheckbox.Size = new System.Drawing.Size(245, 29);
+            this.RecalibrateAfterFlipCheckbox.Size = new System.Drawing.Size(124, 17);
             this.RecalibrateAfterFlipCheckbox.TabIndex = 72;
             this.RecalibrateAfterFlipCheckbox.Text = "Recalibrate After Flip";
             this.RecalibrateAfterFlipCheckbox.UseVisualStyleBackColor = true;
@@ -445,11 +457,11 @@
             // 
             this.HasDomeCheckBox.AutoSize = true;
             this.HasDomeCheckBox.ForeColor = System.Drawing.SystemColors.Control;
-            this.HasDomeCheckBox.Location = new System.Drawing.Point(300, 800);
-            this.HasDomeCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.HasDomeCheckBox.Location = new System.Drawing.Point(150, 416);
+            this.HasDomeCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.HasDomeCheckBox.Name = "HasDomeCheckBox";
             this.HasDomeCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.HasDomeCheckBox.Size = new System.Drawing.Size(223, 29);
+            this.HasDomeCheckBox.Size = new System.Drawing.Size(115, 17);
             this.HasDomeCheckBox.TabIndex = 114;
             this.HasDomeCheckBox.Text = "Has Dome Add-On";
             this.HasDomeCheckBox.UseVisualStyleBackColor = true;
@@ -459,11 +471,11 @@
             // 
             this.HasWeatherCheckBox.AutoSize = true;
             this.HasWeatherCheckBox.ForeColor = System.Drawing.SystemColors.Control;
-            this.HasWeatherCheckBox.Location = new System.Drawing.Point(24, 800);
-            this.HasWeatherCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.HasWeatherCheckBox.Location = new System.Drawing.Point(12, 416);
+            this.HasWeatherCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.HasWeatherCheckBox.Name = "HasWeatherCheckBox";
             this.HasWeatherCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.HasWeatherCheckBox.Size = new System.Drawing.Size(247, 29);
+            this.HasWeatherCheckBox.Size = new System.Drawing.Size(127, 17);
             this.HasWeatherCheckBox.TabIndex = 113;
             this.HasWeatherCheckBox.Text = "Has Weather Monitor";
             this.HasWeatherCheckBox.UseVisualStyleBackColor = true;
@@ -473,10 +485,10 @@
             // 
             this.HasRotatorCheckBox.AutoSize = true;
             this.HasRotatorCheckBox.ForeColor = System.Drawing.Color.White;
-            this.HasRotatorCheckBox.Location = new System.Drawing.Point(24, 642);
-            this.HasRotatorCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.HasRotatorCheckBox.Location = new System.Drawing.Point(12, 334);
+            this.HasRotatorCheckBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.HasRotatorCheckBox.Name = "HasRotatorCheckBox";
-            this.HasRotatorCheckBox.Size = new System.Drawing.Size(158, 29);
+            this.HasRotatorCheckBox.Size = new System.Drawing.Size(83, 17);
             this.HasRotatorCheckBox.TabIndex = 112;
             this.HasRotatorCheckBox.Text = "Has Rotator";
             this.HasRotatorCheckBox.UseVisualStyleBackColor = true;
@@ -486,46 +498,34 @@
             // 
             this.WeatherFileDialog.FileName = "CCDAP";
             // 
-            // RefocusIntervalBox
+            // label2
             // 
-            this.RefocusIntervalBox.Location = new System.Drawing.Point(180, 151);
-            this.RefocusIntervalBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.RefocusIntervalBox.Maximum = new decimal(new int[] {
-            600,
-            0,
-            0,
-            0});
-            this.RefocusIntervalBox.Name = "RefocusIntervalBox";
-            this.RefocusIntervalBox.Size = new System.Drawing.Size(92, 31);
-            this.RefocusIntervalBox.TabIndex = 76;
-            this.RefocusIntervalBox.ValueChanged += new System.EventHandler(this.RefocusIntervalBox_ValueChanged);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 46);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(72, 13);
+            this.label2.TabIndex = 78;
+            this.label2.Text = "Focus Trigger";
             // 
-            // label7
+            // RefocusTriggerBox
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(288, 155);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(156, 25);
-            this.label7.TabIndex = 75;
-            this.label7.Text = "min (zero = off)";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(27, 155);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(140, 25);
-            this.label8.TabIndex = 74;
-            this.label8.Text = "Refocus after";
+            this.RefocusTriggerBox.FormattingEnabled = true;
+            this.RefocusTriggerBox.Items.AddRange(new object[] {
+            "Temp",
+            "Interval",
+            "Both"});
+            this.RefocusTriggerBox.Location = new System.Drawing.Point(28, 66);
+            this.RefocusTriggerBox.Name = "RefocusTriggerBox";
+            this.RefocusTriggerBox.Size = new System.Drawing.Size(65, 21);
+            this.RefocusTriggerBox.TabIndex = 79;
+            this.RefocusTriggerBox.SelectedIndexChanged += new System.EventHandler(this.RefocusTriggerBox_SelectedIndexChanged);
             // 
             // FormDevices
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.ClientSize = new System.Drawing.Size(556, 856);
+            this.ClientSize = new System.Drawing.Size(278, 445);
             this.ControlBox = false;
             this.Controls.Add(this.HasDomeCheckBox);
             this.Controls.Add(this.HasWeatherCheckBox);
@@ -536,7 +536,7 @@
             this.Controls.Add(this.FiltersGroupBox);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormDevices";
@@ -549,13 +549,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.LumFilterNum)).EndInit();
             this.FocuserGroupBox.ResumeLayout(false);
             this.FocuserGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RefocusIntervalBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RefocustTemperatureChangeBox)).EndInit();
             this.GuiderGroupBox.ResumeLayout(false);
             this.GuiderGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResyncPeriodBox)).EndInit();
             this.RotatorGroupBox.ResumeLayout(false);
             this.RotatorGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RefocusIntervalBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -582,7 +582,6 @@
         internal System.Windows.Forms.CheckBox GuiderCalibrateCheck;
         private System.Windows.Forms.NumericUpDown RefocustTemperatureChangeBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label2;
         internal System.Windows.Forms.CheckBox RecalibrateAfterFlipCheckbox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown LumFilterNum;
@@ -595,6 +594,7 @@
         private System.Windows.Forms.NumericUpDown ResyncPeriodBox;
         private System.Windows.Forms.NumericUpDown RefocusIntervalBox;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox RefocusTriggerBox;
     }
 }

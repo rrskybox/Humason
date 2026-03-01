@@ -367,6 +367,9 @@ namespace Humason
             double lastFocusTemperature = TSXLink.Focus.GetTemperature();
             //Save the current time
             DateTime lastFocusTime = DateTime.Now;
+            //If autofocus is enabled, then run autofocus before starting the sequence,
+            //and after that, check for refocus before each image based on the
+            //temperature change and time since last focus
             if (tPlan.AutoFocusEnabled)
             {
                 if (!RunAutoFocus())
@@ -475,7 +478,7 @@ namespace Humason
 
                 //Check for pause before imaging, if so, then pause and wait for user to resume
                 if (openSession.PauseNextImage)
-                    {
+                {
                     lg.LogIt("Sequence paused before image " + (frmdef + 1).ToString("0") + " of " + totalImageCount.ToString("0"));
                     MessageBox.Show("Sequence paused at user request." +
                         "  Right click OK to resume.", "Humason Sequence Paused", MessageBoxButtons.OK);
@@ -982,29 +985,42 @@ namespace Humason
             //Get Maximum Temperature Variation value from the Session database
             //Set a flag if (the current temperature is more than the maximum variation from the last focus temperature
             //  or the time since the last focus is more than the maximum time between focuses, if that is enabled
-            bool refocusFlag = false;
             SessionControl openSession = new SessionControl();
             double atDiff = openSession.RefocusAtTemperatureDifference;
             TimeSpan afterInterval = TimeSpan.FromMinutes(openSession.RefocusAfterInterval);
-            //if either the time or temperature condition is met, then set the refocus flag to true
-            if (afterInterval != TimeSpan.FromMinutes(0) &&
-                (DateTime.Now - lastFocusTime) >= afterInterval)
-                refocusFlag = true;
-            if (!refocusFlag && atDiff != 0 && 
-                Math.Abs(TSXLink.Focus.GetTemperature() - lastFocusTemp) >= atDiff)
-                refocusFlag = true;
-            if (refocusFlag)
+            switch (openSession.RefocusTriggerType)
             {
-                //Run autofocus fails, just return like nothing happened.
-                // If it was because of a failed CLS, then an Abort will have been filed
-                //  Otherwise just let the current focus stay
-                //If autofocus is successful, then update the last focus temperature and time, otherwise just return the current values
-                // 
-                if (!RunAutoFocus())
-                    lastFocusTemp = TSXLink.Focus.GetTemperature();
-                else
-                    lastFocusTemp = TSXLink.Focus.GetTemperature();
-                lastFocusTime = DateTime.Now;
+                case "Both": //Temp and Time
+                    {
+                        if (Math.Abs(TSXLink.Focus.GetTemperature() - lastFocusTemp) >= atDiff ||
+                            (DateTime.Now - lastFocusTime) >= afterInterval)
+                        {
+                            RunAutoFocus();
+                            lastFocusTemp = TSXLink.Focus.GetTemperature();
+                            lastFocusTime = DateTime.Now;
+                        }
+                        break;
+                    }
+                case "Temp": //Temperature
+                    {
+                        if (Math.Abs(TSXLink.Focus.GetTemperature() - lastFocusTemp) >= atDiff)
+                        {
+                            RunAutoFocus();
+                            lastFocusTemp = TSXLink.Focus.GetTemperature();
+                        }
+                        break;
+                    }
+                case "Interval": //Time
+                    {
+                        if ((DateTime.Now - lastFocusTime) >= afterInterval)
+                        {
+                            RunAutoFocus();
+                            lastFocusTime = DateTime.Now;
+                        }
+                        break;
+                    }
+                default:
+                    break;
             }
             return (lastFocusTemp, lastFocusTime);
         }
