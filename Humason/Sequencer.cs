@@ -362,21 +362,16 @@ namespace Humason
             SessionControl openSession = new SessionControl();
             TargetPlan tPlan = new TargetPlan(openSession.CurrentTargetName);
 
-            //Prepare for focusing, if (selected
-            //Save the current temperature
+            //Run Autofocus if enabled this sets current temp and time for first autofocus check in photoloop
             double lastFocusTemperature = TSXLink.Focus.GetTemperature();
-            //Save the current time
             DateTime lastFocusTime = DateTime.Now;
-            //If autofocus is enabled, then run autofocus before starting the sequence,
-            //and after that, check for refocus before each image based on the
-            //temperature change and time since last focus
             if (tPlan.AutoFocusEnabled)
             {
-                if (!RunAutoFocus())
-                {
-                    lg.LogIt("Autofocus failed during sequencing");
-                    return;
-                }
+                //Run an autofocus at the start of the sequence if the check at the start of the run isn't
+                // going to do a focusing run anyway.  This will make sure that we don't automatically run focus twice in the same loop.
+
+                if (openSession.RefocusAtTemperatureDifference != 0 && openSession.RefocusAfterInterval != 0)
+                    RunAutoFocus();
             }
             //If autoguiding is checked and calibration requested, then calibrate the guider
             if (tPlan.AutoGuideEnabled && tPlan.GuiderCalibrateEnabled)
@@ -443,7 +438,7 @@ namespace Humason
                     lg.LogIt("Target Too Low");
                     break;
                 }
-                //Check for refocus -- if (the current temperature is more than a degree greater than the last temperature,{ refocus
+                //Check for (re)focus -- if (the current temperature is more than a degree greater than the last temperature,{ refocus
                 if (tPlan.AutoFocusEnabled)
                 {
                     lg.LogIt("Last autofocus temperature at: " + lastFocusTemperature.ToString("0.0") + " degC");
